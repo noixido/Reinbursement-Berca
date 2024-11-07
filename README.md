@@ -3,5 +3,5 @@
 
 ## Our Member
 - Edo Laksana Widodo
-- Ikhsan
+- Ikhsan Kurniawan
 - Muhammad Yusuf Syahidin
