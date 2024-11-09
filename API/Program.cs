@@ -13,10 +13,11 @@ builder.Services.AddSwaggerGen();
 
 // Menambahkan DbContext dengan Connection String
 builder.Services.AddDbContext<MyContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Reimbursement")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Reimbursement")).EnableSensitiveDataLogging());
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+builder.Services.AddScoped<AccountRepository>();
 
 var app = builder.Build();
 
