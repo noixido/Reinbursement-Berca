@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20241108061410_Model Part 3")]
-    partial class ModelPart3
+    [Migration("20241109065738_update model account detail")]
+    partial class updatemodelaccountdetail
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,17 +55,15 @@ namespace API.Migrations
                     b.Property<DateTime>("Birth_Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<float?>("Current_Limit")
+                    b.Property<float>("Current_Limit")
                         .HasColumnType("real");
 
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Id_Account")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Id_Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Join_Date")
@@ -80,10 +78,6 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id_AccountDetail");
-
-                    b.HasIndex("Id_Account")
-                        .IsUnique()
-                        .HasFilter("[Id_Account] IS NOT NULL");
 
                     b.HasIndex("Id_Title");
 
@@ -173,11 +167,15 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.Account", "Account")
                         .WithOne("AccountDetails")
-                        .HasForeignKey("API.Models.AccountDetail", "Id_Account");
+                        .HasForeignKey("API.Models.AccountDetail", "Id_AccountDetail")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Models.Title", "Title")
                         .WithMany("AccountDetails")
-                        .HasForeignKey("Id_Title");
+                        .HasForeignKey("Id_Title")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
 
@@ -214,7 +212,8 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Account", b =>
                 {
-                    b.Navigation("AccountDetails");
+                    b.Navigation("AccountDetails")
+                        .IsRequired();
 
                     b.Navigation("ReimbursementProfilings");
                 });
