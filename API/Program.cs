@@ -1,4 +1,5 @@
 using API.Context;
+using API.Models;
 using API.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Reimbursement")).EnableSensitiveDataLogging());
 
+builder.Services.AddScoped<TitleRepositories>();
+builder.Services.AddScoped<ReimbursementRepositories>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddScoped<AccountRepository>();

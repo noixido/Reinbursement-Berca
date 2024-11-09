@@ -16,7 +16,7 @@ namespace API.ViewModels
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Join_Date { get; set; }
-        public int Current_Limit { get; set; }
+        public float Current_Limit { get; set; }
     }
 
     public class ShowAccountVM
@@ -30,6 +30,6 @@ namespace API.ViewModels
         public string Gender { get; set; }
         public string Birth_Date { get; set; }
         public string Join_Date { get; set; }
-        public int Current_Limit { get; set; }
+        public float Current_Limit { get; set; }
     }
 }
