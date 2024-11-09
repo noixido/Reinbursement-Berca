@@ -77,6 +77,29 @@ namespace API.Repositories
             return _context.SaveChanges();
         }
 
+        public int ChangePassword(ChangePasswordVM changePasswordVM)
+        {
+            var account = _context.Accounts
+                .Where(e => e.Email == changePasswordVM.Email)
+                .FirstOrDefault();
+            if (account == null)
+            {
+                throw new Exception("Data not found!");
+            }
+
+            var checkPassword = BCrypt.Net.BCrypt.Verify(changePasswordVM.OldPassword, account.Password);
+            if(!checkPassword)
+            {
+                throw new Exception("Old password is incorrect!");
+            }
+
+            var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+            account.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordVM.NewPassword, salt);
+
+            _context.Entry(account).State = EntityState.Modified;
+            return _context.SaveChanges();
+        }
+
         public int DeleteAccount(string email)
         {
             var account = _context.Accounts

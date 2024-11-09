@@ -20,7 +20,7 @@ namespace API.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Join_Date { get; set; }
-        public int Current_Limit { get; set; }
+        public float Current_Limit { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Title Title { get; set; }

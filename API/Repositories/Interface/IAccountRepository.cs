@@ -12,7 +12,8 @@ namespace API.Repositories.Interface
         int DeleteAccount(string email); // hapus data berdasarkan email
 
         // Lain-lain
-        string GenerateCustomIdForAccount();
+        string GenerateCustomIdForAccount(); // generate custom id untuk tabel Account
         AccountVM GetLastInsertedAccount(); // ambil data terakhir yang disimpan
+        int ChangePassword(ChangePasswordVM changePasswordVM);
     }
 }
