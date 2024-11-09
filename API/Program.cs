@@ -1,5 +1,5 @@
 using API.Context;
-using API.Models;
+using API.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen();
 // Menambahkan DbContext dengan Connection String
 builder.Services.AddDbContext<MyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Reimbursement")));
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 
 var app = builder.Build();
