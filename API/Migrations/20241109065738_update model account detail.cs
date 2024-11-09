@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class ModelPart3 : Migration
+    public partial class updatemodelaccountdetail : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,28 +77,29 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id_AccountDetail = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Id_Account = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Id_Title = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Id_Title = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Birth_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Current_Limit = table.Column<float>(type: "real", nullable: true),
-                    Join_Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Join_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Current_Limit = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AccountDetails", x => x.Id_AccountDetail);
                     table.ForeignKey(
-                        name: "FK_AccountDetails_Accounts_Id_Account",
-                        column: x => x.Id_Account,
+                        name: "FK_AccountDetails_Accounts_Id_AccountDetail",
+                        column: x => x.Id_AccountDetail,
                         principalTable: "Accounts",
-                        principalColumn: "Id_Account");
+                        principalColumn: "Id_Account",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AccountDetails_Titles_Id_Title",
                         column: x => x.Id_Title,
                         principalTable: "Titles",
-                        principalColumn: "Id_Title");
+                        principalColumn: "Id_Title",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,13 +125,6 @@ namespace API.Migrations
                         principalColumn: "Id_Reimbursement",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountDetails_Id_Account",
-                table: "AccountDetails",
-                column: "Id_Account",
-                unique: true,
-                filter: "[Id_Account] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountDetails_Id_Title",
