@@ -97,5 +97,28 @@ namespace API.Repositories
 
             return reimbursementVM;
         }
+
+        public IEnumerable<ReimbursementVM> GetAllReimbursements()
+        {
+            return _myContext.Reimbursements
+            .Include(re => re.ReimbursementProfilings)
+                .ThenInclude(rp => rp.Account).ThenInclude(a => a.AccountDetails)
+            .Include(re => re.Category)
+            .Select(re => new ReimbursementVM
+            {
+                Id_Account = re.ReimbursementProfilings.FirstOrDefault().Id_Account,
+                Id_Reimbursement = re.Id_Reimbursement,
+                Name = re.ReimbursementProfilings.FirstOrDefault().Account.AccountDetails.Name,
+                Id_Category = re.Id_Category,
+                Category_Name = re.Category.Category_Name,
+                Evidence = re.Evidence,
+                Amount = re.Amount,
+                Note = re.Note,
+                Status = re.Status,
+                Submit_Date = re.Submit_Date
+            })
+            .ToList();
+        }
+
     }
 }

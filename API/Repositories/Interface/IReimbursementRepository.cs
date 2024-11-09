@@ -8,5 +8,7 @@ namespace API.Repositories.Interface
         IEnumerable<ReimbursementVM> GetAllReimbursementByAccount(string id);
         ReimbursementVM GetReimbursementById(string id);
         int AddReimbursement(ReimbursementVM reimbursement);
+        IEnumerable<ReimbursementVM> GetAllReimbursements();
+
     }
 }

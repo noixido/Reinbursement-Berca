@@ -129,5 +129,26 @@ namespace API.Controllers
             });
 
         }
+
+        [HttpGet]
+        public IActionResult GetAllReimbursements()
+        {
+            var reimbursements = _reimbursementRepositories.GetAllReimbursements();
+
+            if (reimbursements.Count() == 0)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Data tidak ditemukan"
+                });
+            }
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = $"{reimbursements.Count()} data ditemukan",
+                Data = reimbursements
+            });
+        }
     }
 }
