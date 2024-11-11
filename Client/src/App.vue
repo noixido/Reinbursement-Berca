@@ -1,9 +1,18 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<template>
+  <RouterView></RouterView>
+</template>
+
+<script>
+import { RouterView } from "vue-router";
+
+export default {
+  components: {
+    RouterView,
+  },
+  setup() {
+    return {};
+  },
+};
 </script>
 
-<template>
-  <h1 class="text-3xl font-bold underline bg-green-500">
-    Hello world!
-  </h1>
-</template>
+<style lang="scss" scoped></style>
