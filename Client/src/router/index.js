@@ -1,8 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Login from "../components/Auth/Login.vue";
+import MainLayout from "../components/layouts/MainLayout.vue";
 import IndexEmployee from "../components/Pages/Employee/index-employee.vue";
-import IndexHr from "../components/Pages/HR/index-hr.vue";
-import IndexFinance from "../components/Pages/Finance/index-finance.vue";
 
 const routes = [{
     path: '/',
@@ -13,29 +12,17 @@ const routes = [{
         guest: true,
     }
 },{
-    path: '/employee',
-    name: 'employee',
-    component: IndexEmployee,
-    meta: {
-        requiresAuth: true,
-        role: 'Employee',
-    }
-},{
-    path: '/hr',
-    name: 'hr',
-    component: IndexHr,
-    meta: {
-        requiresAuth: true,
-        role: 'HR',
-    }
-},{
-    path: '/finance',
-    name: 'finance',
-    component: IndexFinance,
-    meta: {
-        requiresAuth: true,
-        role: 'Finance',
-    }
+    path: '/',
+    component: MainLayout,
+    children:[{
+        path: 'employee',
+        name: 'employee',
+        component: IndexEmployee,
+        meta: {
+            requiresAuth: true,
+            role: 'Employee',
+        }
+    }]
 }]
 
 const router = createRouter({
