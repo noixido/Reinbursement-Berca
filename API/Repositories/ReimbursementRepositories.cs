@@ -120,35 +120,5 @@ namespace API.Repositories
             .ToList();
         }
 
-        public int UpdateReimbursementStatusByHR(string id, string status, string note)
-        {
-            var reimbursement = _myContext.Reimbursements.FirstOrDefault(re => re.Id_Reimbursement == id);
-            if (reimbursement == null)
-            {
-                return -1;
-            }
-
-            reimbursement.Status = status;
-            reimbursement.Note = note;
-
-            return _myContext.SaveChanges();
-        }
-
-        public int UpdateReimbursementStatusByFinance(string id, string status, string note, float approveAmount)
-        {
-            var reimbursement = _myContext.Reimbursements.FirstOrDefault(re => re.Id_Reimbursement == id);
-            if (reimbursement == null)
-            {
-                return -1;
-            }
-
-            reimbursement.Status = status;
-            reimbursement.Note = note;
-            reimbursement.Amount = approveAmount;
-
-            return _myContext.SaveChanges();
-        }
-
-
     }
 }
