@@ -13,11 +13,12 @@ namespace API.Models
 
         public string Evidence { get; set; }
         public float Amount { get; set; }
+        public float? Approve_Amount { get; set; }
         public string? Note { get; set; }
         public string Status { get; set; }
         public DateTime Submit_Date { get; set; }
 
         public Category Category { get; set; }
-        public ICollection<ReimbursementProfiling> ReimbursementProfilings { get; set; }
+        public ICollection<ReimbursementProfiling>? ReimbursementProfilings { get; set; }
     }
 }
