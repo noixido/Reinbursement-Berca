@@ -43,6 +43,7 @@ namespace API.Controllers
 
                 var claims = new List<Claim>
                 {
+                    new Claim("id_account", payload.Id_Account),
                     new Claim("email", payload.Email),
                     new Claim("name", payload.Name),
                     new Claim("role", payload.Roles),
