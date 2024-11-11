@@ -13,7 +13,7 @@ namespace API.Repositories.Interface
 
         // Lain-lain
         string GenerateCustomIdForAccount(); // generate custom id untuk tabel Account
-        AccountVM GetLastInsertedAccount(); // ambil data terakhir yang disimpan
+        LastInsertedAccountVM GetLastInsertedAccount(); // ambil data terakhir yang disimpan
         int ChangePassword(ChangePasswordVM changePasswordVM);
     }
 }

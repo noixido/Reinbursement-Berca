@@ -21,6 +21,7 @@ namespace API.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Join_Date { get; set; }
         public float Current_Limit { get; set; }
+        public int IsEmployee { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Title Title { get; set; }

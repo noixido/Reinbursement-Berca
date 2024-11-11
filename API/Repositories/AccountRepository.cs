@@ -47,10 +47,6 @@ namespace API.Repositories
             {
                 throw new Exception("Join Date is required!");
             }
-            if (accountVM.Current_Limit == null)
-            {
-                throw new Exception("Current Reimbursement Limit is required!");
-            }
 
             // mapping data untuk table Account
             Account account = new Account();
@@ -71,7 +67,23 @@ namespace API.Repositories
             accountDetail.Gender = accountVM.Gender;
             accountDetail.Birth_Date = accountVM.Birth_Date;
             accountDetail.Join_Date = accountVM.Join_Date;
-            accountDetail.Current_Limit = accountVM.Current_Limit;
+
+            var title = _context.Titles
+                .Where(id => id.Id_Title == accountDetail.Id_Title)
+                .FirstOrDefault();
+
+            DateTime now = DateTime.Now;
+            float totalWorkMonth = (now.Year - accountDetail.Join_Date.Year) * 12 + now.Month - accountDetail.Join_Date.Month;
+            if(totalWorkMonth > 12)
+            {
+                accountDetail.Current_Limit = title.Reimburse_Limit;
+            }
+            else
+            {
+                accountDetail.Current_Limit = (float)(totalWorkMonth/12) * title.Reimburse_Limit;
+            }
+
+            accountDetail.IsEmployee = 1;
             _context.AccountDetails.Add(accountDetail);
 
             return _context.SaveChanges();
@@ -81,6 +93,7 @@ namespace API.Repositories
         {
             var account = _context.Accounts
                 .Where(e => e.Email == changePasswordVM.Email)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
                 .FirstOrDefault();
             if (account == null)
             {
@@ -97,26 +110,6 @@ namespace API.Repositories
             account.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordVM.NewPassword, salt);
 
             _context.Entry(account).State = EntityState.Modified;
-            return _context.SaveChanges();
-        }
-
-        public int DeleteAccount(string email)
-        {
-            var account = _context.Accounts
-                .Where(x => x.Email == email)
-                .FirstOrDefault();
-
-            if (account == null)
-            {
-                throw new Exception("Data not found!");
-            }
-
-            var accountDetail = _context.AccountDetails
-                .Where(id => id.Id_AccountDetail == account.Id_Account)
-                .FirstOrDefault();
-
-            _context.AccountDetails.Remove(accountDetail);
-            _context.Accounts.Remove(account);
             return _context.SaveChanges();
         }
 
@@ -145,6 +138,7 @@ namespace API.Repositories
         {
             var accountByEmail = _context.Accounts
                 .Where(e => e.Email == email)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
                 .FirstOrDefault();
             if (accountByEmail == null)
             {
@@ -174,6 +168,7 @@ namespace API.Repositories
         {
              var account = _context.Accounts
                 .Include(ad => ad.AccountDetails.Title)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
                 .Select(acc => new ShowAccountVM
                 {
                     Id_Account = acc.Id_Account,
@@ -195,10 +190,11 @@ namespace API.Repositories
             return account;
         }
 
-        public AccountVM GetLastInsertedAccount()
+        public LastInsertedAccountVM GetLastInsertedAccount()
         {
             var lastInsertedAccount = _context.Accounts
                 .Include(a => a.AccountDetails)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
                 .OrderByDescending(id => id.Id_Account)
                 .FirstOrDefault();
             if(lastInsertedAccount == null)
@@ -206,7 +202,7 @@ namespace API.Repositories
                 return null;
             }
 
-            return new AccountVM
+            return new LastInsertedAccountVM
             {
                 Email = lastInsertedAccount.Email,
                 Role_Name = lastInsertedAccount.Role_Name,
@@ -224,6 +220,7 @@ namespace API.Repositories
         {
             var account = _context.Accounts
                 .Where(e => e.Email == accountVM.Email)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
                 .FirstOrDefault();
             if (account == null)
             {
@@ -242,12 +239,36 @@ namespace API.Repositories
             accountDetail.Gender = accountVM.Gender;
             accountDetail.Birth_Date = accountVM.Birth_Date;
             accountDetail.Join_Date = accountVM.Join_Date;
-            accountDetail.Current_Limit = accountVM.Current_Limit;
 
             _context.Entry(account).State = EntityState.Modified;
             _context.Entry(account).State = EntityState.Detached;
             _context.Entry(accountDetail).State = EntityState.Modified;
 
+            return _context.SaveChanges();
+        }
+
+        public int DeleteAccount(string email)
+        {
+            var account = _context.Accounts
+                .Where(x => x.Email == email)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
+                .FirstOrDefault();
+
+            if (account == null)
+            {
+                throw new Exception("Data not found!");
+            }
+
+            var accountDetail = _context.AccountDetails
+                .Where(id => id.Id_AccountDetail == account.Id_Account)
+                .FirstOrDefault();
+
+            accountDetail.IsEmployee = 0;
+
+            _context.Entry(accountDetail).State = EntityState.Modified;
+
+            //_context.AccountDetails.Remove(accountDetail);
+            //_context.Accounts.Remove(account);
             return _context.SaveChanges();
         }
     }

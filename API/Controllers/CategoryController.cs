@@ -1,6 +1,8 @@
 ﻿using API.Models;
 using API.Repositories;
 using API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+    [Authorize(Roles = "HR, Employee, Finance")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
