@@ -186,5 +186,36 @@ namespace API.Controllers
                 });
             }
         }
+
+        [HttpPut("ChangePassword/{email}")]
+        public IActionResult ChangePassword(ChangePasswordVM changePasswordVM)
+        {
+            try
+            {
+                var data = _repository.ChangePassword(changePasswordVM);
+                if (data == 0)
+                {
+                    return NotFound(new
+                    {
+                        status = StatusCodes.Status404NotFound,
+                        message = "Data Not Found",
+                    });
+                }
+                return Ok(new
+                {
+                    status = StatusCodes.Status200OK,
+                    message = "Data updated!",
+                    data = (object)true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = StatusCodes.Status400BadRequest,
+                    message = ex.Message,
+                });
+            }
+        }
     }
 }
