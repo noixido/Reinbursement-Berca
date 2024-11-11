@@ -10,6 +10,6 @@ namespace API.Models
         public string Title_Name { get; set; }
         public float Reimburse_Limit { get; set; }
 
-        public ICollection<AccountDetail> AccountDetails { get; set; }
+        public ICollection<AccountDetail>? AccountDetails { get; set; }
     }
 }
