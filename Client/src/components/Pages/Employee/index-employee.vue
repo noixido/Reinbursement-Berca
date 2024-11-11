@@ -1,0 +1,19 @@
+<template>
+    <div>
+        halo dari employee
+    </div>
+</template>
+
+<script>
+export default {
+    setup () {
+        
+
+        return {}
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+
+</style>
