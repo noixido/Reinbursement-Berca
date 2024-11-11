@@ -2,6 +2,8 @@
 using API.Repositories;
 using API.Repositories.Interface;
 using API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -9,6 +11,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+    [Authorize(Roles = "HR, Employee, Finance")]
     public class ReimbursementController : ControllerBase
     {
         private ReimbursementRepositories _reimbursementRepositories;
@@ -151,12 +155,55 @@ namespace API.Controllers
             });
         }
 
-        [HttpPut("hr/approve/{id}")]
-        public IActionResult ApproveReimbursementByHR(string id, [FromQuery] string note = "Approve reimbursement by HR")
+        [HttpGet("hr")]
+        public IActionResult GetAllReimbursementsHR()
         {
-            var result = _reimbursementRepositories.UpdateReimbursementStatusByHR(id, "Approved", note);
+            var reimbursements = _reimbursementRepositories.GetAllReimbursementsByStatus("progress in hr");
 
-            if (result == -1)
+            if (reimbursements.Count() == 0)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Data tidak ditemukan"
+                });
+            }
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = $"{reimbursements.Count()} data ditemukan",
+                Data = reimbursements
+            });
+        }
+
+        [HttpGet("finance")]
+        public IActionResult GetAllReimbursementsFinance()
+        {
+            var reimbursements = _reimbursementRepositories.GetAllReimbursementsByStatus("progress in finance");
+
+            if (reimbursements.Count() == 0)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Data tidak ditemukan"
+                });
+            }
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = $"{reimbursements.Count()} data ditemukan",
+                Data = reimbursements
+            });
+        }
+
+        [HttpPut("approvehr/{id}")]
+        public IActionResult ApproveReimbursementByHR(string id, ChangeStatusReimbursement changeReimbursement)
+        {
+            bool isApprove = true;
+            var result = _reimbursementRepositories.UpdateReimbursementStatusByHR(id, changeReimbursement, isApprove);
+
+            if (result == ReimbursementRepositories.NOTFOUND)
             {
                 return NotFound(new
                 {
@@ -176,17 +223,18 @@ namespace API.Controllers
             return Ok(new
             {
                 StatusCode = 200,
-                Message = "Reimbursement berhasil di-approve oleh HR",
-                Note = note
+
+                Message = "Reimbursement berhasil di-approve oleh HR"
             });
         }
 
-        [HttpPut("hr/decline/{id}")]
-        public IActionResult DeclineReimbursementByHR(string id, [FromQuery] string note = "Decline reimbursement by HR")
+        [HttpPut("declinehr/{id}")]
+        public IActionResult DeclineReimbursementByHR(string id, ChangeStatusReimbursement changeReimbursement)
         {
-            var result = _reimbursementRepositories.UpdateReimbursementStatusByHR(id, "Declined", note);
+            bool isApprove = false;
+            var result = _reimbursementRepositories.UpdateReimbursementStatusByHR(id, changeReimbursement, isApprove);
 
-            if (result == -1)
+            if (result == ReimbursementRepositories.NOTFOUND)
             {
                 return NotFound(new
                 {
@@ -206,17 +254,16 @@ namespace API.Controllers
             return Ok(new
             {
                 StatusCode = 200,
-                Message = "Reimbursement berhasil ditolak oleh HR",
-                Note = note
+                Message = "Reimbursement berhasil ditolak oleh HR"
             });
         }
 
-        [HttpPut("finance/approve/{id}")]
-        public IActionResult ApproveReimbursementByFinance(string id, float Approve_Amount, [FromQuery] string note = "Approve reimbursement by Finance")
-        {
-            var result = _reimbursementRepositories.UpdateReimbursementStatusByFinance(id, "Approved by Finance", note, Approve_Amount);
+        [HttpPut("approvefinance/{id}")]
+        public IActionResult ApproveReimbursementByFinance(string id, ChangeStatusReimbursement approveReimbursement)
+        {   bool isApprove = true;
+            var result = _reimbursementRepositories.UpdateReimbursementStatusByFinance(id, approveReimbursement, isApprove);
 
-            if (result == -1)
+            if (result == ReimbursementRepositories.NOTFOUND)
             {
                 return NotFound(new
                 {
@@ -236,18 +283,17 @@ namespace API.Controllers
             return Ok(new
             {
                 StatusCode = 200,
-                Message = "Reimbursement berhasil di-approve oleh Finance",
-                ApprovedAmount = Approve_Amount,
-                Note = note
+                Message = "Reimbursement berhasil di-approve oleh Finance"
             });
         }
 
-        [HttpPut("finance/decline/{id}")]
-        public IActionResult DeclineReimbursementByFinance(string id, [FromQuery] string note = "Decline reimbursement by Finance")
+        [HttpPut("declinefinance/{id}")]
+        public IActionResult DeclineReimbursementByFinance(string id, ChangeStatusReimbursement declineReimbursement)
         {
-            var result = _reimbursementRepositories.UpdateReimbursementStatusByFinance(id, "Declined by Finance", note, 0);
+            bool isApprove = false;
+            var result = _reimbursementRepositories.UpdateReimbursementStatusByFinance(id, declineReimbursement, isApprove);
 
-            if (result == -1)
+            if (result == ReimbursementRepositories.NOTFOUND)
             {
                 return NotFound(new
                 {
@@ -267,10 +313,8 @@ namespace API.Controllers
             return Ok(new
             {
                 StatusCode = 200,
-                Message = "Reimbursement berhasil ditolak oleh Finance",
-                Note = note
+                Message = "Reimbursement berhasil ditolak oleh Finance"
             });
         }
-
     }
 }

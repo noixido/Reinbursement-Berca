@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -8,6 +9,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+    [Authorize(Roles = "HR")]
     public class TitlesController : ControllerBase
     {
         private TitleRepositories _titleRepositories;
@@ -70,6 +73,15 @@ namespace API.Controllers
                     Message = $"Nama title harus diisi",
                 });
             }
+            else if (title.Reimburse_Limit == null || title.Reimburse_Limit == 0)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = $"Reimburse limit harus diisi",
+                });
+            }
+
             var addTitle = _titleRepositories.AddTitles(title);
 
             if (addTitle <= 0)
@@ -126,9 +138,9 @@ namespace API.Controllers
                 });
             }
 
-            var updatedRole = _titleRepositories.UpdateTitle(title);
+            var updatedTitle = _titleRepositories.UpdateTitle(title);
 
-            if (updatedRole == TitleRepositories.NOTFOUND)
+            if (updatedTitle == TitleRepositories.NOTFOUND)
             {
                 return NotFound(new
                 {
@@ -146,7 +158,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{titleId}")]
-        public IActionResult DeleteUniversity(string titleId)
+        public IActionResult DeleteTitle(string titleId)
         {
             try
             {
@@ -158,6 +170,14 @@ namespace API.Controllers
                     {
                         StatusCode = 400,
                         Message = $"Data {titleId} tidak ditemukan",
+                    });
+                }
+                else if (delete == TitleRepositories.INUSE)
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = $"Data {titleId} tidak bisa dihapus karena sedang digunakan oleh akun lain",
                     });
                 }
 

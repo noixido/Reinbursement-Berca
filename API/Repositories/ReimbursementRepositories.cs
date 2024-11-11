@@ -29,8 +29,9 @@ namespace API.Repositories
                 Id_Category = reimbursement.Id_Category,
                 Evidence = reimbursement.Evidence,
                 Amount = (float)reimbursement.Amount,
+                Approve_Amount = 0,
                 Note = reimbursement.Note,
-                Status = reimbursement.Status,
+                Status = "progress in hr",
                 Submit_Date = (DateTime)reimbursement.Submit_Date,
             };
             _myContext.Reimbursements.Add(newReimbursement);
@@ -60,6 +61,7 @@ namespace API.Repositories
                 Category_Name = re.Category.Category_Name,
                 Evidence = re.Evidence,
                 Amount = re.Amount,
+                Approve_Amount = re.Approve_Amount,
                 Note = re.Note,
                 Status = re.Status,
                 Submit_Date = re.Submit_Date
@@ -90,6 +92,7 @@ namespace API.Repositories
                 Category_Name = reimbursement.Category?.Category_Name,
                 Evidence = reimbursement.Evidence,
                 Amount = reimbursement.Amount,
+                Approve_Amount = reimbursement.Approve_Amount,
                 Note = reimbursement.Note,
                 Status = reimbursement.Status,
                 Submit_Date = reimbursement.Submit_Date,
@@ -113,6 +116,7 @@ namespace API.Repositories
                 Category_Name = re.Category.Category_Name,
                 Evidence = re.Evidence,
                 Amount = re.Amount,
+                Approve_Amount = re.Approve_Amount,
                 Note = re.Note,
                 Status = re.Status,
                 Submit_Date = re.Submit_Date
@@ -120,35 +124,74 @@ namespace API.Repositories
             .ToList();
         }
 
-        public int UpdateReimbursementStatusByHR(string id, string status, string note)
+        public int UpdateReimbursementStatusByHR(string id, ChangeStatusReimbursement changeReimbursement, bool isApprove)
         {
             var reimbursement = _myContext.Reimbursements.FirstOrDefault(re => re.Id_Reimbursement == id);
             if (reimbursement == null)
             {
-                return -1;
+                return NOTFOUND;
             }
 
-            reimbursement.Status = status;
-            reimbursement.Note = note;
+            if (isApprove)
+            {
+                reimbursement.Status = "progress in finance";
+            }
+            else
+            {
+                reimbursement.Status = "declined by HR";
+            }
+
+            reimbursement.Note = changeReimbursement.Note;
 
             return _myContext.SaveChanges();
         }
 
-        public int UpdateReimbursementStatusByFinance(string id, string status, string note, float approveAmount)
+        public int UpdateReimbursementStatusByFinance(string id, ChangeStatusReimbursement approveReimbursement, bool isAprrove)
         {
             var reimbursement = _myContext.Reimbursements.FirstOrDefault(re => re.Id_Reimbursement == id);
             if (reimbursement == null)
             {
-                return -1;
+                return NOTFOUND;
             }
 
-            reimbursement.Status = status;
-            reimbursement.Note = note;
-            reimbursement.Amount = approveAmount;
+            if (isAprrove)
+            {
+                reimbursement.Status = "approved";
+                reimbursement.Approve_Amount = approveReimbursement.Approve_Amount;
+            }
+            else
+            {
+                reimbursement.Status = "declined by finance";
+            }
+            reimbursement.Note = approveReimbursement.Note;
 
             return _myContext.SaveChanges();
         }
 
+        public IEnumerable<ReimbursementVM> GetAllReimbursementsByStatus(string status)
+        {
+            var reimbursements = _myContext.Reimbursements
+                .Include(re => re.ReimbursementProfilings)
+                    .ThenInclude(rp => rp.Account).ThenInclude(a => a.AccountDetails)
+                .Include(re => re.Category)
+                .Where(re => re.Status == status)
+                .Select(re => new ReimbursementVM
+                {
+                    Id_Account = re.ReimbursementProfilings.FirstOrDefault().Id_Account,
+                    Id_Reimbursement = re.Id_Reimbursement,
+                    Name = re.ReimbursementProfilings.FirstOrDefault().Account.AccountDetails.Name,
+                    Id_Category = re.Id_Category,
+                    Category_Name = re.Category.Category_Name,
+                    Evidence = re.Evidence,
+                    Amount = re.Amount,
+                    Approve_Amount = re.Approve_Amount,
+                    Note = re.Note,
+                    Status = re.Status,
+                    Submit_Date = re.Submit_Date,
+                })
+                .ToList();
 
+            return reimbursements;
+        }
     }
 }
