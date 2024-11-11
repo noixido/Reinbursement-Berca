@@ -9,6 +9,9 @@ namespace API.Repositories.Interface
         ReimbursementVM GetReimbursementById(string id);
         int AddReimbursement(ReimbursementVM reimbursement);
         IEnumerable<ReimbursementVM> GetAllReimbursements();
+        int UpdateReimbursementStatusByHR(string id, ChangeStatusReimbursement changeReimbursement, bool isApprove);
+        int UpdateReimbursementStatusByFinance(string id, ChangeStatusReimbursement changeReimbursement, bool isApprove);
+        IEnumerable<ReimbursementVM> GetAllReimbursementsByStatus(string status);
 
     }
 }
