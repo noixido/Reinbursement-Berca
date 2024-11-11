@@ -9,6 +9,7 @@ namespace API.Repositories
     public class TitleRepositories : ITitleRepository
     {
         public const int NOTFOUND = -3;
+        public const int INUSE = -2;
 
         private readonly MyContext _myContext;
 
@@ -32,6 +33,12 @@ namespace API.Repositories
             if (titleToDelete == null)
             {
                 return NOTFOUND;
+            }
+
+            bool isTitleInUse = _myContext.AccountDetails.Any(ad => ad.Id_Title == id);
+            if (isTitleInUse)
+            {
+                return INUSE;
             }
             _myContext.Titles.Remove(titleToDelete);
             return _myContext.SaveChanges();
