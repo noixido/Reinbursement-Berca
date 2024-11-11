@@ -1,11 +1,15 @@
 ﻿using API.Repositories;
 using API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+    [Authorize(Roles = "HR")]
     public class AccountController : Controller
     {
         private readonly AccountRepository _repository;
@@ -53,7 +57,7 @@ namespace API.Controllers
             try
             {
                 var accounts = _repository.GetAllAccounts();
-                if (accounts == null)
+                if (accounts == null || !accounts.Any())
                 {
                     return NotFound(new
                     {
@@ -66,7 +70,7 @@ namespace API.Controllers
                 {
                     status = StatusCodes.Status200OK,
                     message = "Data Found",
-                    data = (object)accounts
+                    data = (object) accounts
                 });
             }
             catch (Exception ex)
@@ -151,7 +155,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("{email}")]
+        [HttpPut("Delete/{email}")]
         public IActionResult DeleteAccount(string email)
         {
             try
@@ -162,7 +166,7 @@ namespace API.Controllers
                     return BadRequest(new
                     {
                         status = StatusCodes.Status400BadRequest,
-                        message = "Data Cannot be Updated!",
+                        message = "Data Cannot be Deleted!",
                         data = (object)null,
                     });
                 }
@@ -171,6 +175,37 @@ namespace API.Controllers
                 {
                     status = StatusCodes.Status200OK,
                     message = "Data deleted successfully!",
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = StatusCodes.Status400BadRequest,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPut("ChangePassword/{email}")]
+        public IActionResult ChangePassword(ChangePasswordVM changePasswordVM)
+        {
+            try
+            {
+                var data = _repository.ChangePassword(changePasswordVM);
+                if (data == 0)
+                {
+                    return NotFound(new
+                    {
+                        status = StatusCodes.Status404NotFound,
+                        message = "Data Not Found",
+                    });
+                }
+                return Ok(new
+                {
+                    status = StatusCodes.Status200OK,
+                    message = "Data updated!",
+                    data = (object)true
                 });
             }
             catch (Exception ex)
