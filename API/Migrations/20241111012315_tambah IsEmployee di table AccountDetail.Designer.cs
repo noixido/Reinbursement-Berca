@@ -4,6 +4,7 @@ using API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20241111012315_tambah IsEmployee di table AccountDetail")]
+    partial class tambahIsEmployeeditableAccountDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,9 +107,6 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<float>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Approve_Amount")
                         .HasColumnType("real");
 
                     b.Property<string>("Evidence")

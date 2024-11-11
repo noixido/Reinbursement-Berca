@@ -4,6 +4,7 @@ using API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20241109135349_update model Account and AccountDetail")]
+    partial class updatemodelAccountandAccountDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,9 +66,6 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("IsEmployee")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Join_Date")
                         .HasColumnType("datetime2");
 
@@ -104,9 +104,6 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<float>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Approve_Amount")
                         .HasColumnType("real");
 
                     b.Property<string>("Evidence")
@@ -156,8 +153,8 @@ namespace API.Migrations
                     b.Property<string>("Id_Title")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<float>("Reimburse_Limit")
-                        .HasColumnType("real");
+                    b.Property<int>("Reimburse_Limit")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title_Name")
                         .IsRequired()

@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -8,6 +9,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+    [Authorize(Roles = "HR")]
     public class TitlesController : ControllerBase
     {
         private TitleRepositories _titleRepositories;

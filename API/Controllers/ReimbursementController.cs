@@ -2,6 +2,8 @@
 using API.Repositories;
 using API.Repositories.Interface;
 using API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -9,6 +11,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+    [Authorize(Roles = "HR, Employee, Finance")]
     public class ReimbursementController : ControllerBase
     {
         private ReimbursementRepositories _reimbursementRepositories;
