@@ -7,6 +7,7 @@
             <main class="flex-1 p-4">
                 <!-- <Breadcrumb class="mb-4" :items="breadcrumbItems" /> -->
                 <slot></slot>
+                <!-- <router-view></router-view> -->
             </main>
             <Footer></Footer>
         </div>

@@ -1,17 +1,19 @@
 <template>
-  <RouterView></RouterView>
+<div >
+    <RouterView/>
+  </div>
 </template>
 
 <script>
-import { RouterView } from "vue-router";
+import { RouterView } from 'vue-router';
+import Login from './components/Auth/Login.vue';
 
-export default {
-  components: {
-    RouterView,
+export default{
+  components:{
+    Login,
+    RouterView
   },
-  setup() {
-    return {};
-  },
+  setup(){}
 };
 </script>
 

@@ -2,6 +2,7 @@
 using API.Repositories;
 using API.Repositories.Interface;
 using API.ViewModels;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult addReimbursement(ReimbursementVM reimbursement)
+        public async Task<IActionResult> addReimbursement([FromForm] ReimbursementRequest reimbursement)
         {
             if (String.IsNullOrWhiteSpace(reimbursement.Id_Account))
             {
@@ -39,14 +40,6 @@ namespace API.Controllers
                 {
                     StatusCode = 400,
                     Message = $"ID Kategori harus diisi",
-                });
-            }
-            else if (String.IsNullOrWhiteSpace(reimbursement.Evidence))
-            {
-                return BadRequest(new
-                {
-                    StatusCode = 400,
-                    Message = $"Evidence harus diisi",
                 });
             }
             else if (reimbursement.Amount == null || reimbursement.Amount == 0)
@@ -65,10 +58,48 @@ namespace API.Controllers
                     Message = "Submit date harus diisi",
                 });
             }
+            else if (reimbursement.Evidence == null || reimbursement.Evidence.Length == 0)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = $"Evidence harus diisi",
+                });
+            }
 
-            var addReimbursement = _reimbursementRepositories.AddReimbursement(reimbursement);
+            // Membuat nama file unik dengan UUID
+            var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(reimbursement.Evidence.FileName)}";
+            // Menambahkan Id_Account ke dalam path
+            var folderPath = Path.Combine("wwwroot/uploads/evidence", reimbursement.Id_Account);
 
-            if (addReimbursement <= 0)  
+            // Membuat folder jika belum ada
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // Path file akhir
+            var fullPath = Path.Combine(folderPath, uniqueFileName);
+
+            // Menyimpan file ke disk
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await reimbursement.Evidence.CopyToAsync(stream);
+            }
+
+            // Mapping model ke ReimbursementVM sebelum mengirim ke repository
+            var newReimbursement = new ReimbursementVM
+            {
+                Id_Account = reimbursement.Id_Account,
+                Id_Category = reimbursement.Id_Category,
+                Evidence = Path.Combine("uploads", "evidence", reimbursement.Id_Account, uniqueFileName).Replace("\\", "/"),
+                Amount = reimbursement.Amount,
+                Submit_Date = reimbursement.Submit_Date
+            };
+
+            var addReimbursement = await _reimbursementRepositories.AddReimbursement(newReimbursement);
+
+            if (addReimbursement <= 0)
             {
                 return BadRequest(new
                 {
@@ -162,10 +193,10 @@ namespace API.Controllers
 
             if (reimbursements.Count() == 0)
             {
-                return NotFound(new
+                return Ok(new
                 {
-                    StatusCode = 404,
-                    Message = "Data tidak ditemukan"
+                    StatusCode = 200,
+                    Message = "Data tidak ditemukan",
                 });
             }
             return Ok(new
@@ -183,9 +214,9 @@ namespace API.Controllers
 
             if (reimbursements.Count() == 0)
             {
-                return NotFound(new
+                return Ok(new
                 {
-                    StatusCode = 404,
+                    StatusCode = 200,
                     Message = "Data tidak ditemukan"
                 });
             }

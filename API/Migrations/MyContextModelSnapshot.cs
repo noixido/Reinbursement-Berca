@@ -106,7 +106,7 @@ namespace API.Migrations
                     b.Property<float>("Amount")
                         .HasColumnType("real");
 
-                    b.Property<float>("Approve_Amount")
+                    b.Property<float?>("Approve_Amount")
                         .HasColumnType("real");
 
                     b.Property<string>("Evidence")
