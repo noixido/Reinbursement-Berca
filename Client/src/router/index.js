@@ -4,6 +4,11 @@ import IndexHr from "../components/Pages/HR/indexHr.vue";
 import ManageAccount from "../components/Pages/HR/manageAccount.vue";
 import ManageTitle from "../components/Pages/HR/manageTitle.vue";
 import ManageCategory from "../components/Pages/HR/manageCategory.vue";
+import ApprovalByHR from "../components/pages/HR/ApprovalByHR.vue";
+import ApprovalByFNC from "../components/pages/Finance/ApprovalByFNC.vue";
+import Profile from "../components/pages/Profile.vue";
+import IndexEmployee from "../components/Pages/Employee/indexEmployee.vue";
+import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
 
 const routes = [{
         path: '/',
@@ -13,6 +18,14 @@ const routes = [{
         meta: {
             guest: true,
         }
+    },{
+      path: '/employee/dashboard',
+      name: 'employee-dashboard',
+      component: IndexEmployee,
+      props: true,
+      meta: {
+          guest: true,
+      }
     },{
         path: '/hr/dashboard',
         name: 'hr-dashboard',
@@ -49,6 +62,41 @@ const routes = [{
             requiresAuth: true,
             role: 'HR',
         },
+    },{
+      path: '/hr/approval-hr',
+      name: 'approval-hr',
+      component: ApprovalByHR,
+      props: true,
+      meta: {
+          requiresAuth: true,
+          role: 'HR',
+      }
+    },{
+      path: '/finance/approval-fnc',
+      name: 'approval-fnc',
+      component: ApprovalByFNC,
+      props: true,
+      meta: {
+          requiresAuth: true,
+          role: 'Finance',
+      }
+    },{
+      path: '/finance/dashboard',
+      name: 'dashboard-fnc',
+      component: IndexFinance,
+      props: true,
+      meta: {
+          requiresAuth: true,
+          role: 'Finance',
+      }
+    },{
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
+    //   meta: {
+    //     requiresAuth: true,
+    //     role: 'HR, Finance, Employee',
+    // }
     }
 ]
 
