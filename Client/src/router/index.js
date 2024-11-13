@@ -1,67 +1,103 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Login from "../components/Auth/Login.vue";
-import MainLayout from "../components/layouts/MainLayout.vue";
-import IndexEmployee from "../components/Pages/Employee/index-employee.vue";
+import IndexHr from "../components/Pages/HR/indexHr.vue";
+import ManageAccount from "../components/Pages/HR/manageAccount.vue";
+import ManageTitle from "../components/Pages/HR/manageTitle.vue";
+import ManageCategory from "../components/Pages/HR/manageCategory.vue";
 import ApprovalByHR from "../components/pages/HR/ApprovalByHR.vue";
 import ApprovalByFNC from "../components/pages/Finance/ApprovalByFNC.vue";
-import IndexFinance from "../components/pages/Finance/index-finance.vue";
-import IndexHr from "../components/pages/HR/index-hr.vue";
 import Profile from "../components/pages/Profile.vue";
+import IndexEmployee from "../components/Pages/Employee/indexEmployee.vue";
+import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
 
 const routes = [{
-    path: '/',
-    name: 'login',
-    component: Login,
-    props: true,
-    meta: {
-        guest: true,
+        path: '/',
+        name: 'login',
+        component: Login,
+        props: true,
+        meta: {
+            guest: true,
+        }
+    },{
+      path: '/employee/dashboard',
+      name: 'employee-dashboard',
+      component: IndexEmployee,
+      props: true,
+      meta: {
+          guest: true,
+      }
+    },{
+        path: '/hr/dashboard',
+        name: 'hr-dashboard',
+        component: IndexHr,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    },{
+        path: '/hr/manage-account',
+        name: 'manage-account',
+        component: ManageAccount,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    },{
+        path: '/hr/manage-title',
+        name: 'manage-title',
+        component: ManageTitle,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    },{
+        path: '/hr/manage-reimbursement-category',
+        name: 'manage-reimbursement-category',
+        component: ManageCategory,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    },{
+      path: '/hr/approval-hr',
+      name: 'approval-hr',
+      component: ApprovalByHR,
+      props: true,
+      meta: {
+          requiresAuth: true,
+          role: 'HR',
+      }
+    },{
+      path: '/finance/approval-fnc',
+      name: 'approval-fnc',
+      component: ApprovalByFNC,
+      props: true,
+      meta: {
+          requiresAuth: true,
+          role: 'Finance',
+      }
+    },{
+      path: '/finance/dashboard',
+      name: 'dashboard-fnc',
+      component: IndexFinance,
+      props: true,
+      meta: {
+          requiresAuth: true,
+          role: 'Finance',
+      }
+    },{
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
+    //   meta: {
+    //     requiresAuth: true,
+    //     role: 'HR, Finance, Employee',
+    // }
     }
-},{
-    path: '/hr/approval-hr',
-    name: 'approval-hr',
-    component: ApprovalByHR,
-    props: true,
-    meta: {
-        requiresAuth: true,
-        role: 'HR',
-    }
-},{
-  path: '/finance/approval-fnc',
-  name: 'approval-fnc',
-  component: ApprovalByFNC,
-  props: true,
-  meta: {
-      requiresAuth: true,
-      role: 'Finance',
-  }
-},{
-  path: '/finance/dashboard',
-  name: 'dashboard-fnc',
-  component: IndexFinance,
-  props: true,
-  meta: {
-      requiresAuth: true,
-      role: 'Finance',
-  }
-},{
-  path: '/hr/dashboard',
-  name: 'dashboard-hr',
-  component: IndexHr,
-  props: true,
-  meta: {
-      requiresAuth: true,
-      role: 'HR',
-  }
-},{
-  path: '/profile',
-  name: 'Profile',
-  component: Profile,
-//   meta: {
-//     requiresAuth: true,
-//     role: 'HR, Finance, Employee',
-// }
-}
-
 ]
 
 const router = createRouter({
@@ -100,15 +136,15 @@ router.beforeEach((to, from, next) => {
   
         if(role === 'Employee'){
           next({
-            path: '/employee',
+            path: '/employee/dashboard',
           });
         }else if(role === 'HR'){
           next({
-            path: '/hr',
+            path: '/hr/dashboard',
           });
         }else if(role === 'Finance'){
             next({
-              path: '/finance',
+              path: '/finance/dashboard',
             });
           }
       }else{

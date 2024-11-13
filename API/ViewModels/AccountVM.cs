@@ -18,6 +18,20 @@ namespace API.ViewModels
         public DateTime Join_Date { get; set; }
     }
 
+    public class ShowAccountForUpdateVM
+    {
+        public string Id_Account { get; set; }
+        public string Email { get; set; }
+        public string Role_Name { get; set; }
+        public string Id_Title { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Gender { get; set; }
+        public string Birth_Date { get; set; }
+        public string Join_Date { get; set; }
+        public float Current_Limit { get; set; }
+    }
+
     public class LastInsertedAccountVM
     {
         public string Email { get; set; }

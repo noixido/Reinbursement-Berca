@@ -169,6 +169,7 @@ namespace API.Repositories
              var account = _context.Accounts
                 .Include(ad => ad.AccountDetails.Title)
                 .Where(ie => ie.AccountDetails.IsEmployee == 1)
+                .OrderByDescending(ia => ia.Id_Account)
                 .Select(acc => new ShowAccountVM
                 {
                     Id_Account = acc.Id_Account,
@@ -270,6 +271,36 @@ namespace API.Repositories
             //_context.AccountDetails.Remove(accountDetail);
             //_context.Accounts.Remove(account);
             return _context.SaveChanges();
+        }
+
+        public ShowAccountForUpdateVM GetAccountByEmailForUpdate(string email)
+        {
+            var accountByEmail = _context.Accounts
+                .Where(e => e.Email == email)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
+                .FirstOrDefault();
+            if (accountByEmail == null)
+            {
+                throw new Exception("Data not found!");
+            }
+            var account = _context.Accounts
+                .Include(ad => ad.AccountDetails.Title)
+                .Where(id => id.Id_Account == accountByEmail.Id_Account)
+                .Select(acc => new ShowAccountForUpdateVM
+                {
+                    Id_Account = acc.Id_Account,
+                    Email = acc.Email,
+                    Role_Name = acc.Role_Name,
+                    Id_Title = acc.AccountDetails.Id_Title,
+                    Name = acc.AccountDetails.Name,
+                    Phone = acc.AccountDetails.Phone,
+                    Gender = acc.AccountDetails.Gender,
+                    Birth_Date = acc.AccountDetails.Birth_Date.ToString("dd-MM-yyyy") ?? string.Empty,
+                    Join_Date = acc.AccountDetails.Join_Date.ToString("dd-MM-yyyy") ?? string.Empty,
+                    Current_Limit = acc.AccountDetails.Current_Limit,
+                })
+                .FirstOrDefault();
+            return account;
         }
     }
 }

@@ -62,7 +62,7 @@ export default {
                 const redirectPath =
                     this.$route.query.redirect ||
                     (role === "Employee"
-                        ? "/employee"
+                        ? "/employee/dahsboard"
                         : role === "HR"
                         ? "/hr/dashboard"
                         : role === "Finance"

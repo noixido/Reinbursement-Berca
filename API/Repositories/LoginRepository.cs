@@ -38,6 +38,7 @@ namespace API.Repositories
         public bool Login(LoginVM loginVM)
         {
             var account = _context.Accounts
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
                 .FirstOrDefault(e => e.Email == loginVM.Email);
             if (account == null)
             {
