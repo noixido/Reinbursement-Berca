@@ -7,7 +7,22 @@
                 </path>
             </svg>
         </button>
-        <button @click="logout" class="btn">Logout</button>
+        <!-- <button @click="logout" class="btn">Logout</button> -->
+        <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                <img
+                    alt="Tailwind CSS Navbar component"
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                </div>
+            </div>
+            <ul
+                tabindex="0"
+                class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                <li><a>Profile</a></li>
+                <li><a @click="logout">Logout</a></li>
+            </ul>
+        </div>
     </nav>
 </template>
 
@@ -15,21 +30,28 @@
 import { useRouter } from 'vue-router';
 
 export default {
+    data() {
+        return {
+            router: useRouter(),
+        };
+    },
     methods: {
         toggleSidebar() {
             this.$emit('toggleSidebar');
         },
+        logout() {
+            // Clear token from localStorage
+            localStorage.removeItem("token");
+
+            // Redirect to login page
+            this.router.push("/");
+        },
     },
 
     setup() {
-        const router = useRouter()
+        
 
-        const logout = () => {
-            localStorage.clear();
-            router.push("/");
-        };
-
-        return{ logout }
+        return{  }
     }
 };
 </script>

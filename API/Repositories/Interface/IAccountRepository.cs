@@ -7,7 +7,8 @@ namespace API.Repositories.Interface
         // CRUD
         int AddAccount(AccountVM accountVM); // tambah data
         IEnumerable<ShowAccountVM> GetAllAccounts(); // lihat semua data
-        ShowAccountVM GetAccountByEmail(string email); // lihat data berdasarkan email
+        ShowAccountVM GetAccountByEmail(string email); // lihat data berdasarkan email (versi cantik)
+        ShowAccountForUpdateVM GetAccountByEmailForUpdate(string email); // lihat data berdasarkan email (buat update)
         int UpdateAccount(AccountVM accountVM); // perbaharui data berdasarkan email
         int DeleteAccount(string email); // hapus data berdasarkan email
 

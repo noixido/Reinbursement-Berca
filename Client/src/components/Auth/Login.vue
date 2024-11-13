@@ -62,11 +62,11 @@ export default {
                 const redirectPath =
                     this.$route.query.redirect ||
                     (role === "Employee"
-                        ? "/employee"
+                        ? "/employee/dahsboard"
                         : role === "HR"
-                        ? "/hr"
+                        ? "/hr/dashboard"
                         : role === "Finance"
-                        ? "/finance"
+                        ? "/finance/dashboard"
                         : "/"); // Default fallback path if none match
                 this.router.push(redirectPath);
             }catch(error){

@@ -1,29 +1,56 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Login from "../components/Auth/Login.vue";
-import MainLayout from "../components/layouts/MainLayout.vue";
-import IndexEmployee from "../components/Pages/Employee/index-employee.vue";
+import IndexHr from "../components/Pages/HR/indexHr.vue";
+import ManageAccount from "../components/Pages/HR/manageAccount.vue";
+import ManageTitle from "../components/Pages/HR/manageTitle.vue";
+import ManageCategory from "../components/Pages/HR/manageCategory.vue";
 
 const routes = [{
-    path: '/',
-    name: 'login',
-    component: Login,
-    props: true,
-    meta: {
-        guest: true,
-    }
-},{
-    path: '/',
-    component: MainLayout,
-    children:[{
-        path: 'employee',
-        name: 'employee',
-        component: IndexEmployee,
+        path: '/',
+        name: 'login',
+        component: Login,
+        props: true,
+        meta: {
+            guest: true,
+        }
+    },{
+        path: '/hr/dashboard',
+        name: 'hr-dashboard',
+        component: IndexHr,
+        props: true,
         meta: {
             requiresAuth: true,
-            role: 'Employee',
-        }
-    }]
-}]
+            role: 'HR',
+        },
+    },{
+        path: '/hr/manage-account',
+        name: 'manage-account',
+        component: ManageAccount,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    },{
+        path: '/hr/manage-title',
+        name: 'manage-title',
+        component: ManageTitle,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    },{
+        path: '/hr/manage-reimbursement-category',
+        name: 'manage-reimbursement-category',
+        component: ManageCategory,
+        props: true,
+        meta: {
+            requiresAuth: true,
+            role: 'HR',
+        },
+    }
+]
 
 const router = createRouter({
     history: createWebHistory(),
@@ -61,15 +88,15 @@ router.beforeEach((to, from, next) => {
   
         if(role === 'Employee'){
           next({
-            path: '/employee',
+            path: '/employee/dashboard',
           });
         }else if(role === 'HR'){
           next({
-            path: '/hr',
+            path: '/hr/dashboard',
           });
         }else if(role === 'Finance'){
             next({
-              path: '/finance',
+              path: '/finance/dashboard',
             });
           }
       }else{
