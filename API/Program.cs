@@ -89,7 +89,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseStaticFiles(); // Menyajikan file statis dari wwwroot
 
 app.UseHttpsRedirection();
 

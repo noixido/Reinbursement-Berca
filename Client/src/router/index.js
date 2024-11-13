@@ -1,11 +1,13 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Login from "../components/Auth/Login.vue";
+import Submission from "../components/pages/Submission.vue";
+import History from "../components/pages/History.vue";
 import IndexHr from "../components/Pages/HR/indexHr.vue";
 import ManageAccount from "../components/Pages/HR/manageAccount.vue";
 import ManageTitle from "../components/Pages/HR/manageTitle.vue";
 import ManageCategory from "../components/Pages/HR/manageCategory.vue";
 import ApprovalByHR from "../components/pages/HR/ApprovalByHR.vue";
-import ApprovalByFNC from "../components/pages/Finance/ApprovalByFNC.vue";
+import ApprovalFinance from "../components/pages/Finance/ApprovalFinance.vue";
 import Profile from "../components/pages/Profile.vue";
 import IndexEmployee from "../components/Pages/Employee/indexEmployee.vue";
 import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
@@ -24,8 +26,9 @@ const routes = [{
       component: IndexEmployee,
       props: true,
       meta: {
-          guest: true,
-      }
+        requiresAuth: true,
+        role: 'Employee',
+    },
     },{
         path: '/hr/dashboard',
         name: 'hr-dashboard',
@@ -74,7 +77,7 @@ const routes = [{
     },{
       path: '/finance/approval-fnc',
       name: 'approval-fnc',
-      component: ApprovalByFNC,
+      component: ApprovalFinance,
       props: true,
       meta: {
           requiresAuth: true,
@@ -93,10 +96,25 @@ const routes = [{
       path: '/profile',
       name: 'Profile',
       component: Profile,
-    //   meta: {
-    //     requiresAuth: true,
-    //     role: 'HR, Finance, Employee',
-    // }
+      meta: {
+        requiresAuth: true,
+    }
+    },{
+      path: '/submission',
+      name: 'submission',
+      component: Submission,
+      props: true,
+      meta: {
+          requiresAuth: true,
+      }
+    },{
+      path: '/history',
+      name: 'history',
+      component: History,
+      props: true,
+      meta: {
+          requiresAuth: true,
+      }
     }
 ]
 

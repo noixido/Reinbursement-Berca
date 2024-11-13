@@ -17,10 +17,13 @@ namespace API.Repositories
             _myContext = myContext;
         }
 
-        public int AddReimbursement(ReimbursementVM reimbursement)
+        public async Task<int> AddReimbursement(ReimbursementVM reimbursement)
         {
-            var totalReimbursement = _myContext.Reimbursements.Count();
-            var idReimbursement = $"R{++totalReimbursement:D7}";
+            //var totalReimbursement = _myContext.Reimbursements.Count();
+            //var idReimbursement = $"R{++totalReimbursement:D7}";
+            //reimbursement.Id_Reimbursement = idReimbursement;
+
+            var idReimbursement = $"R{Guid.NewGuid()}";
             reimbursement.Id_Reimbursement = idReimbursement;
 
             Reimbursement newReimbursement = new Reimbursement
@@ -43,7 +46,7 @@ namespace API.Repositories
             };
             _myContext.ReimbursementProfilings.Add(newReimbursementProfiling);
 
-            return _myContext.SaveChanges();
+            return await _myContext.SaveChangesAsync();
         }
 
         public IEnumerable<ReimbursementVM> GetAllReimbursementByAccount(string id)
@@ -52,6 +55,7 @@ namespace API.Repositories
             .Include(re => re.ReimbursementProfilings)
                 .ThenInclude(rp => rp.Account).ThenInclude(a => a.AccountDetails)
             .Where(re => re.ReimbursementProfilings.Any(rp => rp.Id_Account == id))
+            .OrderByDescending(re => re.Submit_Date)  // Menambahkan pengurutan berdasarkan Submit_Date
             .Select(re => new ReimbursementVM
             {
                 Id_Account = re.ReimbursementProfilings.FirstOrDefault(rp => rp.Id_Account == id).Id_Account,
@@ -158,12 +162,22 @@ namespace API.Repositories
             {
                 reimbursement.Status = "approved";
                 reimbursement.Approve_Amount = approveReimbursement.Approve_Amount;
+
+                var reimbursementProfiling = _myContext.ReimbursementProfilings
+                    .FirstOrDefault(rp => rp.Id_Reimbursement == id);
+                var accountDetail = _myContext.AccountDetails
+                       .FirstOrDefault(ad => ad.Id_AccountDetail == reimbursementProfiling.Id_Account);
+
+                accountDetail.Current_Limit -= (float)approveReimbursement.Approve_Amount;
             }
             else
             {
                 reimbursement.Status = "declined by finance";
             }
             reimbursement.Note = approveReimbursement.Note;
+
+
+
 
             return _myContext.SaveChanges();
         }

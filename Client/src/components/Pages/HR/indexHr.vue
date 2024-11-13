@@ -1,7 +1,7 @@
 <template>
     <MainLayout>
         <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Dashboard Finance</h1>
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Dashboard Human Resource</h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Total Requests Card -->

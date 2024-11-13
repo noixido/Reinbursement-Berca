@@ -7,7 +7,7 @@ namespace API.Repositories.Interface
     {
         IEnumerable<ReimbursementVM> GetAllReimbursementByAccount(string id);
         ReimbursementVM GetReimbursementById(string id);
-        int AddReimbursement(ReimbursementVM reimbursement);
+        Task<int> AddReimbursement(ReimbursementVM reimbursement);
         IEnumerable<ReimbursementVM> GetAllReimbursements();
         int UpdateReimbursementStatusByHR(string id, ChangeStatusReimbursement changeReimbursement, bool isApprove);
         int UpdateReimbursementStatusByFinance(string id, ChangeStatusReimbursement changeReimbursement, bool isApprove);
