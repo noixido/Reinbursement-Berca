@@ -64,9 +64,9 @@ export default {
                     (role === "Employee"
                         ? "/employee"
                         : role === "HR"
-                        ? "/hr"
+                        ? "/hr/dashboard"
                         : role === "Finance"
-                        ? "/finance"
+                        ? "/finance/dashboard"
                         : "/"); // Default fallback path if none match
                 this.router.push(redirectPath);
             }catch(error){

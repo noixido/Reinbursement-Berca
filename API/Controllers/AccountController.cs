@@ -9,7 +9,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowOrigin")]
-    [Authorize(Roles = "HR")]
+    
     public class AccountController : Controller
     {
         private readonly AccountRepository _repository;
@@ -18,6 +18,7 @@ namespace API.Controllers
             _repository = repository;
         }
 
+        [Authorize(Roles = "HR")]
         [HttpPost]
         public IActionResult AddAccount(AccountVM accountVM)
         {
@@ -51,6 +52,7 @@ namespace API.Controllers
             }
         }
 
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public IActionResult GetAllAccounts()
         {
@@ -82,7 +84,7 @@ namespace API.Controllers
                 });
             }
         }
-
+        [Authorize(Roles = "HR, Employee, Finance")]
         [HttpGet("{email}")]
         public IActionResult GetAccountByEmail(string email)
         {
@@ -115,6 +117,7 @@ namespace API.Controllers
             }
         }
 
+        [Authorize(Roles = "HR, Employee, Finance")]
         [HttpPut("{email}")]
         public IActionResult UpdateAccount(string email, AccountVM accountVM)
         {
@@ -154,7 +157,7 @@ namespace API.Controllers
                 });
             }
         }
-
+        [Authorize(Roles = "HR")]
         [HttpPut("Delete/{email}")]
         public IActionResult DeleteAccount(string email)
         {
@@ -186,7 +189,7 @@ namespace API.Controllers
                 });
             }
         }
-
+        [Authorize(Roles = "HR, Employee, Finance")]
         [HttpPut("ChangePassword/{email}")]
         public IActionResult ChangePassword(ChangePasswordVM changePasswordVM)
         {

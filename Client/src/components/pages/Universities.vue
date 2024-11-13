@@ -2,7 +2,6 @@
     <MainLayout>
         <div class="mb-4 flex justify-between">
             <div class="">
-                <!-- You can open the modal using ID.showModal() method -->
                 <button class="btn btn-info" @click="addUniversity">
                     Tambah Data
                 </button>

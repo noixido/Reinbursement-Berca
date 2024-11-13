@@ -10,7 +10,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowOrigin")]
-    [Authorize(Roles = "HR")]
+    //[Authorize(Roles = "HR")]
     public class TitlesController : ControllerBase
     {
         private TitleRepositories _titleRepositories;
@@ -20,6 +20,7 @@ namespace API.Controllers
             _titleRepositories = titleRepositories; 
         }
 
+        [Authorize(Roles = "HR, Employee, Finance")]
         [HttpGet]
         public IActionResult GetAllTitles()
         {
