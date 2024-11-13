@@ -2,6 +2,11 @@ import { createWebHistory, createRouter } from "vue-router";
 import Login from "../components/Auth/Login.vue";
 import MainLayout from "../components/layouts/MainLayout.vue";
 import IndexEmployee from "../components/Pages/Employee/index-employee.vue";
+import ApprovalByHR from "../components/pages/HR/ApprovalByHR.vue";
+import ApprovalByFNC from "../components/pages/Finance/ApprovalByFNC.vue";
+import IndexFinance from "../components/pages/Finance/index-finance.vue";
+import IndexHr from "../components/pages/HR/index-hr.vue";
+import Profile from "../components/pages/Profile.vue";
 
 const routes = [{
     path: '/',
@@ -12,18 +17,52 @@ const routes = [{
         guest: true,
     }
 },{
-    path: '/',
-    component: MainLayout,
-    children:[{
-        path: 'employee',
-        name: 'employee',
-        component: IndexEmployee,
-        meta: {
-            requiresAuth: true,
-            role: 'Employee',
-        }
-    }]
-}]
+    path: '/hr/approval-hr',
+    name: 'approval-hr',
+    component: ApprovalByHR,
+    props: true,
+    meta: {
+        requiresAuth: true,
+        role: 'HR',
+    }
+},{
+  path: '/finance/approval-fnc',
+  name: 'approval-fnc',
+  component: ApprovalByFNC,
+  props: true,
+  meta: {
+      requiresAuth: true,
+      role: 'Finance',
+  }
+},{
+  path: '/finance/dashboard',
+  name: 'dashboard-fnc',
+  component: IndexFinance,
+  props: true,
+  meta: {
+      requiresAuth: true,
+      role: 'Finance',
+  }
+},{
+  path: '/hr/dashboard',
+  name: 'dashboard-hr',
+  component: IndexHr,
+  props: true,
+  meta: {
+      requiresAuth: true,
+      role: 'HR',
+  }
+},{
+  path: '/profile',
+  name: 'Profile',
+  component: Profile,
+//   meta: {
+//     requiresAuth: true,
+//     role: 'HR, Finance, Employee',
+// }
+}
+
+]
 
 const router = createRouter({
     history: createWebHistory(),
