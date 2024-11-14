@@ -15,6 +15,7 @@ namespace API.ViewModels
         public string? Status { get; set; }
         public DateTime? Submit_Date { get; set; }
         public string? Category_Name { get; set; }
+        public float? Current_Limit { get; set; }
     }
 
     public class ChangeStatusReimbursement
