@@ -265,7 +265,8 @@ export default {
                     icon: 'success',
                     title: 'Password Changed Successfully!',
                     text: 'Your password has been updated.',
-                    confirmButtonText: 'OK',
+                    showConfirmButton: false, // Menghilangkan tombol OK
+                    timer: 1500, // SweetAlert akan hilang otomatis setelah 1,5 detik
                 });
                 console.log("Password changed successfully:", response);
                 closeChangePasswordModal();
@@ -275,13 +276,15 @@ export default {
                     icon: 'error',
                     title: 'Error Changing Password',
                     text: err.response?.data?.message || err.message,
-                    confirmButtonText: 'Try Again',
+                    showConfirmButton: false, // Menghilangkan tombol OK pada error message juga
+                    timer: 1500, // SweetAlert error juga hilang otomatis setelah 1,5 detik
                 });
                 console.error("Error changing password:", err);
                 console.log("Error response:", err.response?.data); // Log the detailed error response
                 error.value = "Error changing password: " + (err.response?.data?.message || err.message);
             }
         };
+
 
         const fetchTitleList = async () => {
             try {
@@ -307,34 +310,53 @@ export default {
         };
 
 
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
         const updateProfile = async () => {
             try {
-                // Format the birth date and join date before submitting
+                // Format tanggal dan kirim data update
                 editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
                 editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
 
-                // Send the updated user data with Authorization header
                 const response = await axios.put(
                     `https://localhost:7102/api/Account/${user.value.email}`,
                     editableUser.value,
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`  // Add the Authorization header
+                            Authorization: `Bearer ${token}`,
                         }
                     }
                 );
 
-                // Update data user setelah berhasil
                 user.value = response.data.data;
-                closeEditModal(); // Close the modal after successful update
-                window.location.href = "/profile"
-                location
+                closeEditModal();
+                
+                // Menampilkan SweetAlert tanpa tombol 'OK'
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Profile Updated Successfully!',
+                    text: 'Your profile information has been updated.',
+                    showConfirmButton: false, // Menghilangkan tombol OK
+                    timer: 1500, // Menampilkan SweetAlert selama 1,5 detik
+                });
+
+                // Menunggu SweetAlert selesai ditampilkan
+                await delay(1500); // Sesuaikan waktu delay jika perlu
+
+                window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
+
             } catch (err) {
                 console.error("Error updating profile:", err);
                 error.value = "Error updating profile: " + (err.response?.data?.message || err.message);
+                
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error Updating Profile',
+                    text: err.response?.data?.message || err.message,
+                    confirmButtonText: 'Try Again',
+                });
             }
         };
-
 
         // Edit profile methods
         const openEditModal = () => {
