@@ -8,7 +8,7 @@
         </div>
 
         <!-- Table -->
-        <table class="table">
+        <table class="table table-zebra">
             <thead>
                 <tr>
                     <th>Nomor</th>
@@ -16,8 +16,8 @@
                     <th>Kategori</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Jumlah Dana</th>
+                    <th>Dana Disetujui</th>
                     <th>Status</th>
-                    <th>Catatan</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,8 +26,12 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.id_Reimbursement }}</td>
                     <td>{{ item.category_Name }}</td>
-                    <td>{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
+                    <td>{{ new Date(item.submit_Date).toLocaleDateString('id-ID', {
+                        year: 'numeric', month: 'long', day:
+                            '2-digit'
+                    }) }}</td>
                     <td>Rp. {{ formatCurrency(item.amount) }}</td>
+                    <td>Rp. {{ item.approve_Amount ? formatCurrency(item.approve_Amount) : "-" }}</td>
                     <td>
                         <span :class="{
                             'badge badge-warning': item.status.includes('progress'),
@@ -37,16 +41,10 @@
                             {{ item.status }}
                         </span>
                     </td>
-                    <td>{{ item.note || '-' }}</td>
                     <td>
                         <button
-                            class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
-                            @click="openModal(item)">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm1.73 4.73A8.94 8.94 0 0121 12a8.94 8.94 0 01-4.27 4.73m-8.73 0A8.94 8.94 0 013 12a8.94 8.94 0 014.27-4.73" />
-                            </svg>
-                        </button>
+                            class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 border border-blue-700 rounded"
+                            @click="openModal(item)">Lihat</button>
                     </td>
                 </tr>
 
@@ -72,7 +70,6 @@
                 </form>
                 <h3 class="text-center text-2xl font-bold mb-4">Detail Reimbursement</h3>
                 <div class="py-4 space-y-3 text-gray-800">
-
                     <div class="text-center">
                         <div class="font-semibold">📌 ID Reimbursement:</div>
                         <div>{{ selectedReimbursement.id_Reimbursement }}</div>
@@ -95,12 +92,21 @@
 
                     <div class="flex justify-between">
                         <span class="font-semibold">📅 Tanggal Pengajuan:</span>
-                        <span>{{ new Date(selectedReimbursement.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</span>
+                        <span>{{ new Date(selectedReimbursement.submit_Date).toLocaleDateString('id-ID', {
+                            year:
+                                'numeric', month: 'long', day: '2-digit'
+                        }) }}</span>
                     </div>
 
                     <div class="flex justify-between">
                         <span class="font-semibold">💰 Jumlah Dana:</span>
                         <span>Rp {{ formatCurrency(selectedReimbursement.amount) }}</span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span class="font-semibold">✔️ Dana Disetujui:</span>
+                        <span>Rp. {{ selectedReimbursement.approve_Amount ?
+                            formatCurrency(selectedReimbursement.approve_Amount) : "-" }}</span>
                     </div>
 
                     <div class="flex justify-between">
@@ -120,9 +126,12 @@
                             selectedReimbursement.note || "Tidak ada catatan" }}</div>
                     </div>
 
-                    <div class="flex justify-center space-x-4 mt-4">
-                        <button class="btn btn-success" @click="approveReimbursement(selectedReimbursement.id_Reimbursement)">Approve</button>
-                        <button class="btn btn-error" @click="declineReimbursement(selectedReimbursement.id_Reimbursement)">Decline</button>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">📎 Evidence:</span>
+                        <a :href="`https://localhost:7102/api/file/` + selectedReimbursement.evidence" target="_blank"
+                            rel="noopener noreferrer" class="text-blue-500 hover:underline">
+                            Lihat evidence
+                        </a>
                     </div>
                 </div>
             </div>
@@ -156,6 +165,7 @@ export default {
     },
     computed: {
         filteredData() {
+            // Filter data based on search query
             return this.reimbursements.filter(item =>
                 item.category_Name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                 item.status.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -164,9 +174,11 @@ export default {
             );
         },
         totalPages() {
+            // Calculate total pages
             return Math.ceil(this.filteredData.length / this.itemsPerPage);
         },
         paginatedData() {
+            // Slice data for current page
             const start = (this.currentPage - 1) * this.itemsPerPage;
             const end = start + this.itemsPerPage;
             return this.filteredData.slice(start, end);
@@ -201,6 +213,7 @@ export default {
     },
     watch: {
         currentPage(value) {
+            // Reset to last page if we go beyond
             if (value > this.totalPages) this.currentPage = this.totalPages;
         }
     }
@@ -210,11 +223,12 @@ export default {
 <style lang="scss" scoped>
 .table {
     width: 100%;
-    border-collapse: collapse; /* Remove table borders */
+    border-collapse: collapse;
 }
 
 .table th,
 .table td {
+    border: 1px solid #ccc;
     padding: 8px;
     text-align: center;
 }
@@ -231,24 +245,12 @@ export default {
 #kontrol .btn {
     background-color: #007bff;
     color: white;
+    border: none;
+    cursor: pointer;
 }
 
 #kontrol .btn:disabled {
-    background-color: #e0e0e0;
-}
-
-#kontrol .btn:hover {
-    background-color: #0056b3;
-}
-
-.modal-box {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.modal-box textarea {
-    resize: vertical;
-    min-height: 100px;
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 </style>
