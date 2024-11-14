@@ -12,7 +12,7 @@
         </div>
 
         <!-- Profile Header -->
-        <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6">
+        <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6 flex justify-between">
             <div class="flex items-center">
                 <!-- Profile Image -->
                 <div class="w-24 h-24 rounded-full overflow-hidden mr-6">
@@ -27,6 +27,16 @@
                     <p class="text-gray-400">{{ user.email }}</p>
                 </div>
             </div>
+            <div class="h-full flex gap-2">
+                <button @click="openEditModal" id="editProfile" class="text-gray-400 hover:bg-gray-100 p-1 px-2 rounded-xl cursor-pointer flex items-center text-sm">
+                    <i class="fas fa-user mr-2 text-xs"></i>
+                    Edit Profile
+                </button>
+                <button @click="openChangePasswordModal" id="editProfile" class="text-gray-400 hover:bg-gray-100 p-1 px-2 rounded-xl cursor-pointer flex items-center text-sm">
+                    <i class="fas fa-key mr-2 text-xs"></i>
+                    Change Password
+                </button>
+            </div>
         </div>
 
         <!-- Error Message -->
@@ -35,10 +45,10 @@
         </div>
 
         <!-- Button edit profile & password -->
-        <div class="flex gap-3">
+        <!-- <div class="flex gap-3">
             <button @click="openEditModal" class="btn btn-primary mb-4">Edit Profile</button>
             <button @click="openChangePasswordModal" class="btn btn-secondary mb-4">Change Password</button>
-        </div>
+        </div> -->
 
         <!-- Profile Details Section -->
         <div v-if="user" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -91,7 +101,7 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-600">Current Limit:</span>
-                        <span class="text-gray-800">{{ user.current_Limit }}</span>
+                        <span class="text-gray-800">{{ formatToRupiah( user.current_Limit) }}</span>
                     </div>
                 </div>
             </div>
@@ -242,7 +252,7 @@ export default {
                     },
                 });
                 user.value = response.data.data;
-                console.log(user);
+                // console.log(user);
             } catch (err) {
                 error.value = "Error fetching user data: " + err.message;
             }
@@ -294,7 +304,7 @@ export default {
                     }
                 });
                 titleList.value = response.data.data;
-                console.log(titleList.value); // Pastikan data titleList berhasil diambil
+                // console.log(titleList.value); // Pastikan data titleList berhasil diambil
             } catch (err) {
                 console.error('Error fetching titles:', err);
             }
@@ -418,6 +428,12 @@ export default {
         },
         goBack() {
             this.$router.go(-1);
+        },
+        formatToRupiah(number) {
+            return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            }).format(number);
         },
     },
 };
