@@ -101,7 +101,7 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-600">Current Limit:</span>
-                        <span class="text-gray-800">{{ formatToRupiah( user.current_Limit) }}</span>
+                        <span class="text-gray-800">{{ formatToRupiah(user.current_Limit) }}</span>
                     </div>
                 </div>
             </div>
@@ -342,7 +342,7 @@ export default {
                 closeEditModal();
                 
                 // Menampilkan SweetAlert tanpa tombol 'OK'
-                await Swal.fire({
+                Swal.fire({
                     icon: 'success',
                     title: 'Profile Updated Successfully!',
                     text: 'Your profile information has been updated.',
@@ -353,7 +353,8 @@ export default {
                 // Menunggu SweetAlert selesai ditampilkan
                 await delay(1500); // Sesuaikan waktu delay jika perlu
 
-                window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
+                // window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
+                window.location.reload(); // Redirect ke halaman profil setelah penundaan
 
             } catch (err) {
                 console.error("Error updating profile:", err);
