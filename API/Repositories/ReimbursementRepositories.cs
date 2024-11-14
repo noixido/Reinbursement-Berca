@@ -68,7 +68,8 @@ namespace API.Repositories
                 Approve_Amount = re.Approve_Amount,
                 Note = re.Note,
                 Status = re.Status,
-                Submit_Date = re.Submit_Date
+                Submit_Date = re.Submit_Date,
+                Current_Limit = re.ReimbursementProfilings.FirstOrDefault().Account.AccountDetails.Current_Limit
             })
             .ToList();
         }
@@ -100,6 +101,7 @@ namespace API.Repositories
                 Note = reimbursement.Note,
                 Status = reimbursement.Status,
                 Submit_Date = reimbursement.Submit_Date,
+                Current_Limit = reimbursement.ReimbursementProfilings.FirstOrDefault().Account.AccountDetails.Current_Limit
             };
 
             return reimbursementVM;
@@ -123,7 +125,8 @@ namespace API.Repositories
                 Approve_Amount = re.Approve_Amount,
                 Note = re.Note,
                 Status = re.Status,
-                Submit_Date = re.Submit_Date
+                Submit_Date = re.Submit_Date,
+                Current_Limit = re.ReimbursementProfilings.FirstOrDefault().Account.AccountDetails.Current_Limit
             })
             .ToList();
         }
@@ -202,6 +205,7 @@ namespace API.Repositories
                     Note = re.Note,
                     Status = re.Status,
                     Submit_Date = re.Submit_Date,
+                    Current_Limit = re.ReimbursementProfilings.FirstOrDefault().Account.AccountDetails.Current_Limit,
                 })
                 .ToList();
 

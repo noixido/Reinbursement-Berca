@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement">
+                <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement" v-if="paginatedData.length > 0">
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.id_Reimbursement }}</td>
                     <td>{{ item.category_Name }}</td>
@@ -35,7 +35,7 @@
                     <td>
                         <span :class="{
                             'badge badge-warning': item.status.includes('progress'),
-                            'badge badge-success': item.status === 'approved',
+                            'badge badge-success': item.status.includes('approved'),
                             'badge badge-error': item.status.includes('declined')
                         }">
                             {{ item.status }}
@@ -47,11 +47,16 @@
                             @click="openModal(item)">Lihat</button>
                     </td>
                 </tr>
+
+                <!-- Jika tidak ada data, tampilkan pesan "Data tidak ditemukan" -->
+                <tr v-if="paginatedData.length === 0">
+                    <td colspan="8" class="text-center text-gray-500 py-4">Data tidak ditemukan</td>
+                </tr>
             </tbody>
         </table>
 
         <!-- Pagination Controls -->
-        <div id="kontrol" class="flex justify-center items-center mt-4">
+        <div v-if="paginatedData.length > 0" id="kontrol" class="flex justify-center items-center mt-4">
             <button @click="currentPage--" :disabled="currentPage === 1" class="btn">Previous</button>
             <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
             <button @click="currentPage++" :disabled="currentPage === totalPages" class="btn">Next</button>
@@ -68,6 +73,16 @@
                     <div class="text-center">
                         <div class="font-semibold">📌 ID Reimbursement:</div>
                         <div>{{ selectedReimbursement.id_Reimbursement }}</div>
+                    </div>
+                    <div class="border border-blue-500 space-y-3 rounded-lg p-4 bg-gray-50 mb-3">
+                        <div class="flex justify-between">
+                            <span class="font-semibold">🆔 ID User:</span>
+                            <span>{{ selectedReimbursement.id_Account }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-semibold">👤 Nama User:</span>
+                            <span>{{ selectedReimbursement.name }}</span>
+                        </div>
                     </div>
 
                     <div class="flex justify-between">
@@ -97,17 +112,18 @@
                     <div class="flex justify-between">
                         <span class="font-semibold">📈 Status:</span>
                         <span :class="{
-                            'text-green-600 font-semibold': selectedReimbursement.status === 'Approved',
-                            'text-red-600 font-semibold': selectedReimbursement.status === 'Rejected',
-                            'text-yellow-600 font-semibold': selectedReimbursement.status === 'Pending'
+                            'badge badge-warning': selectedReimbursement.status && selectedReimbursement.status.includes('progress'),
+                            'badge badge-success': selectedReimbursement.status && selectedReimbursement.status.includes('approv'),
+                            'badge badge-error': selectedReimbursement.status && selectedReimbursement.status.includes('declined')
                         }">
                             {{ selectedReimbursement.status }}
                         </span>
                     </div>
 
-                    <div class="">
-                        <div class="font-semibold">📝 Catatan:</div>
-                        <div>{{ selectedReimbursement.note || "Tidak ada catatan" }}</div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">📝 Catatan:</span>
+                        <div class="md:max-w-md mt-2 md:mt-0 font-semibold whitespace-normal break-words">{{
+                            selectedReimbursement.note || "Tidak ada catatan" }}</div>
                     </div>
 
                     <div class="flex justify-between">
@@ -183,7 +199,7 @@ export default {
                     this.reimbursements = response.data.data;
                 })
                 .catch((error) => {
-                    console.error('Error fetching data:', error);
+                    this.reimbursements = []
                 });
         },
         openModal(item) {
@@ -214,7 +230,7 @@ export default {
 .table td {
     border: 1px solid #ccc;
     padding: 8px;
-    text-align: left;
+    text-align: center;
 }
 
 .table th {
