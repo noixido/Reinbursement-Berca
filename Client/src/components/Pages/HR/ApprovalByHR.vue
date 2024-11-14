@@ -2,13 +2,30 @@
   <MainLayout>
       <!-- Search Bar -->
       <h1 class="text-center text-2xl font-bold mb-4">Approval Reimbursement for Human Resouce</h1>
-      <div class="mb-4 flex justify-end">
-          <input v-model="searchQuery" type="text" placeholder="Cari data..."
-              class="input input-bordered w-full max-w-xs" />
+
+      <!-- Search Bar and Show Entries -->
+      <div class="mb-4 flex justify-between items-center">
+        <div class="flex items-center">
+          <label class="mr-2">Show</label>
+          <select
+            v-model="itemsPerPage"
+            @change="currentPage = 1"
+            class="border border-gray-300 rounded p-2 bg-white"
+          >
+            <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+          <span class="ml-2">entries</span>
+        </div>
+        <div class="flex justify-end">
+          <input v-model="searchQuery" type="text" placeholder="Cari data..." class="input input-bordered w-full max-w-xs" />
+        </div>
       </div>
 
       <!-- Tabel -->
-      <table class="table table-zebra">
+      <div class="overflow-x-auto">
+        <table class="table w-full">
         <thead>
           <tr>
             <th>Nomor</th>
@@ -29,36 +46,58 @@
             <td>{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
             <td>Rp. {{ formatCurrency(item.amount) }}</td>
             <td>
-              <span :class="{
-                  'badge badge-warning': item.status.includes('progress'),
-                  'badge badge-success': item.status === 'approved',
-                  'badge badge-error': item.status.includes('declined')
-              }">
-                {{ item.status }}
-              </span>
-            </td>
+                            <span :class="{
+                                'badge badge-warning text-xs px-2 py-1 rounded-lg': item.status.includes('progress'),
+                                'badge badge-success text-xs px-2 py-1 rounded-lg': item.status === 'approved',
+                                'badge badge-error text-xs px-2 py-1 rounded-lg': item.status.includes('declined')
+                            }">
+                                {{ item.status }}
+                            </span>
+                        </td>
             <td>{{ item.note || '-' }}</td>
             <td>
-              <button
-                class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
-                @click="openModal(item)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm1.73 4.73A8.94 8.94 0 0121 12a8.94 8.94 0 01-4.27 4.73m-8.73 0A8.94 8.94 0 013 12a8.94 8.94 0 014.27-4.73" />
-                </svg>
-              </button>
-            </td>
+                <button
+                    class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                    @click="openModal(item)"
+                    title="View Details"
+                    >
+                      <i class="fas fa-eye"></i>
+                </button>
+              </td>
+          </tr>
+          <tr v-if="filteredData.length === 0">
+            <td colspan="8" class="text-center py-4 text-red-500">No data found</td>
           </tr>
         </tbody>
       </table>
+    </div>
 
 
       <!-- Pagination Controls -->
-      <div id="kontrol" class="flex justify-center items-center mt-4">
-          <button @click="currentPage--" :disabled="currentPage === 1" class="btn">Previous</button>
-          <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button @click="currentPage++" :disabled="currentPage === totalPages" class="btn">Next</button>
+    <div class="flex justify-between mt-5">
+      <div class="mb-4">
+        <span class="text-sm">
+          Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
+        </span>
       </div>
+      <div class="join mt-4">
+        <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
+          Prev
+        </button>
+        <button
+          v-for="page in pageNumbers"
+          :key="page"
+          class="join-item btn"
+          @click="currentPage = page"
+          :class="{'btn-active': currentPage === page}"
+        >
+          {{ page }}
+        </button>
+        <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
+          Last
+        </button>
+      </div>
+    </div>
 
       <!-- Modal -->
       <dialog ref="reimbursementModal" class="modal">
@@ -68,17 +107,12 @@
           </form>
           <h3 class="text-center text-2xl font-bold mb-4">Detail Reimbursement</h3>
           <div class="py-4 space-y-3 text-gray-800">
+            
             <div class="text-center">
               <div class="font-semibold">📌 ID Reimbursement:</div>
               <div>{{ selectedReimbursement.id_Reimbursement }}</div>
             </div>
 
-            <div class="flex justify-between">
-              <span class="font-semibold">📝 Catatan:</span>
-              <textarea v-model="selectedReimbursement.note" class="input input-bordered w-full" placeholder="Tulis catatan..."></textarea>
-            </div>
-
-            <!-- Other fields remain the same -->
             <div class="flex justify-between">
               <span class="font-semibold">📁 Kategori:</span>
               <span>{{ selectedReimbursement.category_Name }}</span>
@@ -103,6 +137,14 @@
               }">
                 {{ selectedReimbursement.status }}
               </span>
+            </div>
+
+            <!-- Catatan Field: Moved below -->
+            <div class="flex justify-between">
+              <span class="font-semibold">📝 Catatan:</span>
+            </div>
+            <div class="flex justify-between">
+              <textarea v-model="selectedReimbursement.note" class="input input-bordered w-full" placeholder="Tulis catatan..."></textarea>
             </div>
 
             <div class="flex justify-center space-x-4 mt-4">
@@ -140,25 +182,30 @@ export default {
       }
   },
   computed: {
-      filteredData() {
-          // Filter data based on search query
-          return this.reimbursements.filter(item =>
-              item.category_Name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-              item.status.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-              item.id_Reimbursement.toLowerCase().toString().includes(this.searchQuery) ||
-              item.status.toLowerCase().toString().includes(this.searchQuery)
-          );
-      },
-      totalPages() {
-          // Calculate total pages
-          return Math.ceil(this.filteredData.length / this.itemsPerPage);
-      },
-      paginatedData() {
-          // Slice data for current page
-          const start = (this.currentPage - 1) * this.itemsPerPage;
-          const end = start + this.itemsPerPage;
-          return this.filteredData.slice(start, end);
-      }
+    filteredData() {
+      return this.reimbursements.filter(item =>
+        item.category_Name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        item.status.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        item.id_Reimbursement.toLowerCase().includes(this.searchQuery)
+      );
+    },
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredData.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredData.length / this.itemsPerPage);
+    },
+    pageNumbers() {
+      return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    },
+    startItem() {
+      return (this.currentPage - 1) * this.itemsPerPage + 1;
+    },
+    endItem() {
+      return Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
+    },
   },
   methods: {
       fetchReimbursements() {
