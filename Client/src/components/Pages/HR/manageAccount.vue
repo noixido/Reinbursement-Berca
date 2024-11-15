@@ -514,7 +514,7 @@
       formatDate(dateStr) {
         const [day, month, year] = dateStr.split('-');
         return `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
-        },
+      },
     },
   };
   </script>
