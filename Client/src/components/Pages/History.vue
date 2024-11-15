@@ -2,9 +2,28 @@
     <MainLayout>
         <!-- Search Bar -->
         <h1 class="text-center text-2xl font-bold mb-4">History Reimbursement {{ account_Name }}</h1>
-        <div class="mb-4 flex justify-end">
+        <!-- <div class="mb-4 flex justify-end">
             <input v-model="searchQuery" type="text" placeholder="Cari data..."
                 class="input input-bordered w-full max-w-xs" />
+        </div> -->
+        <!-- Search Bar and Show Entries -->
+        <div class="mb-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <label class="mr-2">Show</label>
+            <select
+            v-model="itemsPerPage"
+            @change="currentPage = 1"
+            class="border border-gray-300 rounded p-2 bg-white"
+            >
+            <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+                {{ option }}
+            </option>
+            </select>
+            <span class="ml-2">entries</span>
+        </div>
+        <div class="flex justify-end">
+            <input v-model="searchQuery" type="text" placeholder="Cari data..." class="input input-bordered w-full max-w-xs" />
+        </div>
         </div>
 
         <!-- Table -->
@@ -43,8 +62,12 @@
                     </td>
                     <td>
                         <button
-                            class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 border border-blue-700 rounded"
-                            @click="openModal(item)">Lihat</button>
+                                class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                                @click="openModal(item)"
+                                title="View Details"
+                            >
+                                <i class="fas fa-eye"></i>
+                        </button>
                     </td>
                 </tr>
 
@@ -56,12 +79,30 @@
         </table>
 
         <!-- Pagination Controls -->
-        <div v-if="paginatedData.length > 0" id="kontrol" class="flex justify-center items-center mt-4">
-            <button @click="currentPage--" :disabled="currentPage === 1" class="btn">Previous</button>
-            <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button @click="currentPage++" :disabled="currentPage === totalPages" class="btn">Next</button>
+        <div class="flex justify-between mt-5">
+        <div class="mb-4">
+            <span class="text-sm">
+            Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
+            </span>
         </div>
-
+        <div class="join mt-4">
+            <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
+            Prev
+            </button>
+            <button
+            v-for="page in pageNumbers"
+            :key="page"
+            class="join-item btn"
+            @click="currentPage = page"
+            :class="{'btn-active': currentPage === page}"
+            >
+            {{ page }}
+            </button>
+            <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
+            Last
+            </button>
+        </div>
+        </div>
         <!-- Modal -->
         <dialog ref="reimbursementModal" class="modal">
             <div class="modal-box max-w-3xl">
@@ -177,6 +218,15 @@ export default {
             // Calculate total pages
             return Math.ceil(this.filteredData.length / this.itemsPerPage);
         },
+        pageNumbers() {
+            return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+        },
+        startItem() {
+            return (this.currentPage - 1) * this.itemsPerPage + 1;
+        },
+        endItem() {
+            return Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
+        },
         paginatedData() {
             // Slice data for current page
             const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -228,7 +278,6 @@ export default {
 
 .table th,
 .table td {
-    border: 1px solid #ccc;
     padding: 8px;
     text-align: center;
 }
@@ -254,3 +303,4 @@ export default {
     cursor: not-allowed;
 }
 </style>
+
