@@ -44,11 +44,6 @@
             <p>{{ error }}</p>
         </div>
 
-        <!-- Button edit profile & password -->
-        <!-- <div class="flex gap-3">
-            <button @click="openEditModal" class="btn btn-primary mb-4">Edit Profile</button>
-            <button @click="openChangePasswordModal" class="btn btn-secondary mb-4">Change Password</button>
-        </div> -->
 
         <!-- Profile Details Section -->
         <div v-if="user" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -210,6 +205,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import MainLayout from '../layouts/MainLayout.vue';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 export default {
     components: {
