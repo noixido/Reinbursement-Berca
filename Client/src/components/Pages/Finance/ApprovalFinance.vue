@@ -4,82 +4,112 @@
         <h1 class="text-center text-2xl font-bold mb-4">
             Approval Reimbursement for Finance
         </h1>
-        <div class="mb-4 flex justify-end">
-            <input v-model="searchQuery" type="text" placeholder="Cari data..."
-                class="input input-bordered w-full max-w-xs" />
+        <!-- Search Bar and Show Entries -->
+        <div class="mb-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <label class="mr-2">Show</label>
+                <select
+                v-model="itemsPerPage"
+                @change="currentPage = 1"
+                class="border border-gray-300 rounded p-2 bg-white"
+                >
+                <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+                    {{ option }}
+                </option>
+                </select>
+                <span class="ml-2">entries</span>
+            </div>
+            <div class="flex justify-end">
+                <input v-model="searchQuery" type="text" placeholder="Cari data..." class="input input-bordered w-full max-w-xs" />
+            </div>
         </div>
 
         <!-- Table -->
-        <table class="table table-zebra">
-            <thead>
-                <tr>
-                    <th>Nomor</th>
-                    <th>ID Reimbursement</th>
-                    <th>Kategori</th>
-                    <th>Tanggal Pengajuan</th>
-                    <th>Jumlah Dana</th>
-                    <th>Dana Disetujui</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement" v-if="paginatedData.length > 0">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.id_Reimbursement }}</td>
-                    <td>{{ item.category_Name }}</td>
-                    <td>
-                        {{
-                            new Date(item.submit_Date).toLocaleDateString('id-ID', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: '2-digit',
-                            })
-                        }}
-                    </td>
-                    <td>Rp. {{ formatCurrency(item.amount) }}</td>
-                    <td>
-                        Rp.
-                        {{
-                            item.approve_Amount ? formatCurrency(item.approve_Amount) : '-'
-                        }}
-                    </td>
-                    <td>
-                        <span :class="{
-                            'badge badge-warning': item.status.includes('progress'),
-                            'badge badge-success': item.status.includes('approved'),
-                            'badge badge-error': item.status.includes('declined'),
-                        }">
-                            {{ item.status }}
-                        </span>
-                    </td>
-                    <td>
-                        <button
-                            class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 border border-blue-700 rounded"
-                            @click="openModal(item)">
-                            Lihat
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Jika tidak ada data, tampilkan pesan "Data tidak ditemukan" -->
-                <tr v-if="paginatedData.length === 0">
-                    <td colspan="8" class="text-center text-gray-500 py-4">
-                        Tidak ada reimbursement yang perlu persetujuan
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+        <table class="table w-full">
+                <thead>
+                    <tr>
+                        <th>Nomor</th>
+                        <th>ID Reimbursement</th>
+                        <th>Kategori</th>
+                        <th>Tanggal Pengajuan</th>
+                        <th>Jumlah Dana</th>
+                        <th>Dana Disetujui</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement" v-if="paginatedData.length > 0">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ item.id_Reimbursement }}</td>
+                        <td>{{ item.category_Name }}</td>
+                        <td>
+                            {{
+                                new Date(item.submit_Date).toLocaleDateString('id-ID', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: '2-digit',
+                                })
+                            }}
+                        </td>
+                        <td>Rp. {{ formatCurrency(item.amount) }}</td>
+                        <td>
+                            Rp.
+                            {{
+                                item.approve_Amount ? formatCurrency(item.approve_Amount) : '-'
+                            }}
+                        </td>
+                        <td>
+                            <span :class="{
+                                'badge badge-warning': item.status.includes('progress'),
+                                'badge badge-success': item.status.includes('approved'),
+                                'badge badge-error': item.status.includes('declined'),
+                            }">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <button
+                                class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                                @click="openModal(item)"
+                                title="View Details"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                        <tr v-if="filteredData.length === 0">
+                            <td colspan="7" class="text-center py-4 text-red-500">No data found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
         <!-- Pagination Controls -->
-        <div v-if="paginatedData.length > 0" id="kontrol" class="flex justify-center items-center mt-4">
-            <button @click="currentPage--" :disabled="currentPage === 1" class="btn">
-                Previous
-            </button>
-            <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button @click="currentPage++" :disabled="currentPage === totalPages" class="btn">
+        <div class="flex justify-between mt-5">
+            <div>
+                <span class="text-sm">
+                Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
+                </span>
+            </div>
+            <div class="join">
+                <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
+                Prev
+                </button>
+                <button
+                v-for="page in pageNumbers"
+                :key="page"
+                class="join-item btn"
+                @click="currentPage = page"
+                :class="{'btn-active': currentPage === page}"
+                >
+                {{ page }}
+                </button>
+                <button class="join-item btn" @click="currentPage = Math.min(currentPage + 1, totalPages)" :disabled="currentPage >= totalPages">
                 Next
-            </button>
+                </button>
+            </div>
         </div>
 
         <!-- Modal -->
@@ -279,6 +309,15 @@ export default {
             const end = start + this.itemsPerPage;
             return this.filteredData.slice(start, end);
         },
+        pageNumbers() {
+            return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+        },
+        startItem() {
+            return (this.currentPage - 1) * this.itemsPerPage + 1;
+        },
+        endItem() {
+            return Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
+        },
     },
     methods: {
         fetchReimbursements() {
@@ -418,7 +457,7 @@ export default {
 
 .table th,
 .table td {
-    border: 1px solid #ccc;
+    /* Hapus border */
     padding: 8px;
     text-align: center;
 }
