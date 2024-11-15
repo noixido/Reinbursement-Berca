@@ -93,11 +93,11 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-600">Birth Date:</span>
-                        <span class="text-gray-800">{{ formatDate(user.birth_Date) }}</span>
+                        <span class="text-gray-800">{{ formatTanggal(user.birth_Date) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-600">Join Date:</span>
-                        <span class="text-gray-800">{{ formatDate(user.join_Date) }}</span>
+                        <span class="text-gray-800">{{ formatTanggal(user.join_Date) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-600">Current Limit:</span>
@@ -149,7 +149,8 @@
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-600">Current Limit</label>
-                            <input type="text" v-model="editableUser.current_Limit" class="input input-bordered w-full" />
+                            <input type="text" v-model="editableUser.current_Limit"
+                                class="input input-bordered w-full" />
                         </div>
 
                         <!-- Title Selection -->
@@ -325,8 +326,8 @@ export default {
         const updateProfile = async () => {
             try {
                 // Format tanggal dan kirim data update
-                editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
-                editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
+                // editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
+                // editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
 
                 const response = await axios.put(
                     `https://localhost:7102/api/Account/${user.value.email}`,
@@ -340,7 +341,7 @@ export default {
 
                 user.value = response.data.data;
                 closeEditModal();
-                
+
                 // Menampilkan SweetAlert tanpa tombol 'OK'
                 Swal.fire({
                     icon: 'success',
@@ -348,18 +349,21 @@ export default {
                     text: 'Your profile information has been updated.',
                     showConfirmButton: false, // Menghilangkan tombol OK
                     timer: 1500, // Menampilkan SweetAlert selama 1,5 detik
+                }).then(() => {
+                    fetchUserData(emailFromPayload);
+                    // window.location.reload(); // Redirect ke halaman profil setelah penundaan
                 });
 
+                // window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
                 // Menunggu SweetAlert selesai ditampilkan
-                await delay(1500); // Sesuaikan waktu delay jika perlu
+                // await delay(1500); // Sesuaikan waktu delay jika perlu
 
                 // window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
-                window.location.reload(); // Redirect ke halaman profil setelah penundaan
 
             } catch (err) {
                 console.error("Error updating profile:", err);
                 error.value = "Error updating profile: " + (err.response?.data?.message || err.message);
-                
+
                 await Swal.fire({
                     icon: 'error',
                     title: 'Error Updating Profile',
@@ -372,7 +376,11 @@ export default {
         // Edit profile methods
         const openEditModal = () => {
             // Salin data user ke editableUser
-            editableUser.value = { ...user.value };
+            editableUser.value = {
+                ...user.value,
+                join_Date: formatToISO(user.value.join_Date),
+                birth_Date: formatToISO(user.value.birth_Date),
+            };
 
             // Jika `title_Name` ada di user, cari `id_Title` yang sesuai dari titleList
             const selectedTitle = titleList.value.find(title => title.title_Name === user.value.title_Name);
@@ -381,8 +389,8 @@ export default {
             }
 
             // Format birth_Date dan join_Date menjadi yyyy-MM-dd
-            editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
-            editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
+            // editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
+            // editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
 
             showEditModal.value = true;
         };
@@ -398,6 +406,11 @@ export default {
 
         const closeChangePasswordModal = () => {
             showChangePasswordModal.value = false;
+        };
+        // format tanggal dengan format 13-11-2024 ke 2024-11-13
+        const formatToISO = (date) => {
+            const [day, month, year] = date.split('-');
+            return `${year}-${month}-${day}`;
         };
 
         onMounted(() => {
@@ -423,6 +436,13 @@ export default {
         };
     },
     methods: {
+        // format tanggal dengan format 13-11-2024 ke 13 November 2024
+        formatTanggal(date) {
+            const [day, month, year] = date.split('-');
+            const parsedDate = new Date(year, month - 1, day); // Bulan dikurangi 1 karena dimulai dari 0
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return parsedDate.toLocaleDateString('id-ID', options);
+        },
         formatDate(date) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(date).toLocaleDateString(undefined, options);
@@ -536,13 +556,17 @@ export default {
 
 /* Add this to make the edit form scrollable */
 .modal-body {
-    max-height: 80vh; /* Adjust height to your needs */
-    overflow-y: auto; /* Allow scrolling */
+    max-height: 80vh;
+    /* Adjust height to your needs */
+    overflow-y: auto;
+    /* Allow scrolling */
 }
 
 /* Add the main container for profile details to be scrollable */
 .profile-container {
-    max-height: 80vh; /* Set a max height */
-    overflow-y: auto; /* Allow scrolling */
+    max-height: 80vh;
+    /* Set a max height */
+    overflow-y: auto;
+    /* Allow scrolling */
 }
 </style>
