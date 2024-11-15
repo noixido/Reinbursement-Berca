@@ -249,7 +249,7 @@ export default {
                     },
                 });
                 user.value = response.data.data;
-                console.log(user);
+                // console.log(user);
             } catch (err) {
                 error.value = "Error fetching user data: " + err.message;
             }
@@ -301,7 +301,7 @@ export default {
                     }
                 });
                 titleList.value = response.data.data;
-                console.log(titleList.value); // Pastikan data titleList berhasil diambil
+                // console.log(titleList.value); // Pastikan data titleList berhasil diambil
             } catch (err) {
                 console.error('Error fetching titles:', err);
             }

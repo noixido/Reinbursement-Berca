@@ -1,26 +1,44 @@
 <template>
-    <div class="bg-grey-100 min-h-screen flex items-center justify-center">
-        <div class="card bg-white text-primary-content w-96 mx-auto border-red-500 border-2">
-            <div class="card-body ">
-                <!-- <h2 class="card-title">Login</h2> -->
-                <div class="w-48 mx-auto text-center flex flex-col gap-2">
-                    <img src="../../assets/images/logo.png" alt="Becare logo">
-                    <span class="font-bold text-red-600 text-lg w-full">Berca Reimbursement</span>
+    <div class="bg-gray-200 min-h-screen flex items-center justify-center">
+        <div class="flex w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Left side - Login Form -->
+            <div class="flex flex-col justify-center items-center w-1/2 p-8">
+                <div class="w-40 mb-6">
+                    <img src="../../assets/images/logo.png" alt="Berca logo" />
                 </div>
-                <form id="login" class="mt-5">
-                    <input type="email" v-model="email" class="bg-white rounded-md p-3 w-full mb-2 border-red-500 border" name="email" id="email" placeholder="Email">
-                    <input :type="showPassword ? 'text' : 'password'" v-model="password" class="bg-white rounded-md p-3 w-full mb-2 border-red-500 border" name="password" id="password" placeholder="Password">
-                    <label for="showPass">
-                        <input type="checkbox" v-model="showPassword" id="showPass"> Show Password
+                <!-- <h2 class="text-2xl font-bold text-gray-700 mb-2">LOGIN</h2> -->
+                <p class="text-gray-500 font-bold mb-6">Berca Reimbursement</p>
+
+                <form id="login" class="w-full flex flex-col gap-4">
+                    <!-- Email input -->
+                    <label class="flex flex-col">
+                        <input type="email" v-model="state.email" class="bg-gray-100 rounded-md p-3 w-full border border-gray-300 focus:outline-none" placeholder="Email" />
+                        <span v-if="v$.email.$error" class="text-sm text-red-500">{{ v$.email.$errors[0].$message }}</span>
                     </label>
-                </form>
-                <div class="card-actions justify-end">
-                    <button type="submit" form="login" class="btn text-white border-none w-full mt-5 bg-red-600 hover:bg-red-500 " @click.prevent="login">
+
+                    <!-- Password input -->
+                    <label class="flex flex-col">
+                        <input :type="showPassword ? 'text' : 'password'" v-model="state.password" class="bg-gray-100 rounded-md p-3 w-full border border-gray-300 focus:outline-none" placeholder="Password" />
+                        <span v-if="v$.password.$error" class="text-sm text-red-500">{{ v$.password.$errors[0].$message }}</span>
+                    </label>
+
+                    <!-- Show Password Checkbox -->
+                    <label for="showPass" class="flex items-center mt-2">
+                        <input type="checkbox" v-model="showPassword" id="showPass" class="mr-2" /> Show Password
+                    </label>
+
+                    <!-- Login Button -->
+                    <button type="submit" form="login" class="bg-red-500 hover:bg-red-600 text-white rounded-md p-3 w-full mt-5" @click.prevent="login">
                         <div :class="stateLoading ? 'loading loading-spinner loading-sm text-white' : ''">
-                            Login
+                            Login Now
                         </div>
                     </button>
-                </div>
+                </form>
+            </div>
+
+            <!-- Right side - Image and Decorative Elements -->
+            <div class="w-1/2 bg-gradient-to-l from-red-600 to-red-400 relative flex items-center justify-center">
+                <img src="../../assets/images/login-banner.jpg" alt="Profile" class="h-full" />
             </div>
         </div>
     </div>
@@ -30,64 +48,87 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+import useVuelidate from '@vuelidate/core';
+import { required, email, minLength } from '@vuelidate/validators';
+import { reactive, computed } from 'vue';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
     data() {
         return {
             stateLoading: ref(false),
-            email: "",
-            password: "",
             showPassword: false,
             router: useRouter(),
         };
     },
     methods: {
         async login(){
-            this.stateLoading = true;
+            this.v$.$validate();
 
-            try{
-                const api = "https://localhost:7102/api/Login";
-                const response = await axios.post(api, {
-                    email: this.email,
-                    password: this.password,
-                });
+            if(this.v$.$error){
+                console.log("fix the error first!")
+            } else {
+                this.stateLoading = true;
 
-                // console.log(response.data.token);
+                try{
+                    const api = "https://localhost:7102/api/Login";
+                    const response = await axios.post(api, {
+                        email: this.state.email,
+                        password: this.state.password,
+                    });
 
-                const token = response.data.token;
-                localStorage.setItem("token", token);
+                    // console.log(response.data.token);
 
-                const payload = JSON.parse(atob(token.split(".")[1]));
-                const role = payload.role;
+                    const token = response.data.token;
+                    localStorage.setItem("token", token);
 
-                // console.log(role);
+                    const payload = JSON.parse(atob(token.split(".")[1]));
+                    const role = payload.role;
 
-                const redirectPath =
-                    this.$route.query.redirect ||
-                    (role === "Employee"
-                        ? "/employee/dashboard"
-                        : role === "HR"
-                        ? "/hr/dashboard"
-                        : role === "Finance"
-                        ? "/finance/dashboard"
-                        : "/"); // Default fallback path if none match
-                this.router.push(redirectPath);
-            }catch(error){
-                console.error(error.response.data.message);
-            }finally{
-                this.stateLoading = false;
+                    // console.log(role);
+
+                    const redirectPath =
+                        this.$route.query.redirect ||
+                        (role === "Employee"
+                            ? "/employee/dashboard"
+                            : role === "HR"
+                            ? "/hr/dashboard"
+                            : role === "Finance"
+                            ? "/finance/dashboard"
+                            : "/"); // Default fallback path if none match
+                    this.router.push(redirectPath);
+                }catch(error){
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
+                }finally{
+                    this.stateLoading = false;
+                }
             }
         }
     },
     setup () {
-        
+        const state = reactive({
+            email: "",
+            password: "",
+        });
 
-        return {}
-    }
+        const rules = computed(()=>{
+            return {
+                email: { required, email },
+                password: { required },
+            };
+        });
+
+        const v$ = useVuelidate(rules, state);
+        return {
+            state, 
+            v$
+        }
+    },
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>
