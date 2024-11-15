@@ -224,7 +224,7 @@
                             <input v-model="approveAmount" type="range" 
                             :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
                             class="range range-primary w-2/3" />
-                            <span class="text-gray-700">{{ formatCurrency(selectedReimbursement.current_Limit) }}</span>
+                            <span class="text-gray-700">{{ Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount) }}</span>
                         </div>
                         <div class="flex">
                             <input v-model="approveAmount" type="number" 
