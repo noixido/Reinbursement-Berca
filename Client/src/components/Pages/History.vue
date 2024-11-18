@@ -80,36 +80,55 @@
 
         <!-- Pagination Controls -->
         <div class="flex justify-between mt-5">
-        <div class="mb-4">
-            <span class="text-sm">
-            Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
-            </span>
-        </div>
-        <div class="join mt-4">
-            <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
-            Prev
-            </button>
-            <button
-            v-for="page in pageNumbers"
-            :key="page"
-            class="join-item btn"
-            @click="currentPage = page"
-            :class="{'btn-active': currentPage === page}"
-            >
-            {{ page }}
-            </button>
-            <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
-            Last
-            </button>
-        </div>
+            <div class="mb-4">
+                <span class="text-sm">
+                    Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
+                </span>
+            </div>
+            <div class="join mt-4">
+                <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)"
+                    :disabled="currentPage <= 1">
+                    Prev
+                </button>
+                <button v-for="page in pageNumbers" :key="page" class="join-item btn" @click="currentPage = page"
+                    :class="{ 'btn-active': currentPage === page }">
+                    {{ page }}
+                </button>
+                <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
+                    Last
+                </button>
+            </div>
         </div>
         <!-- Modal -->
         <dialog ref="reimbursementModal" class="modal">
-            <div class="modal-box max-w-3xl">
+            <div class="modal-box max-w-3xl text-center">
                 <form method="dialog">
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
                 <h3 class="text-center text-2xl font-bold mb-4">Detail Reimbursement</h3>
+
+                <div class="inline-block border-4" :class="{
+                        'border-blue-500': selectedStatus.includes('approved'),
+                        'border-red-500': selectedStatus.includes('decline'),
+                        'border-yellow-500': selectedStatus.includes('progress'),
+                    }">
+                    <div :class="{
+                        'bg-blue-500': selectedStatus.includes('approved'),
+                        'bg-red-500': selectedStatus.includes('decline'),
+                        'bg-yellow-500': selectedStatus.includes('progress'),
+                    }" class="inline-block p-2 border-4 w-auto text-white font-bold border-white">
+                        <span v-if="selectedStatus === 'approved'">
+                            Reimbursement akan diterima pada bulan {{ selectedDateReceived }}
+                        </span>
+                        <span v-else-if="selectedStatus.includes('decline')">
+                            Reimbursement ditolak.
+                        </span>
+                        <span v-else>
+                            Reimbursement sedang dalam proses.
+                        </span>
+                    </div>
+                </div>
+
                 <div class="py-4 space-y-3 text-gray-800">
                     <div class="text-center">
                         <div class="font-semibold">📌 ID Reimbursement:</div>
@@ -202,6 +221,9 @@ export default {
             currentPage: 1,
             itemsPerPage: 10, // Adjust this to change the number of items per page
             selectedReimbursement: {}, // to hold the selected reimbursement details
+
+            selectedStatus: '',
+            selectedDateReceived: '',
         };
     },
     computed: {
@@ -254,7 +276,22 @@ export default {
         },
         openModal(item) {
             this.selectedReimbursement = item; // set the selected reimbursement
+
+
+            const status = item.status.toLowerCase();
+            const submitDate = new Date(item.submit_Date);
+
+            const isBefore15 = submitDate.getDate() <= 15;
+
+            const month = submitDate.getMonth() + (isBefore15 ? 0 : 1);
+            const year = submitDate.getFullYear();
+            const dateReceived = new Date(year, month, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+
+            this.selectedStatus = status;
+            this.selectedDateReceived = dateReceived;
+
             this.$refs.reimbursementModal.showModal(); // open the modal
+            console.log(this.selectedReimbursement)
         },
         formatCurrency(value) {
             if (!value) return '0';
@@ -303,4 +340,3 @@ export default {
     cursor: not-allowed;
 }
 </style>
-
