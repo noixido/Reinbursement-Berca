@@ -166,13 +166,13 @@
           </div>
         </div>
 
-        <div class="border border-yellow-500 rounded-lg p-4 bg-gray-200 mb-3">
+        <div class="border-4 border-yellow-500 rounded-lg p-4 mb-3">
           <!-- Tombol Approve dan Decline -->
           <div class="flex justify-center space-x-4">
-            <button class="btn btn-success" @click="openApproveForm">
+            <button class="btn bg-blue-500" @click="openApproveForm">
               Approve
             </button>
-            <button class="btn btn-error" @click="openDeclineForm">
+            <button class="btn bg-red-500" @click="openDeclineForm">
               Decline
             </button>
           </div>
@@ -181,7 +181,7 @@
            <div v-if="showApproveForm" class="mt-4 space-y-3">
             <label class="font-semibold">Notes:</label>
             <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full" placeholder="Masukkan catatan persetujuan"></textarea>
-            <button class="btn btn-primary mt-2 w-full" @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
+            <button class="btn bg-blue-500 mt-2 w-full" @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Approval
             </button>
           </div>
@@ -189,7 +189,7 @@
           <div v-if="showDeclineForm" class="mt-4 space-y-3">
             <label class="font-semibold">Notes:</label>
             <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full" placeholder="Masukkan alasan penolakan"></textarea>
-            <button class="btn btn-primary mt-2 w-full" @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
+            <button class="btn bg-red-500 mt-2 w-full" @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Decline
             </button>
           </div>
@@ -346,8 +346,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Light gray for odd rows */
+  }
 
-.badge-status {
+  .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White for even rows */
+  }
+  .badge-status {
     display: inline-block; /* Membuat elemen berbentuk inline-block */
     font-size: 0.75rem; /* Ukuran font kecil */
     font-weight: normal; /* Tidak bold */
