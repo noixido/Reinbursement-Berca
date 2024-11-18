@@ -598,4 +598,11 @@
   
   <style scoped>
   /* Additional styling if needed */
+  .table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Light gray for odd rows */
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White for even rows */
+  }
   </style>

@@ -1,65 +1,55 @@
 <template>
     <MainLayout>
-        <div class="container mx-auto p-6">
-            <h1 class="text-3xl font-semibold text-gray-800 mb-6">Dashboard Finance</h1>
-
-            <!-- Dashboard Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Left Section: Cards -->
+            <div class="grid grid-cols-2 gap-4">
                 <!-- Total Reimbursement Requests -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center hover:shadow-xl transition duration-300">
-                    <div class="w-1/4">
-                        <i class="fas fa-file-invoice text-4xl text-blue-500"></i>
-                    </div>
-                    <div class="w-3/4 pl-4">
-                        <h3 class="text-xl font-semibold text-black">Total Requests</h3>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
+                    <i class="fas fa-file-invoice text-4xl text-blue-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-black">Total Requests</h3>
                         <p class="text-2xl font-bold text-blue-900">{{ totalRequests }}</p>
                     </div>
                 </div>
 
                 <!-- Approved Requests -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center hover:shadow-xl transition duration-300">
-                    <div class="w-1/4">
-                        <i class="fas fa-check-circle text-4xl text-green-500"></i>
-                    </div>
-                    <div class="w-3/4 pl-4">
-                        <h3 class="text-xl font-semibold text-black">Approved Status</h3>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
+                    <i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-black">Approved Status</h3>
                         <p class="text-2xl font-bold text-green-900">{{ approvedRequests }}</p>
                     </div>
                 </div>
 
                 <!-- Declined Requests -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center hover:shadow-xl transition duration-300">
-                    <div class="w-1/4">
-                        <i class="fas fa-times-circle text-4xl text-red-500"></i>
-                    </div>
-                    <div class="w-3/4 pl-4">
-                        <h3 class="text-xl font-semibold text-black">Declined Requests</h3>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
+                    <i class="fas fa-times-circle text-4xl text-red-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-black">Declined Status</h3>
                         <p class="text-2xl font-bold text-red-900">{{ declinedRequests }}</p>
                     </div>
                 </div>
 
                 <!-- Total Dana Bulan Ini -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center hover:shadow-xl transition duration-300">
-                    <div class="w-1/4">
-                        <i class="fas fa-coins text-4xl text-yellow-500"></i>
-                    </div>
-                    <div class="w-3/4 pl-4">
-                        <h3 class="text-xl font-semibold text-black">Approved Saldo</h3>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
+                    <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-black">Approved Funds</h3>
                         <p class="text-2xl font-bold text-black">{{ formatToRupiah(totalDanaBulanIni) }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Chart Section -->
-            <!-- <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Jumlah Dana yang Dikeluarkan per Bulan</h3>
-                    <line-chart :data="danaPerBulanData" :options="lineChartOptions"></line-chart>
-                </div>
-            </div> -->
+            <!-- Right Section: Line Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Jumlah Dana yang Disetujui per Bulan</h3>
+                <line-chart :data="danaPerBulanData" :options="lineChartOptions"></line-chart>
+            </div>
         </div>
     </MainLayout>
 </template>
+
+
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
@@ -73,22 +63,20 @@ ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale
 export default defineComponent({
     components: {
         'line-chart': Line,
-        MainLayout
+        MainLayout,
     },
     setup() {
-        // Data Properties for Dashboard Cards
         const totalRequests = ref(0);
         const totalDanaBulanIni = ref(0);
         const approvedRequests = ref(0);
         const declinedRequests = ref(0);
 
-        // Chart Data for Dana per Month
         const danaPerBulanData = ref({
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [
                 {
-                    label: 'Dana Dikeluarkan (Rp)',
-                    data: [1000000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000],
+                    label: 'Dana Disetujui (Rp)',
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     borderColor: '#3b82f6',
                     backgroundColor: 'rgba(59, 130, 246, 0.2)',
                     fill: true,
@@ -97,7 +85,6 @@ export default defineComponent({
             ],
         });
 
-        // Chart Options
         const lineChartOptions = ref({
             responsive: true,
             plugins: {
@@ -121,34 +108,26 @@ export default defineComponent({
             },
         });
 
-        // Helper function to format numbers to Rupiah
         const formatToRupiah = (value) => {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
         };
 
-        // Fetch Data from API
         const fetchData = async () => {
             try {
                 const response = await axios.get('https://localhost:7102/api/Reimbursement', {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
                 });
 
                 const reimbursements = response.data.data;
 
-                // Total requests
                 totalRequests.value = reimbursements.length;
-
-                // Total approved requests
                 approvedRequests.value = reimbursements.filter(
                     (item) => item.status.toLowerCase() === 'approved'
                 ).length;
-
-                // Total declined requests
                 declinedRequests.value = reimbursements.filter(
                     (item) => item.status.toLowerCase().includes('decline')
                 ).length;
 
-                // Total dana yang diapprove bulan ini
                 const currentMonth = new Date().getMonth();
                 const currentYear = new Date().getFullYear();
                 totalDanaBulanIni.value = reimbursements.reduce((total, item) => {
@@ -163,17 +142,25 @@ export default defineComponent({
                     return total;
                 }, 0);
 
+                const monthlyDana = Array(12).fill(0);
+                reimbursements.forEach((item) => {
+                    const submitDate = new Date(item.submit_Date);
+                    const month = submitDate.getMonth();
+                    if (item.status.toLowerCase() === 'approved') {
+                        monthlyDana[month] += item.approve_Amount;
+                    }
+                });
+
+                danaPerBulanData.value.datasets[0].data = monthlyDana;
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
-        // OnMounted hook to fetch data when component is mounted
         onMounted(() => {
             fetchData();
         });
 
-        // Return properties and methods for use in the template
         return {
             totalRequests,
             approvedRequests,
@@ -187,7 +174,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .container {
     max-width: 1200px;
 }
@@ -208,19 +195,15 @@ export default defineComponent({
     color: #f59e0b;
 }
 
-.text-2xl {
-    font-size: 1.5rem;
+.text-lg {
+    font-size: 1.125rem;
 }
 
-.text-xl {
-    font-size: 1.25rem;
+.text-sm {
+    font-size: 0.875rem;
 }
 
 .text-gray-800 {
     color: #1f2937;
-}
-
-h3 {
-    font-weight: 600;
 }
 </style>

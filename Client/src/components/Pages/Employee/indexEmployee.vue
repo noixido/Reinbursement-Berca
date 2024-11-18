@@ -7,7 +7,7 @@
                 <!-- Left Column (Cards Column) -->
                 <div class="flex flex-col gap-6 w-1/3">
                     <!-- Max Saldo Card -->
-                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <div class="bg-blue-200 p-6 rounded-lg shadow-md flex items-center">
                         <div class="w-1/4">
                             <i class="fas fa-wallet text-4xl text-blue-500"></i>
                         </div>
@@ -18,7 +18,7 @@
                     </div>
 
                     <!-- Saldo Card -->
-                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <div class="bg-purple-100 p-6 rounded-lg shadow-md flex items-center">
                         <div class="w-1/4">
                             <i class="fas fa-piggy-bank text-4xl text-purple-500"></i>
                         </div>
@@ -30,7 +30,7 @@
                     </div>
 
                     <!-- Approved Card -->
-                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <div class="bg-green-100 p-6 rounded-lg shadow-md flex items-center">
                         <div class="w-1/4">
                             <i class="fas fa-thumbs-up text-4xl text-green-500"></i>
                         </div>
@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Right Column (Reimbursement Card) -->
-                <div class="w-2/3 bg-white p-6 rounded-lg shadow-md flex flex-col justify-center">
+                <div class="w-2/3 bg-gray-100 p-6 rounded-lg shadow-md flex flex-col justify-center">
                     <div>
                         <h3 class="text-xl font-semibold text-center">Reimbursement Status</h3>
                         <h3 class="font-semibold mb-4 text-center">{{ startPeriode }} - {{ endPeriode }}</h3>
@@ -51,22 +51,22 @@
                     <!-- Approved Progress Bar -->
                     <div class="mb-4">
                         <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-green-700">Approved</span>
-                            <span class="text-sm font-medium text-green-700">{{ approvedCount }}</span>
+                            <span class="text-lg font-semibold text-green-700">Approved</span>
+                            <span class="text-lg font-medium text-green-700">{{ approvedCount }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-4">
-                            <div :style="{ width: approvedPercentage + '%' }" class="bg-green-500 h-4 rounded-full">
-                            </div>
+                        <div class="w-full rounded-full h-4 border-green-500 border">
+                                <div :style="{ width: approvedPercentage + '%' }" class="bg-green-500 h-4 rounded-full border">
+                                </div>
                         </div>
                     </div>
 
                     <!-- In Progress Progress Bar -->
                     <div class="mb-4">
                         <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-yellow-700">In Progress</span>
-                            <span class="text-sm font-medium text-yellow-700">{{ inProgressCount }}</span>
+                            <span class="text-lg font-medium text-yellow-700">In Progress</span>
+                            <span class="text-lg font-medium text-yellow-700">{{ inProgressCount }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="w-full border-yellow-500 border rounded-full h-4">
                             <div :style="{ width: inProgressPercentage + '%' }" class="bg-yellow-500 h-4 rounded-full">
                             </div>
                         </div>
@@ -234,6 +234,14 @@ export default {
                 })
                 .catch((error) => {
                     this.reimbursements = [];
+                    this.startPeriode = new Date(startDate).toLocaleDateString('id-ID', {
+                        year: 'numeric', month: 'long', day:
+                            '2-digit'
+                    })
+                    this.endPeriode = new Date(endDate).toLocaleDateString('id-ID', {
+                        year: 'numeric', month: 'long', day:
+                            '2-digit'
+                    })
                     console.log(this.reimbursements)
                     console.error('Error fetching data:', error);
                 });

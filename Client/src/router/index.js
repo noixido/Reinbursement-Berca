@@ -9,9 +9,10 @@ import ApprovalByHR from "../components/pages/HR/ApprovalByHR.vue";
 import ApprovalFinance from "../components/pages/Finance/ApprovalFinance.vue";
 import Profile from "../components/pages/Profile.vue";
 import IndexEmployee from "../components/Pages/Employee/indexEmployee.vue";
-import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
+// import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
 import IndexHr from "../components/pages/HR/indexHr.vue";
 import NotFound from "../components/pages/NotFound.vue";
+import IndexFinance from "../components/pages/Finance/indexFinance.vue";
 
 const routes = [{
         path: '/',

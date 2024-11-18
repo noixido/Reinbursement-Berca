@@ -8,25 +8,23 @@
         <div class="mb-4 flex justify-between items-center">
             <div class="flex items-center">
                 <label class="mr-2">Show</label>
-                <select
-                v-model="itemsPerPage"
-                @change="currentPage = 1"
-                class="border border-gray-300 rounded p-2 bg-white"
-                >
-                <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
-                    {{ option }}
-                </option>
+                <select v-model="itemsPerPage" @change="currentPage = 1"
+                    class="border border-gray-300 rounded p-2 bg-white">
+                    <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+                        {{ option }}
+                    </option>
                 </select>
                 <span class="ml-2">entries</span>
             </div>
             <div class="relative w-full max-w-xs">
-                <input v-model="searchQuery" type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs" />
+                <input v-model="searchQuery" type="text" placeholder="Search..."
+                    class="input input-bordered w-full max-w-xs" />
             </div>
         </div>
 
         <!-- Table -->
         <div class="overflow-x-auto">
-        <table class="table w-full">
+            <table class="table w-full">
                 <thead>
                     <tr>
                         <th>Nomor</th>
@@ -40,7 +38,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement" v-if="paginatedData.length > 0">
+                    <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement"
+                        v-if="paginatedData.length > 0">
                         <td>{{ index + 1 }}</td>
                         <td>{{ item.id_Reimbursement }}</td>
                         <td>{{ item.category_Name }}</td>
@@ -70,44 +69,38 @@
                             </span>
                         </td>
                         <td>
-                            <button
-                                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
-                                @click="openModal(item)"
-                                title="View Details"
-                            >
+                            <button class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                                @click="openModal(item)" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </td>
                     </tr>
-                        <tr v-if="filteredData.length === 0">
-                            <td colspan="8" class="text-center py-4 text-red-500">No data found</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <tr v-if="filteredData.length === 0">
+                        <td colspan="8" class="text-center py-4 text-red-500">No data found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Pagination Controls -->
         <div class="flex justify-between mt-5">
             <div>
                 <span class="text-sm">
-                Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
+                    Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
                 </span>
             </div>
             <div class="join">
-                <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
-                Prev
+                <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)"
+                    :disabled="currentPage <= 1">
+                    Prev
                 </button>
-                <button
-                v-for="page in pageNumbers"
-                :key="page"
-                class="join-item btn"
-                @click="currentPage = page"
-                :class="{'btn-active': currentPage === page}"
-                >
-                {{ page }}
+                <button v-for="page in pageNumbers" :key="page" class="join-item btn" @click="currentPage = page"
+                    :class="{ 'btn-active': currentPage === page }">
+                    {{ page }}
                 </button>
-                <button class="join-item btn" @click="currentPage = Math.min(currentPage + 1, totalPages)" :disabled="currentPage >= totalPages">
-                Next
+                <button class="join-item btn" @click="currentPage = Math.min(currentPage + 1, totalPages)"
+                    :disabled="currentPage >= totalPages">
+                    Next
                 </button>
             </div>
         </div>
@@ -171,7 +164,8 @@
 
                     <div class="flex justify-between">
                         <span class="font-semibold">✔️ Dana Disetujui:</span>
-                        <span>Rp. {{ selectedReimbursement.approve_Amount ? formatCurrency(selectedReimbursement.approve_Amount) : '-' }}</span>
+                        <span>Rp. {{ selectedReimbursement.approve_Amount ?
+                            formatCurrency(selectedReimbursement.approve_Amount) : '-' }}</span>
                     </div>
 
                     <div class="flex justify-between">
@@ -205,46 +199,57 @@
                     </div>
                 </div>
 
-                <div class="border border-yellow-500 rounded-lg p-4 bg-gray-200 mb-3">
+                <div class="border-4 border-yellow-500 rounded-lg p-4 mb-3">
                     <!-- Tombol Approve dan Decline -->
                     <div class="flex justify-center space-x-4">
-                        <button class="btn btn-success" @click="openApproveForm">
+                        <button class="btn bg-blue-500" @click="openApproveForm">
                             Approve
                         </button>
-                        <button class="btn btn-error" @click="openDeclineForm">
+                        <button class="btn bg-red-500" @click="openDeclineForm">
                             Decline
                         </button>
                     </div>
-    
+
                     <!-- Form Approve atau Decline -->
                     <div v-if="showApproveForm" class="mt-4 space-y-3 flex flex-col">
                         <label class="font-semibold">Jumlah Dana Disetujui:</label>
                         <div class="flex justify-center space-x-2">
                             <span class="text-gray-700">{{ 0 }}</span>
-                            <input v-model="approveAmount" type="range" 
-                            :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
-                            class="range range-primary w-2/3" />
-                            <span class="text-gray-700">{{ Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount) }}</span>
-                        </div>
-                        <div class="flex">
-                            <input v-model="approveAmount" type="number" 
+                            <input v-model="approveAmount" type="range"
                                 :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
-                                class="input input-bordered w-2/4 mb-2 mx-auto" placeholder="Masukkan jumlah dana disetujui" />
+                                class="range range-info w-2/3" />
+                            <span class="text-gray-700">{{ Math.min(selectedReimbursement.current_Limit,
+                                selectedReimbursement.amount) }}</span>
                         </div>
-    
+                        <div class="flex justify-center">
+                            <input v-model="approveAmount" type="number"
+                                min="0"
+                                :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
+                                class="input input-bordered w-2/3" />
+                        </div>
+                        <p v-if="!isApproveAmountValid && showValidation" class="text-red-500 text-sm">
+                            Jumlah harus lebih besar dari 0 dan tidak melebihi batas maksimal.
+                        </p>
+
                         <label class="font-semibold">Catatan:</label>
                         <textarea v-model="note" class="textarea textarea-bordered w-full"
                             placeholder="Masukkan catatan"></textarea>
-                        <button class="btn btn-primary mt-2 w-full" @click="submitApproval">
+                        <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
+                            Catatan harus diisi.
+                        </p>
+                        <button class="btn bg-blue-500 mt-2 w-full" @click="submitApproval">
                             Submit Approval
                         </button>
                     </div>
-    
+                    
                     <div v-if="showDeclineForm" class="mt-4 space-y-3">
                         <label class="font-semibold">Catatan:</label>
                         <textarea v-model="note" class="textarea textarea-bordered w-full"
-                            placeholder="Masukkan alasan penolakan"></textarea>
-                        <button class="btn btn-primary mt-2 w-full" @click="submitDecline">
+                        placeholder="Masukkan alasan penolakan"></textarea>
+                        <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
+                            Catatan harus diisi.
+                        </p>
+                        <button class="btn bg-red-500 mt-2 w-full" @click="submitDecline">
                             Submit Decline
                         </button>
                     </div>
@@ -281,6 +286,7 @@ export default {
             showDeclineForm: false, // to toggle decline form visibility
             approveAmount: 0, // amount to approve
             note: '', // note for approval or decline
+            showValidation: false,
         };
     },
     computed: {
@@ -320,6 +326,20 @@ export default {
         endItem() {
             return Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
         },
+
+        // validasi
+        isApproveAmountValid() {
+            return this.approveAmount > 0 && this.approveAmount <= Math.min(this.selectedReimbursement.current_Limit, this.selectedReimbursement.amount);
+        },
+        isNoteValid() {
+            return this.note.trim().length > 0;
+        },
+        isApproveFormValid() {
+            return this.isApproveAmountValid && this.isNoteValid;
+        },
+        isDeclineFormValid() {
+            return this.isNoteValid;
+        }
     },
     methods: {
         fetchReimbursements() {
@@ -353,14 +373,21 @@ export default {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         },
         openApproveForm() {
+            this.showValidation = false;
             this.showApproveForm = true;
             this.showDeclineForm = false;
         },
         openDeclineForm() {
+            this.showValidation = false;
             this.showDeclineForm = true;
             this.showApproveForm = false;
         },
         submitApproval() {
+            this.showValidation = true;
+            if (!this.isApproveFormValid) {
+                return
+            }
+
             const approvalData = {
                 approve_Amount: this.approveAmount,
                 note: this.note,
@@ -408,6 +435,11 @@ export default {
                 });
         },
         submitDecline() {
+            this.showValidation = true
+            if (!this.isDeclineFormValid) {
+                return
+            }
+
             const declineData = {
                 note: this.note,
                 id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
@@ -499,12 +531,19 @@ export default {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
 .badge-status {
-    display: inline-block; /* Membuat elemen berbentuk inline-block */
-    font-size: 0.75rem; /* Ukuran font kecil */
-    font-weight: normal; /* Tidak bold */
-    white-space: nowrap; /* Menghindari teks terpotong ke bawah */
-    overflow: hidden; /* Menyembunyikan teks yang melebihi area */
-    text-align: center; /* Memastikan teks selalu rata tengah */
+    display: inline-block;
+    /* Membuat elemen berbentuk inline-block */
+    font-size: 0.75rem;
+    /* Ukuran font kecil */
+    font-weight: normal;
+    /* Tidak bold */
+    white-space: nowrap;
+    /* Menghindari teks terpotong ke bawah */
+    overflow: hidden;
+    /* Menyembunyikan teks yang melebihi area */
+    text-align: center;
+    /* Memastikan teks selalu rata tengah */
 }
 </style>

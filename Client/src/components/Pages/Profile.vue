@@ -109,93 +109,94 @@
         </div>
 
         <!-- Edit Profile Modal -->
-        <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h2 class="text-xl font-semibold mb-4">Edit Profile</h2>
-                <!-- Scrollable Form -->
-                <form @submit.prevent="updateProfile">
-                    <div class="modal-body space-y-4">
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Id</label>
-                            <input type="text" v-model="editableUser.id_Account" class="input input-bordered w-full bg-gray-200" disabled />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Role Name</label>
-                            <input type="text" v-model="editableUser.role_Name" class="input input-bordered w-full bg-gray-200" disabled />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Email</label>
-                            <input type="text" v-model="editableUser.email" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Name</label>
-                            <input type="text" v-model="editableUser.name" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Phone</label>
-                            <input type="text" v-model="editableUser.phone" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Gender</label>
-                            <input type="text" v-model="editableUser.gender" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Birth Date</label>
-                            <input type="date" v-model="editableUser.birth_Date" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Join Date</label>
-                            <input type="date" v-model="editableUser.join_Date" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Current Limit</label>
-                            <input type="text" v-model="editableUser.current_Limit" class="input input-bordered w-full" />
-                        </div>
+<div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" @click.self="closeEditModal">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-2/3"> <!-- Adjusted width -->
+        <h2 class="text-xl font-semibold mb-4">Edit Profile</h2>
+        <!-- Scrollable Form -->
+        <form @submit.prevent="updateProfile">
+            <div class="modal-body space-y-4">
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Id</label>
+                    <input type="text" v-model="editableUser.id_Account" class="input input-bordered w-full bg-gray-200" disabled />
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Role Name</label>
+                    <input type="text" v-model="editableUser.role_Name" class="input input-bordered w-full bg-gray-200" disabled />
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Email</label>
+                    <input type="text" v-model="editableUser.email" class="input input-bordered w-full" :class="{'input-error': emailError}" />
+                    <span v-if="emailError" class="text-red-500 text-sm">Invalid email format</span>
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Name</label>
+                    <input type="text" v-model="editableUser.name" class="input input-bordered w-full" :class="{'input-error': nameError}" />
+                    <span v-if="nameError" class="text-red-500 text-sm">Name is required</span>
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Phone</label>
+                    <input type="number" v-model="editableUser.phone" class="input input-bordered w-full" :class="{'input-error': phoneError}" />
+                    <span v-if="phoneError" class="text-red-500 text-sm">Phone number is required</span>
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Gender</label>
+                    <input type="text" v-model="editableUser.gender" class="input input-bordered w-full" />
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Birth Date</label>
+                    <input type="date" v-model="editableUser.birth_Date" class="input input-bordered w-full" />
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Join Date</label>
+                    <input type="date" v-model="editableUser.join_Date" class="input input-bordered w-full" />
+                </div>
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Current Limit</label>
+                    <input type="text" v-model="editableUser.current_Limit" class="input input-bordered w-full" />
+                </div>
 
-                        <!-- Title Selection -->
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Title</label>
-                            <select v-model="editableUser.id_Title" class="input input-bordered w-full">
-                                <option v-for="title in titleList" :key="title.id_Title" :value="title.id_Title">
-                                    {{ title.title_Name }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end space-x-4">
-                        <button type="button" @click="closeEditModal" class="btn btn-ghost">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
+                <!-- Title Selection -->
+                <div class="mb-4">
+                    <label class="font-medium text-gray-600">Title</label>
+                    <select v-model="editableUser.id_Title" class="input input-bordered w-full">
+                        <option v-for="title in titleList" :key="title.id_Title" :value="title.id_Title">
+                            {{ title.title_Name }}
+                        </option>
+                    </select>
+                </div>
             </div>
-        </div>
+
+            <div class="flex justify-end space-x-4">
+                <button type="button" @click="closeEditModal" class="btn btn-ghost">Cancel</button>
+                <button type="submit" class="btn bg-[#45aafd]" :disabled="isProfileFormInvalid">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
         <!-- Change Password Modal -->
-        <div v-if="showChangePasswordModal"
-            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div v-if="showChangePasswordModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-96">
                 <h2 class="text-xl font-semibold mb-4">Change Password</h2>
-
                 <form @submit.prevent="changePassword">
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">Old Password</label>
-                        <input type="password" v-model="changePasswordData.oldPassword"
-                            class="input input-bordered w-full" placeholder="Enter your old password" required />
+                        <input type="password" v-model="changePasswordData.oldPassword" class="input input-bordered w-full" placeholder="Enter your old password" required />
                     </div>
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">New Password</label>
-                        <input type="password" v-model="changePasswordData.newPassword"
-                            class="input input-bordered w-full" placeholder="Enter your new password" required />
+                        <input type="password" v-model="changePasswordData.newPassword" class="input input-bordered w-full" placeholder="Enter your new password" required :class="{'input-error': passwordError}" />
+                        <span v-if="passwordError" class="text-red-500 text-sm">Password must be at least 6 characters</span>
                     </div>
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">Confirm New Password</label>
-                        <input type="password" v-model="changePasswordData.confirmNewPassword"
-                            class="input input-bordered w-full" placeholder="Confirm your new password" required />
+                        <input type="password" v-model="changePasswordData.confirmNewPassword" class="input input-bordered w-full" placeholder="Confirm your new password" required :class="{'input-error': confirmPasswordError}" />
+                        <span v-if="confirmPasswordError" class="text-red-500 text-sm">Passwords do not match</span>
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="closeChangePasswordModal" class="btn btn-ghost">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Change</button>
+                        <button type="submit" class="btn bg-[#45aafd]" :disabled="isPasswordFormInvalid">Change</button>
                     </div>
                 </form>
             </div>
@@ -205,7 +206,7 @@
 
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import MainLayout from '../layouts/MainLayout.vue';
 import Swal from 'sweetalert2';
@@ -241,8 +242,29 @@ export default {
         const changePasswordData = ref({
             email: emailFromPayload,
             oldPassword: '',
-            newPassword: ''
+            newPassword: '',
+            confirmNewPassword: ''
         });
+
+        const emailError = ref(false);
+        const nameError = ref(false);
+        const phoneError = ref(false);
+        const passwordError = ref(false);
+        const confirmPasswordError = ref(false);
+
+        // Computed properties to check if the forms are invalid
+        const isProfileFormInvalid = computed(() => {
+            return !editableUser.value.name || !editableUser.value.phone || !validateEmail(editableUser.value.email);
+        });
+
+        const isPasswordFormInvalid = computed(() => {
+            return changePasswordData.value.newPassword.length < 6 || changePasswordData.value.newPassword !== changePasswordData.value.confirmNewPassword;
+        });
+
+        const validateEmail = (email) => {
+            const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return regex.test(email);
+        };
 
         const fetchUserData = async (email) => {
             try {
@@ -252,49 +274,10 @@ export default {
                     },
                 });
                 user.value = response.data.data;
-                // console.log(user);
             } catch (err) {
                 error.value = "Error fetching user data: " + err.message;
             }
         };
-
-
-        const changePassword = async () => {
-            try {
-                const response = await axios.put(
-                    `https://localhost:7102/api/Account/ChangePassword/${user.value.email}`,
-                    changePasswordData.value,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                // Menampilkan SweetAlert sukses setelah password berhasil diubah
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Password Changed Successfully!',
-                    text: 'Your password has been updated.',
-                    showConfirmButton: false, // Menghilangkan tombol OK
-                    timer: 1500, // SweetAlert akan hilang otomatis setelah 1,5 detik
-                });
-                // console.log("Password changed successfully:", response);
-                closeChangePasswordModal();
-            } catch (err) {
-                // Menampilkan SweetAlert error jika terjadi kesalahan
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error Changing Password',
-                    text: err.response?.data?.message || err.message,
-                    showConfirmButton: false, // Menghilangkan tombol OK pada error message juga
-                    timer: 1500, // SweetAlert error juga hilang otomatis setelah 1,5 detik
-                });
-                console.error("Error changing password:", err);
-                console.log("Error response:", err.response?.data); // Log the detailed error response
-                error.value = "Error changing password: " + (err.response?.data?.message || err.message);
-            }
-        };
-
 
         const fetchTitleList = async () => {
             try {
@@ -304,7 +287,6 @@ export default {
                     }
                 });
                 titleList.value = response.data.data;
-                // console.log(titleList.value); // Pastikan data titleList berhasil diambil
             } catch (err) {
                 console.error('Error fetching titles:', err);
             }
@@ -319,15 +301,18 @@ export default {
             return `${year}-${month}-${day}`;
         };
 
-
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         const updateProfile = async () => {
-            try {
-                // Format tanggal dan kirim data update
-                // editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
-                // editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
+            // Validasi email
+            emailError.value = !validateEmail(editableUser.value.email);
+            nameError.value = !editableUser.value.name;
+            phoneError.value = !editableUser.value.phone;
 
+            // Jika ada error, berhenti
+            if (emailError.value || nameError.value || phoneError.value) return;
+
+            try {
                 const response = await axios.put(
                     `https://localhost:7102/api/Account/${user.value.email}`,
                     editableUser.value,
@@ -346,18 +331,11 @@ export default {
                     icon: 'success',
                     title: 'Profile Updated Successfully!',
                     text: 'Your profile information has been updated.',
-                    showConfirmButton: false, // Menghilangkan tombol OK
-                    timer: 1500, // Menampilkan SweetAlert selama 1,5 detik
+                    showConfirmButton: false,
+                    timer: 1500,
                 }).then(() => {
                     fetchUserData(emailFromPayload);
-                    // window.location.reload(); // Redirect ke halaman profil setelah penundaan
                 });
-
-                // window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
-                // Menunggu SweetAlert selesai ditampilkan
-                // await delay(1500); // Sesuaikan waktu delay jika perlu
-
-                // window.location.href = "/profile"; // Redirect ke halaman profil setelah penundaan
 
             } catch (err) {
                 console.error("Error updating profile:", err);
@@ -372,6 +350,44 @@ export default {
             }
         };
 
+        const changePassword = async () => {
+            // Validasi password
+            passwordError.value = changePasswordData.value.newPassword.length < 6;
+            confirmPasswordError.value = changePasswordData.value.newPassword !== changePasswordData.value.confirmNewPassword;
+
+            if (passwordError.value || confirmPasswordError.value) return;
+
+            try {
+                const response = await axios.put(
+                    `https://localhost:7102/api/Account/ChangePassword/${user.value.email}`,
+                    changePasswordData.value,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Password Changed Successfully!',
+                    text: 'Your password has been updated.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+
+                closeChangePasswordModal();
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error Changing Password',
+                    text: err.response?.data?.message || err.message,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            }
+        };
+
         // Edit profile methods
         const openEditModal = () => {
             // Salin data user ke editableUser
@@ -381,19 +397,13 @@ export default {
                 birth_Date: formatToISO(user.value.birth_Date),
             };
 
-            // Jika `title_Name` ada di user, cari `id_Title` yang sesuai dari titleList
             const selectedTitle = titleList.value.find(title => title.title_Name === user.value.title_Name);
             if (selectedTitle) {
-                editableUser.value.id_Title = selectedTitle.id_Title; // Set id_Title ke editableUser
+                editableUser.value.id_Title = selectedTitle.id_Title;
             }
-
-            // Format birth_Date dan join_Date menjadi yyyy-MM-dd
-            // editableUser.value.birth_Date = formatToDate(editableUser.value.birth_Date);
-            // editableUser.value.join_Date = formatToDate(editableUser.value.join_Date);
 
             showEditModal.value = true;
         };
-
 
         const closeEditModal = () => {
             showEditModal.value = false;
@@ -406,7 +416,7 @@ export default {
         const closeChangePasswordModal = () => {
             showChangePasswordModal.value = false;
         };
-        // format tanggal dengan format 13-11-2024 ke 2024-11-13
+
         const formatToISO = (date) => {
             const [day, month, year] = date.split('-');
             return `${year}-${month}-${day}`;
@@ -431,14 +441,20 @@ export default {
             openChangePasswordModal,
             closeChangePasswordModal,
             changePassword,
-            formatToDate
+            formatToDate,
+            isProfileFormInvalid,
+            isPasswordFormInvalid,
+            emailError,
+            nameError,
+            phoneError,
+            passwordError,
+            confirmPasswordError,
         };
     },
     methods: {
-        // format tanggal dengan format 13-11-2024 ke 13 November 2024
         formatTanggal(date) {
             const [day, month, year] = date.split('-');
-            const parsedDate = new Date(year, month - 1, day); // Bulan dikurangi 1 karena dimulai dari 0
+            const parsedDate = new Date(year, month - 1, day);
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return parsedDate.toLocaleDateString('id-ID', options);
         },
