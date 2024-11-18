@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-0 left-0 h-full w-64 bg-base-200 p-4 transition-transform z-50"
+    <div class="fixed top-0 left-0 h-full w-64 bg-[#0e162e] p-4 transition-transform z-50 text-white font-semibold"
         :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
         <div class="flex items-center mb-4">
             <!-- <img src="https://picsum.photos/40" alt="User Avatar" class="rounded-full mr-3" />
@@ -7,10 +7,10 @@
                 <h2 class="text-lg font-bold">User Info</h2>
                 <p class="text-sm text-gray-600">{{ payload.name }}</p>
             </div> -->
-            <img src="../../../assets/images/logo.png" alt="logo" class="w-36 mx-auto">
+            <img src="../../../assets/images/logo.png" alt="logo" class="w-20 mx-auto">
         </div>
 
-        <ul class="menu bg-base-200 rounded-box w-56">
+        <ul class="menu bg-inherit rounded-box w-56 mt-10">
 
             <!-- EMPLOYEE -->
             
@@ -41,7 +41,7 @@
             </li>
 
             <!-- Divider for Finance -->
-            <div v-if="role === 'Finance'" class="divider">Manage Reimbursement</div>
+            <div v-if="role === 'Finance'" class="divider divider-neutral">Manage Reimbursement</div>
 
             <!-- Approval Finance -->
             <li v-if="role === 'Finance'" class="mb-1">
@@ -69,7 +69,7 @@
             </li>
 
             <!-- Divider for HR -->
-            <div v-if="role === 'HR'" class="divider">Manage Data</div>
+            <div v-if="role === 'HR'" class="divider divider-neutral">Manage Data</div>
 
             <li v-if="role === 'HR'" class="mb-1">
                 <RouterLink to="/hr/manage-account" exact-active-class="active">
@@ -102,7 +102,7 @@
             </li>
 
 
-            <div v-if="role === 'HR'" class="divider">Manage Reimbursement</div>
+            <div v-if="role === 'HR'" class="divider divider-neutral">Manage Reimbursement</div>
             <li v-if="role === 'HR'" class="mb-1">
                 <RouterLink to="/hr/approval-hr" exact-active-class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +113,7 @@
                 </RouterLink>
             </li>
 
-            <div class="divider">Reimbursement</div>
+            <div class="divider divider-neutral">Reimbursement</div>
             <li class="mb-1">
                 <RouterLink to="/submission" exact-active-class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

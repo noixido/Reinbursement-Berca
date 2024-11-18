@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-200 min-h-screen flex items-center justify-center">
+    <div class="bg-indigo-950 min-h-screen flex items-center justify-center text-indigo-950">
         <div class="flex w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
             <!-- Left side - Login Form -->
             <div class="flex flex-col justify-center items-center w-1/2 p-8">
@@ -12,13 +12,13 @@
                 <form id="login" class="w-full flex flex-col gap-4">
                     <!-- Email input -->
                     <label class="flex flex-col">
-                        <input type="email" v-model="state.email" class="bg-gray-100 rounded-md p-3 w-full border border-gray-300 focus:outline-none" placeholder="Email" />
+                        <input type="email" v-model="state.email" class="bg-gray-100 rounded-md p-3 w-full border-indigo-950 border-2 focus:outline-none" placeholder="Email" />
                         <span v-if="v$.email.$error" class="text-sm text-red-500">{{ v$.email.$errors[0].$message }}</span>
                     </label>
 
                     <!-- Password input -->
                     <label class="flex flex-col">
-                        <input :type="showPassword ? 'text' : 'password'" v-model="state.password" class="bg-gray-100 rounded-md p-3 w-full border border-gray-300 focus:outline-none" placeholder="Password" />
+                        <input :type="showPassword ? 'text' : 'password'" v-model="state.password" class="bg-gray-100 rounded-md p-3 w-full border-2 border-indigo-950 focus:outline-none" placeholder="Password" />
                         <span v-if="v$.password.$error" class="text-sm text-red-500">{{ v$.password.$errors[0].$message }}</span>
                     </label>
 
@@ -28,7 +28,7 @@
                     </label>
 
                     <!-- Login Button -->
-                    <button type="submit" form="login" class="bg-red-500 hover:bg-red-600 text-white rounded-md p-3 w-full mt-5" @click.prevent="login">
+                    <button type="submit" form="login" class="bg-indigo-950 hover:bg-indigo-900 text-white rounded-md p-3 w-full mt-5" @click.prevent="login">
                         <div :class="stateLoading ? 'loading loading-spinner loading-sm text-white' : ''">
                             Login Now
                         </div>

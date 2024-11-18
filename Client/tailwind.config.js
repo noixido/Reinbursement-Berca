@@ -11,6 +11,12 @@ module.exports = {
     require('daisyui'),
   ],
   daisyui: {
-    themes: ["acid"],
-  },
+    themes: [
+      {
+        mytheme: {
+          "neutral": "#ffffff",
+        },
+      },
+      "acid",
+    ],  },
 }
