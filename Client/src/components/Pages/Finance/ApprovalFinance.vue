@@ -64,8 +64,8 @@
                             <span :class="{
                                 'badge badge-warning': item.status.includes('progress'),
                                 'badge badge-success': item.status.includes('approved'),
-                                'badge badge-error': item.status.includes('declined'),
-                            }">
+                                'badge badge-error': item.status.includes('declined')
+                            }" class="badge-status">
                                 {{ item.status }}
                             </span>
                         </td>
@@ -481,5 +481,13 @@ export default {
 #kontrol .btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+.badge-status {
+    display: inline-block; /* Membuat elemen berbentuk inline-block */
+    font-size: 0.75rem; /* Ukuran font kecil */
+    font-weight: normal; /* Tidak bold */
+    white-space: nowrap; /* Menghindari teks terpotong ke bawah */
+    overflow: hidden; /* Menyembunyikan teks yang melebihi area */
+    text-align: center; /* Memastikan teks selalu rata tengah */
 }
 </style>

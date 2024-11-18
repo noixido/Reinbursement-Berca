@@ -2,7 +2,6 @@ import { createWebHistory, createRouter } from "vue-router";
 import Login from "../components/Auth/Login.vue";
 import Submission from "../components/pages/Submission.vue";
 import History from "../components/pages/History.vue";
-import IndexHr from "../components/Pages/HR/indexHr.vue";
 import ManageAccount from "../components/Pages/HR/manageAccount.vue";
 import ManageTitle from "../components/Pages/HR/manageTitle.vue";
 import ManageCategory from "../components/Pages/HR/manageCategory.vue";
@@ -11,6 +10,8 @@ import ApprovalFinance from "../components/pages/Finance/ApprovalFinance.vue";
 import Profile from "../components/pages/Profile.vue";
 import IndexEmployee from "../components/Pages/Employee/indexEmployee.vue";
 import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
+import IndexHr from "../components/pages/HR/indexHr.vue";
+import NotFound from "../components/pages/NotFound.vue";
 
 const routes = [{
         path: '/',
@@ -115,7 +116,14 @@ const routes = [{
       meta: {
           requiresAuth: true,
       }
+    },{
+      path: '/:pathMatch(.*)*',  // wildcard untuk URL yang tidak ditemukan
+      name: 'not-found',
+      component: NotFound,
+      meta: {
+        requiresAuth: true,
     }
+    },
 ]
 
 const router = createRouter({
