@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <!-- Search Bar -->
-    <h1 class="text-center text-2xl font-bold mb-4">Approval Reimbursement for Human Resource</h1>
+    <h1 class="text-3xl font-bold mb-10">Approval Reimbursement for Human Resource</h1>
 
     <!-- Search Bar and Show Entries -->
     <div class="mb-4 flex justify-between items-center">
@@ -18,33 +18,33 @@
         </select>
         <span class="ml-2">entries</span>
       </div>
-      <div class="flex justify-end">
-        <input v-model="searchQuery" type="text" placeholder="Search data..." class="input input-bordered w-full max-w-xs" />
+      <div class="relative w-full max-w-xs">
+        <input v-model="searchQuery" type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs" />
       </div>
     </div>
 
     <!-- Tabel -->
     <div class="overflow-x-auto">
-      <table class="table w-full">
+      <table class="table w-full border-collapse">
         <thead>
           <tr>
-            <th>Nomor</th>
-            <th>ID Reimbursement</th>
-            <th>Category</th>
-            <th>Submission Date</th>
-            <th>Total Funds</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th class="p-2 text-center font-bold">Nomor</th>
+            <th class="p-2 text-center font-bold">ID Reimbursement</th>
+            <th class="p-2 text-center font-bold">Kategori</th>
+            <th class="p-2 text-center font-bold">Tanggal Pengajuan</th>
+            <th class="p-2 text-center font-bold">Jumlah Dana</th>
+            <th class="p-2 text-center font-bold">Status</th>
+            <th class="p-2 text-center font-bold">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.id_Reimbursement }}</td>
-            <td>{{ item.category_Name }}</td>
-            <td>{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
-            <td>Rp. {{ formatCurrency(item.amount) }}</td>
-            <td>
+            <td class="p-2 text-center">{{ index + 1 }}</td>
+            <td class="p-2 text-center">{{ item.id_Reimbursement }}</td>
+            <td class="p-2 text-center">{{ item.category_Name }}</td>
+            <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
+            <td class="p-2 text-center">Rp. {{ formatCurrency(item.amount) }}</td>
+            <td class="p-2 text-center">
               <span :class="{
                   'badge badge-warning text-xs px-2 py-1 rounded-lg': item.status.includes('progress'),
                   'badge badge-success text-xs px-2 py-1 rounded-lg': item.status === 'approved',
@@ -53,9 +53,9 @@
                 {{ item.status }}
               </span>
             </td>
-            <td>
+            <td class="p-2 text-center">
               <button
-                class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
                 @click="openModal(item)"
                 title="View Details"
               >

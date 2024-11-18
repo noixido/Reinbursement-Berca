@@ -192,6 +192,7 @@ namespace API.Repositories
                     .ThenInclude(rp => rp.Account).ThenInclude(a => a.AccountDetails)
                 .Include(re => re.Category)
                 .Where(re => re.Status == status)
+                .OrderByDescending(re => re.Submit_Date)
                 .Select(re => new ReimbursementVM
                 {
                     Id_Account = re.ReimbursementProfilings.FirstOrDefault().Id_Account,

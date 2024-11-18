@@ -278,7 +278,7 @@ export default {
                     showConfirmButton: false, // Menghilangkan tombol OK
                     timer: 1500, // SweetAlert akan hilang otomatis setelah 1,5 detik
                 });
-                console.log("Password changed successfully:", response);
+                // console.log("Password changed successfully:", response);
                 closeChangePasswordModal();
             } catch (err) {
                 // Menampilkan SweetAlert error jika terjadi kesalahan

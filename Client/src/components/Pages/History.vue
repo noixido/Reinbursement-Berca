@@ -1,53 +1,57 @@
 <template>
     <MainLayout>
         <!-- Search Bar -->
-        <h1 class="text-center text-2xl font-bold mb-4">History Reimbursement {{ account_Name }}</h1>
+        <h1 class="text-3xl font-bold mb-10">History Reimbursement {{ account_Name }}</h1>
+        <!-- <div class="mb-4 flex justify-end">
+            <input v-model="searchQuery" type="text" placeholder="Cari data..."
+                class="input input-bordered w-full max-w-xs" />
+        </div> -->
         <!-- Search Bar and Show Entries -->
         <div class="mb-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <label class="mr-2">Show</label>
-                <select
-                v-model="itemsPerPage"
-                @change="currentPage = 1"
-                class="border border-gray-300 rounded p-2 bg-white"
-                >
-                <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
-                    {{ option }}
-                </option>
-                </select>
-                <span class="ml-2">entries</span>
-            </div>
-            <div class="flex justify-end">
-                <input v-model="searchQuery" type="text" placeholder="Search data..." class="input input-bordered w-full max-w-xs" />
-            </div>
+        <div class="flex items-center">
+            <label class="mr-2">Show</label>
+            <select
+            v-model="itemsPerPage"
+            @change="currentPage = 1"
+            class="border border-gray-300 rounded p-2 bg-white"
+            >
+            <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+                {{ option }}
+            </option>
+            </select>
+            <span class="ml-2">entries</span>
+        </div>
+        <div class="relative w-full max-w-xs">
+            <input v-model="searchQuery" type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs" />
+        </div>
         </div>
 
         <!-- Table -->
-        <table class="table table-zebra">
+        <table class="table w-full border-collapse">
             <thead>
                 <tr>
-                    <th>Nomor</th>
-                    <th>ID Reimbursement</th>
-                    <th>Category</th>
-                    <th>Submission Date</th>
-                    <th>Jumlah Dana</th>
-                    <th>Total Funds</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="p-2 text-center font-bold">Nomor</th>
+                    <th class="p-2 text-center font-bold">ID Reimbursement</th>
+                    <th class="p-2 text-center font-bold">Kategori</th>
+                    <th class="p-2 text-center font-bold">Tanggal Pengajuan</th>
+                    <th class="p-2 text-center font-bold">Jumlah Dana</th>
+                    <th class="p-2 text-center font-bold">Dana Disetujui</th>
+                    <th class="p-2 text-center font-bold">Status</th>
+                    <th class="p-2 text-center font-bold">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement" v-if="paginatedData.length > 0">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.id_Reimbursement }}</td>
-                    <td>{{ item.category_Name }}</td>
-                    <td>{{ new Date(item.submit_Date).toLocaleDateString('id-ID', {
+                    <td class="p-2 text-center">{{ index + 1 }}</td>
+                    <td class="p-2 text-center">{{ item.id_Reimbursement }}</td>
+                    <td class="p-2 text-center">{{ item.category_Name }}</td>
+                    <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', {
                         year: 'numeric', month: 'long', day:
                             '2-digit'
                     }) }}</td>
-                    <td>Rp. {{ formatCurrency(item.amount) }}</td>
-                    <td>Rp. {{ item.approve_Amount ? formatCurrency(item.approve_Amount) : "-" }}</td>
-                    <td>
+                    <td class="p-2 text-center">Rp. {{ formatCurrency(item.amount) }}</td>
+                    <td class="p-2 text-center">Rp. {{ item.approve_Amount ? formatCurrency(item.approve_Amount) : "-" }}</td>
+                    <td class="p-2 text-center">
                         <span :class="{
                             'badge badge-warning': item.status.includes('progress'),
                             'badge badge-success': item.status.includes('approved'),
@@ -56,9 +60,9 @@
                             {{ item.status }}
                         </span>
                     </td>
-                    <td>
+                    <td class="p-2 text-center">
                         <button
-                                class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
                                 @click="openModal(item)"
                                 title="View Details"
                             >
@@ -69,43 +73,62 @@
 
                 <!-- Jika tidak ada data, tampilkan pesan "Data tidak ditemukan" -->
                 <tr v-if="paginatedData.length === 0">
-                    <td colspan="8" class="text-center text-gray-500 py-4">Data tidak ditemukan</td>
+                    <td colspan="8" class="text-center py-4 text-red-500">No data found</td>
                 </tr>
             </tbody>
         </table>
 
         <!-- Pagination Controls -->
         <div class="flex justify-between mt-5">
-        <div class="mb-4">
-            <span class="text-sm">
-            Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
-            </span>
-        </div>
-        <div class="join mt-4">
-            <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
-            Prev
-            </button>
-            <button
-            v-for="page in pageNumbers"
-            :key="page"
-            class="join-item btn"
-            @click="currentPage = page"
-            :class="{'btn-active': currentPage === page}"
-            >
-            {{ page }}
-            </button>
-            <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
-            Last
-            </button>
-        </div>
+            <div class="mb-4">
+                <span class="text-sm">
+                    Showing {{ startItem }} to {{ endItem }} of {{ filteredData.length }} entries
+                </span>
+            </div>
+            <div class="join mt-4">
+                <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)"
+                    :disabled="currentPage <= 1">
+                    Prev
+                </button>
+                <button v-for="page in pageNumbers" :key="page" class="join-item btn" @click="currentPage = page"
+                    :class="{ 'btn-active': currentPage === page }">
+                    {{ page }}
+                </button>
+                <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
+                    Last
+                </button>
+            </div>
         </div>
         <!-- Modal -->
         <dialog ref="reimbursementModal" class="modal">
-            <div class="modal-box max-w-3xl">
+            <div class="modal-box max-w-3xl text-center">
                 <form method="dialog">
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
                 <h3 class="text-center text-2xl font-bold mb-4">Detail Reimbursement</h3>
+
+                <div class="inline-block border-4" :class="{
+                        'border-blue-500': selectedStatus.includes('approved'),
+                        'border-red-500': selectedStatus.includes('decline'),
+                        'border-yellow-500': selectedStatus.includes('progress'),
+                    }">
+                    <div :class="{
+                        'bg-blue-500': selectedStatus.includes('approved'),
+                        'bg-red-500': selectedStatus.includes('decline'),
+                        'bg-yellow-500': selectedStatus.includes('progress'),
+                    }" class="inline-block p-2 border-4 w-auto text-white font-bold border-white">
+                        <span v-if="selectedStatus === 'approved'">
+                            Reimbursement akan diterima pada bulan {{ selectedDateReceived }}
+                        </span>
+                        <span v-else-if="selectedStatus.includes('decline')">
+                            Reimbursement ditolak.
+                        </span>
+                        <span v-else>
+                            Reimbursement sedang dalam proses.
+                        </span>
+                    </div>
+                </div>
+
                 <div class="py-4 space-y-3 text-gray-800">
                     <div class="text-center">
                         <div class="font-semibold">📌 ID Reimbursement:</div>
@@ -198,6 +221,9 @@ export default {
             currentPage: 1,
             itemsPerPage: 10, // Adjust this to change the number of items per page
             selectedReimbursement: {}, // to hold the selected reimbursement details
+
+            selectedStatus: '',
+            selectedDateReceived: '',
         };
     },
     computed: {
@@ -250,7 +276,22 @@ export default {
         },
         openModal(item) {
             this.selectedReimbursement = item; // set the selected reimbursement
+
+
+            const status = item.status.toLowerCase();
+            const submitDate = new Date(item.submit_Date);
+
+            const isBefore15 = submitDate.getDate() <= 15;
+
+            const month = submitDate.getMonth() + (isBefore15 ? 0 : 1);
+            const year = submitDate.getFullYear();
+            const dateReceived = new Date(year, month, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+
+            this.selectedStatus = status;
+            this.selectedDateReceived = dateReceived;
+
             this.$refs.reimbursementModal.showModal(); // open the modal
+            console.log(this.selectedReimbursement)
         },
         formatCurrency(value) {
             if (!value) return '0';
@@ -309,4 +350,3 @@ export default {
 }
 
 </style>
-

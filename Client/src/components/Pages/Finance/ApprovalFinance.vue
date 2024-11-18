@@ -1,7 +1,7 @@
 <template>
     <MainLayout>
         <!-- Search Bar -->
-        <h1 class="text-center text-2xl font-bold mb-4">
+        <h1 class="text-3xl font-bold mb-10">
             Approval Reimbursement for Finance
         </h1>
         <!-- Search Bar and Show Entries -->
@@ -19,8 +19,8 @@
                 </select>
                 <span class="ml-2">entries</span>
             </div>
-            <div class="flex justify-end">
-                <input v-model="searchQuery" type="text" placeholder="Cari data..." class="input input-bordered w-full max-w-xs" />
+            <div class="relative w-full max-w-xs">
+                <input v-model="searchQuery" type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs" />
             </div>
         </div>
 
@@ -71,7 +71,7 @@
                         </td>
                         <td>
                             <button
-                                class="btn btn-info btn-xs mr-2 bg-[#45aafd] hover:bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
                                 @click="openModal(item)"
                                 title="View Details"
                             >
@@ -80,7 +80,7 @@
                         </td>
                     </tr>
                         <tr v-if="filteredData.length === 0">
-                            <td colspan="7" class="text-center py-4 text-red-500">No data found</td>
+                            <td colspan="8" class="text-center py-4 text-red-500">No data found</td>
                         </tr>
                     </tbody>
                 </table>
