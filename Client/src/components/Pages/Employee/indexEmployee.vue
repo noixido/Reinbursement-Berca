@@ -234,6 +234,14 @@ export default {
                 })
                 .catch((error) => {
                     this.reimbursements = [];
+                    this.startPeriode = new Date(startDate).toLocaleDateString('id-ID', {
+                        year: 'numeric', month: 'long', day:
+                            '2-digit'
+                    })
+                    this.endPeriode = new Date(endDate).toLocaleDateString('id-ID', {
+                        year: 'numeric', month: 'long', day:
+                            '2-digit'
+                    })
                     console.log(this.reimbursements)
                     console.error('Error fetching data:', error);
                 });
