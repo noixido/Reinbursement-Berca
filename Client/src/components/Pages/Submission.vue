@@ -23,8 +23,7 @@
                                         {{ category.category_Name }}
                                     </option>
                                 </select>
-                                <p v-if="formErrors[index]?.category" class="text-red-500 text-xs mt-1">Kategori harus
-                                    diisi.
+                                <p v-if="formErrors[index]?.category" class="text-red-500 text-xs mt-1">Category is required!
                                 </p>
                             </div>
     
@@ -32,8 +31,10 @@
                                 <label for="inputEvidence" class="block text-gray-700 font-semibold mb-2">Evidence</label>
                                 <input type="file" @change="handleFileUpload($event, index)"
                                     class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                                <p v-if="formErrors[index]?.evidence" class="text-red-500 text-xs mt-1">Evidence harus
-                                    diisi.
+                                <p v-if="formErrors[index]?.evidence" class="text-red-500 text-xs mt-1">Evidence is required!
+                                </p>
+                                <p v-if="formErrors[index]?.evidenceFileType" class="text-red-500 text-xs mt-1">
+                                    Only PDF files are allowed!
                                 </p>
                             </div>
     
@@ -41,8 +42,7 @@
                                 <label for="inputAmount" class="block text-gray-700 font-semibold mb-2">Amount</label>
                                 <input v-model="form.amount" type="number" min="0"
                                     class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                                <p v-if="formErrors[index]?.amount" class="text-red-500 text-xs mt-1">Amount harus diisi dan
-                                    lebih dari 0</p>
+                                <p v-if="formErrors[index]?.amount" class="text-red-500 text-xs mt-1">Amount is required and the value cannot be 0!</p>
                             </div>
                         </div>
                     </template>
@@ -112,7 +112,7 @@ function validateForm() {
     formErrors.value = [];  // Reset errors
 
     forms.value.forEach((form, index) => {
-        const errors = { category: false, evidence: false, amount: false };
+        const errors = { category: false, evidence: false, evidenceFileType: false, amount: false };
         if (!form.id_Category) {
             errors.category = true;
             valid = false;
@@ -120,6 +120,13 @@ function validateForm() {
         if (!form.evidence) {
             errors.evidence = true;
             valid = false;
+        }else {
+            // Validate evidence file type (only PDF allowed)
+            const fileExtension = form.evidence.name.split('.').pop().toLowerCase();
+            if (fileExtension !== 'pdf') {
+                errors.evidenceFileType = true;
+                valid = false;
+            }
         }
         if (form.amount <= 0) {
             errors.amount = true;

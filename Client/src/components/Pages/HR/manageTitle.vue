@@ -22,7 +22,7 @@
                 </div>
 
                 <div  class="flex items-center">
-                    <button @click="openAddModal" class="btn btn-primary" title="Add Data">
+                    <button @click="openAddModal" class="btn bg-[#45aafd]" title="Add Data">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -41,21 +41,23 @@
                                 <input
                                     type="text"
                                     id="title"
-                                    v-model="title.title_Name"
+                                    v-model="state.title.title_Name"
                                     placeholder="Title Name"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.title.title_Name.$error" class="text-sm text-red-500">{{ v$.title.title_Name.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="reimburse_Limit" class="font-semibold ml-3 mb-2">Reimbursement Limit</label>
                                 <input
                                     type="text"
                                     id="reimburse_Limit"
-                                    v-model="title.reimburse_Limit"
+                                    v-model="state.title.reimburse_Limit"
                                     placeholder="Reimbursement Limit"
                                     class="input input-bordered w-full"
                                 />
+                                <span v-if="v$.title.reimburse_Limit.$error" class="text-sm text-red-500">{{ v$.title.reimburse_Limit.$errors[0].$message }}</span>
                             </div>
                             <button
                                 type="submit"
@@ -79,7 +81,7 @@
                 type="text"
                 v-model="searchTerm"
                 placeholder="Search titles..."
-                class="bg-white text-black border border-gray-300 rounded p-2 w-full pr-8"
+                class="input input-bordered w-full max-w-xs"
               />
               <!-- Clear button (shown when searchTerm is not empty) -->
               <button
@@ -93,22 +95,22 @@
           </div>
   
           <!-- Table -->
-          <table class="table">
+          <table class="table w-full border-collapse">
             <!-- Table Head -->
             <thead>
               <tr>
-                <th>Id Account</th>
-                <th>Title Name</th>
-                <th>Reimbursement Limit</th>
-                <th>Action</th>
+                <th class="p-2 text-center font-bold">Id Account</th>
+                <th class="p-2 text-center font-bold">Title Name</th>
+                <th class="p-2 text-center font-bold">Reimbursement Limit</th>
+                <th class="p-2 text-center font-bold">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(title, index) in paginatedData" :key="title.id_Title">
-                <td>{{ title.id_Title }}</td>
-                <td>{{ title.title_Name }}</td>
-                <td>{{ formatToRupiah(title.reimburse_Limit) }}</td>
-                <td>
+                <td class="p-2 text-center">{{ title.id_Title }}</td>
+                <td class="p-2 text-center">{{ title.title_Name }}</td>
+                <td class="p-2 text-center">{{ formatToRupiah(title.reimburse_Limit) }}</td>
+                <td class="p-2 text-center">
                   <div class="flex gap-5 justify-center">
                     <button class="btn btn-warning" @click="editData(title)" title="Edit Data">
                       <i class="fas fa-pencil-alt"></i>
@@ -187,6 +189,9 @@
   <script>
   import axios from "axios";
   import MainLayout from "../../layouts/MainLayout.vue";
+  import useVuelidate from '@vuelidate/core';
+  import { required, numeric } from '@vuelidate/validators';
+  import { reactive, computed } from "vue";
   
   export default {
     name: "manage-title",
@@ -196,11 +201,6 @@
     data() {
       return {
         titles: [],
-        title: {
-            id_Title: "",
-            title_Name: "",
-            reimburse_Limit: "",
-        },
         searchTerm: "",
         itemsPerPage: 10,
         currentPage: 1,
@@ -209,8 +209,30 @@
     },
     setup() {
         const token = localStorage.getItem("token");
+
+        const state = reactive({
+          title: {
+            id_Title: "",
+            title_Name: "",
+            reimburse_Limit: "",
+          },
+        });
+
+        const rules = computed(()=>{
+          return {
+            title: {
+              title_Name: { required },
+              reimburse_Limit: { required, numeric },
+            },
+          };
+        })
+
+        const v$ = useVuelidate(rules, state);
+
         return {
             token,
+            state,
+            v$,
         };
     },
     computed: {
@@ -282,7 +304,11 @@
         this.$refs.theModal.showModal();
       },
       clearForm() {
-        this.title = { title_Name: "", reimburse_Limit: ""};
+        this.state.title = { 
+          title_Name: "", 
+          reimburse_Limit: ""
+        };
+        this.v$.$reset();
       },
       submitData(){
         if(this.isEditing){
@@ -292,9 +318,16 @@
         }
       },
       addData(){
+        this.v$.$validate();
+
+        if(this.v$.$error){
+          console.error("fix the error first!");
+          return;
+        }
+
         const api = "https://localhost:7102/api/Titles";
         return axios
-            .post(api, this.title, {
+            .post(api, this.state.title, {
                     headers: {
                         Authorization: `Bearer ${this.token}`,
                         "Content-Type": "application/json",
@@ -330,14 +363,21 @@
       editData(title){
         this.isEditing = true;
         this.getDataById(title.id_Title).then((data)=>{
-            this.title = data;
+            this.state.title = data;
             this.$refs.theModal.showModal();
         });
       },
       updateData(){
-        const api = "https://localhost:7102/api/Titles/" + this.title.id_Title;
+        this.v$.$validate();
+
+        if(this.v$.$error){
+          console.error("fix the error first!");
+          return;
+        }
+
+        const api = "https://localhost:7102/api/Titles/" + this.state.title.id_Title;
         return axios
-            .put(api, this.title, {
+            .put(api, this.state.title, {
                     headers: {
                         Authorization: `Bearer ${this.token}`,
                         "Content-Type": "application/json",

@@ -49,7 +49,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
-import { required, email, minLength } from '@vuelidate/validators';
+import { required, email } from '@vuelidate/validators';
 import { reactive, computed } from 'vue';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';

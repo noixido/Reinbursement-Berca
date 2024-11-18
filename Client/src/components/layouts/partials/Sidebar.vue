@@ -2,12 +2,14 @@
     <div class="fixed top-0 left-0 h-full w-64 bg-base-200 p-4 transition-transform z-50"
         :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
         <div class="flex items-center mb-4">
-            <img src="https://picsum.photos/40" alt="User Avatar" class="rounded-full mr-3" />
+            <!-- <img src="https://picsum.photos/40" alt="User Avatar" class="rounded-full mr-3" />
             <div>
                 <h2 class="text-lg font-bold">User Info</h2>
                 <p class="text-sm text-gray-600">{{ payload.name }}</p>
-            </div>
+            </div> -->
+            <img src="../../../assets/images/logo.png" alt="logo" class="w-36 mx-auto">
         </div>
+
         <ul class="menu bg-base-200 rounded-box w-56">
 
             <!-- EMPLOYEE -->

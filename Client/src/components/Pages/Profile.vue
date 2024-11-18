@@ -177,18 +177,30 @@
                 <form @submit.prevent="changePassword">
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">Old Password</label>
-                        <input type="password" v-model="changePasswordData.oldPassword"
-                            class="input input-bordered w-full" required />
+                        <input 
+                            type="password" 
+                            v-model="changePasswordData.oldPassword"
+                            class="input input-bordered w-full" 
+                            placeholder="Your Old Password"
+                            required />
                     </div>
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">New Password</label>
-                        <input type="password" v-model="changePasswordData.newPassword"
-                            class="input input-bordered w-full" required />
+                        <input 
+                            type="password" 
+                            v-model="changePasswordData.newPassword"
+                            class="input input-bordered w-full" 
+                            placeholder="Your New Password"
+                            required />
                     </div>
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">Confirm New Password</label>
-                        <input type="password" v-model="changePasswordData.confirmNewPassword"
-                            class="input input-bordered w-full" required />
+                        <input 
+                            type="password" 
+                            v-model="changePasswordData.confirmNewPassword"
+                            class="input input-bordered w-full" 
+                            placeholder="Confirm Your New Password"
+                            required />
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="closeChangePasswordModal" class="btn btn-ghost">Cancel</button>
@@ -275,7 +287,7 @@ export default {
                     showConfirmButton: false, // Menghilangkan tombol OK
                     timer: 1500, // SweetAlert akan hilang otomatis setelah 1,5 detik
                 });
-                console.log("Password changed successfully:", response);
+                // console.log("Password changed successfully:", response);
                 closeChangePasswordModal();
             } catch (err) {
                 // Menampilkan SweetAlert error jika terjadi kesalahan
