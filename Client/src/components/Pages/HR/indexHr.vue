@@ -16,7 +16,7 @@
                     <div class="bg-white p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-times-circle text-3xl text-red-500 mr-4"></i>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Decline Requests</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">Decline Status</h3>
                             <p class="text-2xl font-bold text-red-900">{{ rejectedRequests }}</p>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                         <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">
-                                Approved Saldo</h3>
+                                Approved Funds</h3>
                             <p class="text-2xl font-bold text-black">{{ formattedMonthlyReimbursements }}</p>
                         </div>
                     </div>

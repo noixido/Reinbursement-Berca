@@ -44,15 +44,15 @@
             <td class="p-2 text-center">{{ item.category_Name }}</td>
             <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
             <td class="p-2 text-center">Rp. {{ formatCurrency(item.amount) }}</td>
-            <td class="p-2 text-center">
-              <span :class="{
-                  'badge badge-warning text-xs px-2 py-1 rounded-lg': item.status.includes('progress'),
-                  'badge badge-success text-xs px-2 py-1 rounded-lg': item.status === 'approved',
-                  'badge badge-error text-xs px-2 py-1 rounded-lg': item.status.includes('declined')
-              }">
-                {{ item.status }}
-              </span>
-            </td>
+            <td>
+                            <span :class="{
+                                'badge badge-warning': item.status.includes('progress'),
+                                'badge badge-success': item.status.includes('approved'),
+                                'badge badge-error': item.status.includes('declined')
+                            }" class="badge-status">
+                                {{ item.status }}
+                            </span>
+                        </td>
             <td class="p-2 text-center">
               <button
                 class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
@@ -346,5 +346,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.badge-status {
+    display: inline-block; /* Membuat elemen berbentuk inline-block */
+    font-size: 0.75rem; /* Ukuran font kecil */
+    font-weight: normal; /* Tidak bold */
+    white-space: nowrap; /* Menghindari teks terpotong ke bawah */
+    overflow: hidden; /* Menyembunyikan teks yang melebihi area */
+    text-align: center; /* Memastikan teks selalu rata tengah */
+}
 /* Sesuaikan style sesuai kebutuhan */
 </style>
