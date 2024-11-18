@@ -19,7 +19,7 @@
         <span class="ml-2">entries</span>
       </div>
       <div class="flex justify-end">
-        <input v-model="searchQuery" type="text" placeholder="Cari data..." class="input input-bordered w-full max-w-xs" />
+        <input v-model="searchQuery" type="text" placeholder="Search data..." class="input input-bordered w-full max-w-xs" />
       </div>
     </div>
 
@@ -30,9 +30,9 @@
           <tr>
             <th>Nomor</th>
             <th>ID Reimbursement</th>
-            <th>Kategori</th>
-            <th>Tanggal Pengajuan</th>
-            <th>Jumlah Dana</th>
+            <th>Category</th>
+            <th>Submission Date</th>
+            <th>Total Funds</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -116,7 +116,7 @@
               <span>{{ selectedReimbursement.id_Account }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="font-semibold">👤 Nama User:</span>
+              <span class="font-semibold">👤 User Name:</span>
               <span>{{ selectedReimbursement.name }}</span>
             </div>
             <div class="flex justify-between">
@@ -126,17 +126,17 @@
           </div>
 
           <div class="flex justify-between">
-            <span class="font-semibold">📁 Kategori:</span>
+            <span class="font-semibold">📁 Category:</span>
             <span>{{ selectedReimbursement.category_Name }}</span>
           </div>
 
           <div class="flex justify-between">
-            <span class="font-semibold">📅 Tanggal Pengajuan:</span>
+            <span class="font-semibold">📅 Submission Date:</span>
             <span>{{ new Date(selectedReimbursement.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</span>
           </div>
 
           <div class="flex justify-between">
-            <span class="font-semibold">💰 Jumlah Dana:</span>
+            <span class="font-semibold">💰 Total Funds:</span>
             <span>Rp {{ formatCurrency(selectedReimbursement.amount) }}</span>
           </div>
 
@@ -152,7 +152,7 @@
           </div>
 
           <div class="flex justify-between">
-            <span class="font-semibold">📝 Catatan:</span>
+            <span class="font-semibold">📝 Notes:</span>
             <div class="md:max-w-md mt-2 md:mt-0 font-semibold whitespace-normal break-words">
               {{ selectedReimbursement.note || 'Tidak ada catatan' }}
             </div>
@@ -179,7 +179,7 @@
 
            <!-- Form Approve atau Decline -->
            <div v-if="showApproveForm" class="mt-4 space-y-3">
-            <label class="font-semibold">Catatan:</label>
+            <label class="font-semibold">Notes:</label>
             <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full" placeholder="Masukkan catatan persetujuan"></textarea>
             <button class="btn btn-primary mt-2 w-full" @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Approval
@@ -187,7 +187,7 @@
           </div>
 
           <div v-if="showDeclineForm" class="mt-4 space-y-3">
-            <label class="font-semibold">Catatan:</label>
+            <label class="font-semibold">Notes:</label>
             <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full" placeholder="Masukkan alasan penolakan"></textarea>
             <button class="btn btn-primary mt-2 w-full" @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Decline

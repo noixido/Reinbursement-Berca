@@ -15,8 +15,13 @@
         <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6 flex justify-between">
             <div class="flex items-center">
                 <!-- Profile Image -->
-                <div class="w-24 h-24 rounded-full overflow-hidden mr-6">
-                    <img alt="Profile Picture"
+                <div class="w-24 h-24 rounded-full overflow-hidden mr-6 border-2 border-gray-300 flex items-center justify-center bg-gray-200">
+                    <!-- Display a user icon (siluet) if no profile picture -->
+                    <svg v-if="!user.profilePicture" xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14c3.866 0 7 3.134 7 7H5c0-3.866 3.134-7 7-7zM12 2a4 4 0 110 8 4 4 0 010-8z" />
+                    </svg>
+                    <!-- Show profile image if exists -->
+                    <img v-else alt="Profile Picture"
                         :src="user.profilePicture || 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'"
                         class="w-full h-full object-cover" />
                 </div>
@@ -38,6 +43,7 @@
                 </button>
             </div>
         </div>
+
 
         <!-- Error Message -->
         <div v-if="error" class="text-red-500">
@@ -106,21 +112,20 @@
         <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-96">
                 <h2 class="text-xl font-semibold mb-4">Edit Profile</h2>
-
                 <!-- Scrollable Form -->
                 <form @submit.prevent="updateProfile">
                     <div class="modal-body space-y-4">
                         <div class="mb-4">
                             <label class="font-medium text-gray-600">Id</label>
-                            <input type="text" v-model="editableUser.id_Account" class="input input-bordered w-full" />
+                            <input type="text" v-model="editableUser.id_Account" class="input input-bordered w-full bg-gray-200" disabled />
+                        </div>
+                        <div class="mb-4">
+                            <label class="font-medium text-gray-600">Role Name</label>
+                            <input type="text" v-model="editableUser.role_Name" class="input input-bordered w-full bg-gray-200" disabled />
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-600">Email</label>
                             <input type="text" v-model="editableUser.email" class="input input-bordered w-full" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Role Name</label>
-                            <input type="text" v-model="editableUser.role_Name" class="input input-bordered w-full" />
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-600">Name</label>
@@ -144,8 +149,7 @@
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-600">Current Limit</label>
-                            <input type="text" v-model="editableUser.current_Limit"
-                                class="input input-bordered w-full" />
+                            <input type="text" v-model="editableUser.current_Limit" class="input input-bordered w-full" />
                         </div>
 
                         <!-- Title Selection -->
@@ -167,7 +171,6 @@
             </div>
         </div>
 
-
         <!-- Change Password Modal -->
         <div v-if="showChangePasswordModal"
             class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -178,17 +181,17 @@
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">Old Password</label>
                         <input type="password" v-model="changePasswordData.oldPassword"
-                            class="input input-bordered w-full" required />
+                            class="input input-bordered w-full" placeholder="Enter your old password" required />
                     </div>
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">New Password</label>
                         <input type="password" v-model="changePasswordData.newPassword"
-                            class="input input-bordered w-full" required />
+                            class="input input-bordered w-full" placeholder="Enter your new password" required />
                     </div>
                     <div class="mb-4">
                         <label class="font-medium text-gray-600">Confirm New Password</label>
                         <input type="password" v-model="changePasswordData.confirmNewPassword"
-                            class="input input-bordered w-full" required />
+                            class="input input-bordered w-full" placeholder="Confirm your new password" required />
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="closeChangePasswordModal" class="btn btn-ghost">Cancel</button>
@@ -249,7 +252,7 @@ export default {
                     },
                 });
                 user.value = response.data.data;
-                console.log(user);
+                // console.log(user);
             } catch (err) {
                 error.value = "Error fetching user data: " + err.message;
             }
@@ -301,7 +304,7 @@ export default {
                     }
                 });
                 titleList.value = response.data.data;
-                console.log(titleList.value); // Pastikan data titleList berhasil diambil
+                // console.log(titleList.value); // Pastikan data titleList berhasil diambil
             } catch (err) {
                 console.error('Error fetching titles:', err);
             }

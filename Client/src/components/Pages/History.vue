@@ -2,28 +2,24 @@
     <MainLayout>
         <!-- Search Bar -->
         <h1 class="text-center text-2xl font-bold mb-4">History Reimbursement {{ account_Name }}</h1>
-        <!-- <div class="mb-4 flex justify-end">
-            <input v-model="searchQuery" type="text" placeholder="Cari data..."
-                class="input input-bordered w-full max-w-xs" />
-        </div> -->
         <!-- Search Bar and Show Entries -->
         <div class="mb-4 flex justify-between items-center">
-        <div class="flex items-center">
-            <label class="mr-2">Show</label>
-            <select
-            v-model="itemsPerPage"
-            @change="currentPage = 1"
-            class="border border-gray-300 rounded p-2 bg-white"
-            >
-            <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
-                {{ option }}
-            </option>
-            </select>
-            <span class="ml-2">entries</span>
-        </div>
-        <div class="flex justify-end">
-            <input v-model="searchQuery" type="text" placeholder="Cari data..." class="input input-bordered w-full max-w-xs" />
-        </div>
+            <div class="flex items-center">
+                <label class="mr-2">Show</label>
+                <select
+                v-model="itemsPerPage"
+                @change="currentPage = 1"
+                class="border border-gray-300 rounded p-2 bg-white"
+                >
+                <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+                    {{ option }}
+                </option>
+                </select>
+                <span class="ml-2">entries</span>
+            </div>
+            <div class="flex justify-end">
+                <input v-model="searchQuery" type="text" placeholder="Search data..." class="input input-bordered w-full max-w-xs" />
+            </div>
         </div>
 
         <!-- Table -->
@@ -32,10 +28,10 @@
                 <tr>
                     <th>Nomor</th>
                     <th>ID Reimbursement</th>
-                    <th>Kategori</th>
-                    <th>Tanggal Pengajuan</th>
+                    <th>Category</th>
+                    <th>Submission Date</th>
                     <th>Jumlah Dana</th>
-                    <th>Dana Disetujui</th>
+                    <th>Total Funds</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -56,7 +52,7 @@
                             'badge badge-warning': item.status.includes('progress'),
                             'badge badge-success': item.status.includes('approved'),
                             'badge badge-error': item.status.includes('declined')
-                        }">
+                        }" class="badge-status">
                             {{ item.status }}
                         </span>
                     </td>
@@ -121,18 +117,18 @@
                             <span>{{ selectedReimbursement.id_Account }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="font-semibold">👤 Nama User:</span>
+                            <span class="font-semibold">👤 User Name:</span>
                             <span>{{ selectedReimbursement.name }}</span>
                         </div>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📁 Kategori:</span>
+                        <span class="font-semibold">📁 Category:</span>
                         <span>{{ selectedReimbursement.category_Name }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📅 Tanggal Pengajuan:</span>
+                        <span class="font-semibold">📅 Submission Date:</span>
                         <span>{{ new Date(selectedReimbursement.submit_Date).toLocaleDateString('id-ID', {
                             year:
                                 'numeric', month: 'long', day: '2-digit'
@@ -140,12 +136,12 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">💰 Jumlah Dana:</span>
+                        <span class="font-semibold">💰 Total Funds:</span>
                         <span>Rp {{ formatCurrency(selectedReimbursement.amount) }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">✔️ Dana Disetujui:</span>
+                        <span class="font-semibold">✔️ Approved Funds:</span>
                         <span>Rp. {{ selectedReimbursement.approve_Amount ?
                             formatCurrency(selectedReimbursement.approve_Amount) : "-" }}</span>
                     </div>
@@ -162,7 +158,7 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📝 Catatan:</span>
+                        <span class="font-semibold">📝 Notes:</span>
                         <div class="md:max-w-md mt-2 md:mt-0 font-semibold whitespace-normal break-words">{{
                             selectedReimbursement.note || "Tidak ada catatan" }}</div>
                     </div>
@@ -302,5 +298,15 @@ export default {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+.badge-status {
+    display: inline-block; /* Membuat elemen berbentuk inline-block */
+    font-size: 0.75rem; /* Ukuran font kecil */
+    font-weight: normal; /* Tidak bold */
+    white-space: nowrap; /* Menghindari teks terpotong ke bawah */
+    overflow: hidden; /* Menyembunyikan teks yang melebihi area */
+    text-align: center; /* Memastikan teks selalu rata tengah */
+}
+
 </style>
 
