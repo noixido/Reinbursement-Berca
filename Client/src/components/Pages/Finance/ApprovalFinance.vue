@@ -258,6 +258,8 @@
 import axios from 'axios';
 import MainLayout from '../../layouts/MainLayout.vue';
 import Swal from 'sweetalert2';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
     components: {
@@ -332,6 +334,9 @@ export default {
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
+                    toast.error(error.response.data.message, {
+                            autoClose: 1000,
+                        });
                 });
         },
         openModal(item) {
@@ -376,23 +381,29 @@ export default {
                     // Handle success
                     this.fetchReimbursements(); // refresh the data
                     this.$refs.reimbursementModal.close(); // close modal
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Reimbursement Diterima',
-                        showConfirmButton: false,
-                        timer: 1500,
+                    // Swal.fire({
+                    //     position: 'center',
+                    //     icon: 'success',
+                    //     title: 'Reimbursement Diterima',
+                    //     showConfirmButton: false,
+                    //     timer: 1500,
+                    // });
+                    toast.success(response.data.message, {
+                        autoClose: 1000,
                     });
                 })
                 .catch((error) => {
                     // Handle error
                     console.error('Error approving reimbursement:', error);
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: 'Operasi Gagal',
-                        showConfirmButton: false,
-                        timer: 1500,
+                    // Swal.fire({
+                    //     position: 'center',
+                    //     icon: 'error',
+                    //     title: 'Operasi Gagal',
+                    //     showConfirmButton: false,
+                    //     timer: 1500,
+                    // });
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
                     });
                 });
         },
@@ -416,23 +427,29 @@ export default {
                     // Handle success
                     this.fetchReimbursements(); // refresh the data
                     this.$refs.reimbursementModal.close(); // close modal
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Reimbursement Ditolak',
-                        showConfirmButton: false,
-                        timer: 1500,
+                    // Swal.fire({
+                    //     position: 'center',
+                    //     icon: 'success',
+                    //     title: 'Reimbursement Ditolak',
+                    //     showConfirmButton: false,
+                    //     timer: 1500,
+                    // });
+                    toast.success(response.data.message, {
+                        autoClose: 1000,
                     });
                 })
                 .catch((error) => {
                     // Handle error
                     console.error('Error declining reimbursement:', error);
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: 'Operasi Gagal',
-                        showConfirmButton: false,
-                        timer: 1500,
+                    // Swal.fire({
+                    //     position: 'center',
+                    //     icon: 'error',
+                    //     title: 'Operasi Gagal',
+                    //     showConfirmButton: false,
+                    //     timer: 1500,
+                    // });
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
                     });
                 });
         },

@@ -202,6 +202,8 @@
 <script>
 import axios from 'axios';
 import MainLayout from '../../layouts/MainLayout.vue';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
   components: {
@@ -272,6 +274,9 @@ export default {
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
+          toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
         });
     },
     openModal(item) {
@@ -294,7 +299,10 @@ export default {
     },
     approveReimbursement(id) {
       if (!this.selectedReimbursement.note) {
-        alert("Catatan persetujuan harus diisi.");
+        // alert("Catatan persetujuan harus diisi.");
+        toast.error("Catatan persetujuan harus diisi.", {
+                        autoClose: 1000,
+                    });
         return;
       }
       if (confirm("Anda yakin ingin menyetujui reimbursement ini?")) {
@@ -304,20 +312,29 @@ export default {
               'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
           })
-          .then(() => {
+          .then((response) => {
             this.selectedReimbursement.status = 'Approved';
-            alert("Reimbursement telah disetujui!");
+            // alert("Reimbursement telah disetujui!");
+            toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
             this.$refs.reimbursementModal.close();
             this.fetchReimbursements();
           })
           .catch((error) => {
             console.error('Error approving reimbursement:', error);
+            toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
           });
       }
     },
     declineReimbursement(id) {
       if (!this.selectedReimbursement.note) {
-        alert("Catatan penolakan harus diisi.");
+        // alert("Catatan penolakan harus diisi.");
+        toast.error("Catatan penolakan harus diisi.", {
+                        autoClose: 1000,
+                    });
         return;
       }
       if (confirm("Anda yakin ingin menolak reimbursement ini?")) {
@@ -327,14 +344,20 @@ export default {
               'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
           })
-          .then(() => {
+          .then((response) => {
             this.selectedReimbursement.status = 'Rejected';
-            alert("Reimbursement telah ditolak!");
+            // alert("Reimbursement telah ditolak!");
+            toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
             this.$refs.reimbursementModal.close();
             this.fetchReimbursements();
           })
           .catch((error) => {
             console.error('Error declining reimbursement:', error);
+            toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
           });
       }
     }

@@ -179,6 +179,9 @@
   import useVuelidate from '@vuelidate/core';
   import { required } from '@vuelidate/validators';
   import { reactive, computed } from "vue";
+  import { toast } from 'vue3-toastify';
+  import 'vue3-toastify/dist/index.css';
+  import Swal from 'sweetalert2'
   
   export default {
     name: "manage-reimbursement-category",
@@ -270,6 +273,9 @@
           })
           .catch((error) => {
             console.error(error.response?.data?.message || error.message);
+            toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
           });
       },
       clearSearch() {
@@ -313,12 +319,16 @@
                 })
                 .then((response)=>{
                     this.$refs.theModal.close();
-                    alert(response.data.message);
+                    toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
                     this.fetchData();
                 })
                 .catch((error) => {
                     console.error(error);
-                    alert(error);
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
                 });
       },
       getDataById(id){
@@ -335,7 +345,9 @@
                 })
                 .catch((error) => {
                     console.error(error);
-                    alert(error);
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
                 });
       },
       editData(category){
@@ -363,16 +375,29 @@
                 })
                 .then((response)=>{
                     this.$refs.theModal.close();
-                    alert(response.data.message);
+                    toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
                     this.fetchData();
                 })
                 .catch((error) => {
                     console.error(error);
-                    alert(error);
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
                 });
       },
       deleteData(id){
-        const api = "https://localhost:7102/api/Category/" + id;
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const api = "https://localhost:7102/api/Category/" + id;
         return axios
             .delete(api, {
                     headers: {
@@ -381,7 +406,9 @@
                     },
                 })
                 .then((response)=>{
-                    alert(response.data.message);
+                  toast.success(response.data.message, {
+                            autoClose: 1000,
+                        });
                     if (
                         this.currentPage === this.totalPages &&
                         this.paginatedData.length === 1
@@ -394,8 +421,12 @@
                 })
                 .catch((error) => {
                     console.error(error);
-                    alert(error);
+                    toast.error(error.response.data.message, {
+                            autoClose: 1000,
+                        });
                 });
+          }
+        });
       }
     },
   };

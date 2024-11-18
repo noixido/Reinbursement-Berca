@@ -270,6 +270,9 @@
   import useVuelidate from '@vuelidate/core';
   import { required, email } from '@vuelidate/validators';
   import { reactive, computed } from "vue";
+  import { toast } from 'vue3-toastify';
+  import 'vue3-toastify/dist/index.css';
+  import Swal from 'sweetalert2'
   
   export default {
     name: "manage-account",
@@ -385,6 +388,9 @@
           })
           .catch((error) => {
             console.error(error.response?.data?.message || error.message);
+            toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
           });
       },
       fetchTitle(){
@@ -400,6 +406,9 @@
           })
           .catch((error) => {
             console.error(error.response?.data?.message || error.message);
+            toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
           });
       },
       formatToRupiah(number) {
@@ -464,13 +473,16 @@
                 })
                 .then((response) => {
                     this.$refs.theModal.close();
-                    alert(response.data.message);
+                    toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
                     this.fetchData();
                 })
                 .catch((error) => {
-                    console.log(error)
                     console.error(error.response?.data?.message || error.message);
-                    alert(error.response?.data?.message || "An error occurred.");
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
                 });
         },
       getAccountByEmail(emailParams){
@@ -498,6 +510,9 @@
             })
             .catch((error)=>{
                 console.error(error);
+                toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
             });
       },
       editAccount(account) {
@@ -518,41 +533,60 @@
           })
           .then((response)=>{
             this.$refs.theModal.close();
-            alert(response.data.message);
+            toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
             this.fetchData();
           })
           .catch((error) => {
             console.error(error);
-            alert(error);
+            toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
           });
       },
       deleteAccount(email) {
-        const api = "https://localhost:7102/api/Account/Delete/" + email;
-        return axios
-          .put(api, {}, {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-              "Content-Type": "application/json",
-            },
-          })
-          .then((response)=>{
-            this.$refs.theModal.close();
-            alert(response.data.message);        
-            if (
-              this.currentPage === this.totalPages && 
-              this.paginatedData &&
-              this.paginatedData.length === 1
-            ) {
-              // If true, go to the previous page
-              this.currentPage-1
-            }
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const api = "https://localhost:7102/api/Account/Delete/" + email;
+            return axios
+              .put(api, {}, {
+                headers: {
+                  Authorization: `Bearer ${this.token}`,
+                  "Content-Type": "application/json",
+                },
+              })
+              .then((response)=>{
+                this.$refs.theModal.close();
+                toast.success(response.data.message, {
+                            autoClose: 1000,
+                        });        
+                if (
+                  this.currentPage === this.totalPages && 
+                  this.paginatedData &&
+                  this.paginatedData.length === 1
+                ) {
+                  // If true, go to the previous page
+                  this.currentPage-1
+                }
 
-            this.fetchData();
-          })
-          .catch((error)=>{
-            console.error(error);
-            alert(error);
-          })
+                this.fetchData();
+              })
+              .catch((error)=>{
+                console.error(error);
+                toast.error(error.response.data.message, {
+                            autoClose: 1000,
+                        });
+              })
+          }
+        });
       },
       formatDate(dateStr) {
         const [day, month, year] = dateStr.split('-');
