@@ -22,7 +22,7 @@
                 </div>
 
                 <div  class="flex items-center">
-                    <button @click="openAddModal" class="btn btn-primary" title="Add Data">
+                    <button @click="openAddModal" class="btn bg-[#45aafd]" title="Add Data">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -41,79 +41,87 @@
                                 <input
                                     type="text"
                                     id="email"
-                                    v-model="account.email"
+                                    v-model="state.account.email"
                                     placeholder="Email"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.account.email.$error" class="text-sm text-red-500">{{ v$.account.email.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="name" class="font-semibold ml-3 mb-2">Employee Name</label>
                                 <input
                                     type="text"
                                     id="name"
-                                    v-model="account.name"
+                                    v-model="state.account.name"
                                     placeholder="Employee Name"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.account.name.$error" class="text-sm text-red-500">{{ v$.account.name.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="phone" class="font-semibold ml-3 mb-2">Phone</label>
                                 <input
                                     type="text"
                                     id="phone"
-                                    v-model="account.phone"
+                                    v-model="state.account.phone"
                                     placeholder="Phone"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.account.phone.$error" class="text-sm text-red-500">{{ v$.account.phone.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="gender" class="font-semibold ml-3 mb-2">Gender</label>
-                                <select name="gender" id="gender" v-model="account.gender" class="select select-bordered w-full">
+                                <select name="gender" id="gender" v-model="state.account.gender" class="select select-bordered w-full">
                                     <option value="" disabled>== Select Gender ==</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
+                                <span v-if="v$.account.gender.$error" class="text-sm text-red-500">{{ v$.account.gender.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="birth_Date" class="font-semibold ml-3 mb-2">Birth Date</label>
                                 <input
                                     type="date"
                                     id="birth_Date"
-                                    v-model="account.birth_Date"
+                                    v-model="state.account.birth_Date"
                                     placeholder="Birth Date"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.account.birth_Date.$error" class="text-sm text-red-500">{{ v$.account.birth_Date.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="join_Date" class="font-semibold ml-3 mb-2">Join Date</label>
                                 <input
                                     type="date"
                                     id="join_Date"
-                                    v-model="account.join_Date"
+                                    v-model="state.account.join_Date"
                                     placeholder="Join Date"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.account.join_Date.$error" class="text-sm text-red-500">{{ v$.account.join_Date.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="title" class="font-semibold ml-3 mb-2">Title</label>
-                                <select name="title" id="title" v-model="account.id_Title" class="select select-bordered w-full">
+                                <select name="title" id="title" v-model="state.account.id_Title" class="select select-bordered w-full">
                                     <option value="" selected disabled>== Select Title ==</option>
                                     <option v-for="title in titles" :key="title.id_Title" :value="title.id_Title">{{ title.title_Name }}</option>
                                 </select>
+                                <span v-if="v$.account.id_Title.$error" class="text-sm text-red-500">{{ v$.account.id_Title.$errors[0].$message }}</span>
                             </div>
                             <div class="flex flex-col form-control">
                                 <label for="role_Name" class="font-semibold ml-3 mb-2">Role</label>
-                                <select name="role_Name" id="role_Name" v-model="account.role_Name" class="select select-bordered w-full">
+                                <select name="role_Name" id="role_Name" v-model="state.account.role_Name" class="select select-bordered w-full">
                                     <option value="" selected disabled>== Select Role ==</option>
                                     <option value="Employee">Employee</option>
                                     <option value="HR">Human Resource Department</option>
                                     <option value="Finance">Finance</option>
                                 </select>
+                                <span v-if="v$.account.role_Name.$error" class="text-sm text-red-500">{{ v$.account.role_Name.$errors[0].$message }}</span>
                             </div>
                             <button
                                 type="submit"
@@ -137,7 +145,7 @@
                 type="text"
                 v-model="searchTerm"
                 placeholder="Search accounts..."
-                class="bg-white text-black border border-gray-300 rounded p-2 w-full pr-8"
+                class="input input-bordered w-full max-w-xs"
               />
               <!-- Clear button (shown when searchTerm is not empty) -->
               <button
@@ -151,36 +159,36 @@
           </div>
   
           <!-- Table -->
-          <table class="table">
+          <table class="table w-full border-collapse">
             <!-- Table Head -->
             <thead>
               <tr>
-                <th>Id Account</th>
-                <th>Employee Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Gender</th>
-                <th>Birth Date</th>
-                <th>Join Date</th>
-                <th>Title</th>
-                <th>Reimbursement Limit</th>
-                <th>Role</th>
-                <th>Action</th>
+                <th class="p-2 text-center font-bold">Id Account</th>
+                <th class="p-2 text-center font-bold">Employee Name</th>
+                <th class="p-2 text-center font-bold">Email</th>
+                <th class="p-2 text-center font-bold">Phone</th>
+                <th class="p-2 text-center font-bold">Gender</th>
+                <th class="p-2 text-center font-bold">Birth Date</th>
+                <th class="p-2 text-center font-bold">Join Date</th>
+                <th class="p-2 text-center font-bold">Title</th>
+                <th class="p-2 text-center font-bold">Reimbursement Limit</th>
+                <th class="p-2 text-center font-bold">Role</th>
+                <th class="p-2 text-center font-bold">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(account, index) in paginatedAccounts" :key="account.id_Account">
-                <td>{{ account.id_Account }}</td>
-                <td>{{ account.name }}</td>
-                <td>{{ account.email }}</td>
-                <td>{{ account.phone }}</td>
-                <td>{{ account.gender }}</td>
-                <td>{{ account.birth_Date }}</td>
-                <td>{{ account.join_Date }}</td>
-                <td>{{ account.title_Name }}</td>
-                <td>{{ formatToRupiah(account.current_Limit) }}</td>
-                <td>{{ account.role_Name }}</td>
-                <td>
+                <td class="p-2 text-center">{{ account.id_Account }}</td>
+                <td class="p-2 text-center">{{ account.name }}</td>
+                <td class="p-2 text-center">{{ account.email }}</td>
+                <td class="p-2 text-center">{{ account.phone }}</td>
+                <td class="p-2 text-center">{{ account.gender }}</td>
+                <td class="p-2 text-center">{{ account.birth_Date }}</td>
+                <td class="p-2 text-center">{{ account.join_Date }}</td>
+                <td class="p-2 text-center">{{ account.title_Name }}</td>
+                <td class="p-2 text-center">{{ formatToRupiah(account.current_Limit) }}</td>
+                <td class="p-2 text-center">{{ account.role_Name }}</td>
+                <td class="p-2 text-center">
                   <div class="flex gap-5 justify-center">
                     <button class="btn btn-warning" @click="editAccount(account)" title="Edit Data">
                       <i class="fas fa-pencil-alt"></i>
@@ -259,6 +267,9 @@
   <script>
   import axios from "axios";
   import MainLayout from "../../layouts/MainLayout.vue";
+  import useVuelidate from '@vuelidate/core';
+  import { required, email } from '@vuelidate/validators';
+  import { reactive, computed } from "vue";
   
   export default {
     name: "manage-account",
@@ -269,16 +280,6 @@
       return {
         accounts: [],
         titles: [],
-        account: {
-            email: "",
-            name: "",
-            phone: "",
-            gender: "",
-            birth_Date: "",
-            join_Date: "",
-            id_Title: "",
-            role_Name: "",
-        },
         searchTerm: "",
         itemsPerPage: 10,
         currentPage: 1,
@@ -287,8 +288,42 @@
     },
     setup() {
         const token = localStorage.getItem("token");
+
+        const state = reactive({
+          account: {
+            email: "",
+            name: "",
+            phone: "",
+            gender: "",
+            birth_Date: "",
+            join_Date: "",
+            id_Title: "",
+            role_Name: "",
+          },
+        });
+
+        const rules = computed(()=>{
+          return {
+            account: {
+            email: { required, email },
+            name: { required },
+            phone: { required },
+            gender: { required },
+            birth_Date: { required },
+            join_Date: { required },
+            id_Title: { required },
+            role_Name: { required },
+            },
+          };
+
+        });
+        
+        const v$ = useVuelidate(rules, state);
+        
         return {
             token,
+            state,
+            v$,
         };
     },
     computed: {
@@ -383,7 +418,7 @@
         this.$refs.theModal.showModal();
     },
     clearForm() {
-      this.account = { 
+      this.state.account = { 
         email: "",
         name: "",
         phone: "",
@@ -393,6 +428,7 @@
         id_Title: "",
         role_Name: "",
       };
+      this.v$.$reset();
     },
       submitAccount(){
         if (this.isEditing) {
@@ -402,18 +438,25 @@
         }
       },
       addAccount() {
+            this.v$.$validate();
+            
+            if(this.v$.$error){
+              console.error("fix the error first!");
+              return;
+            }
+
             const api = "https://localhost:7102/api/Account";
             
             // Ensure date format (if required by your API)
-            if (this.account.birth_Date) {
-                this.account.birth_Date = new Date(this.account.birth_Date).toISOString().split("T")[0];
+            if (this.state.account.birth_Date) {
+              this.state.account.birth_Date = new Date(this.state.account.birth_Date).toISOString().split("T")[0];
             }
-            if (this.account.join_Date) {
-                this.account.join_Date = new Date(this.account.join_Date).toISOString().split("T")[0];
+            if (this.state.account.join_Date) {
+              this.state.account.join_Date = new Date(this.state.account.join_Date).toISOString().split("T")[0];
             }
 
             return axios
-                .post(api, this.account, {
+                .post(api, this.state.account, {
                     headers: {
                         Authorization: `Bearer ${this.token}`,
                         "Content-Type": "application/json",
@@ -442,16 +485,16 @@
             .then((response)=>{
                 const data = response.data.data;
 
-                this.account.email = data.email;
-                this.account.name = data.name;
-                this.account.phone = data.phone;
-                this.account.gender = data.gender;
-                this.account.birth_Date = this.formatDate(data.birth_Date);
-                this.account.join_Date = this.formatDate(data.join_Date);
-                this.account.id_Title = data.id_Title;
-                this.account.role_Name = data.role_Name;
+                this.state.account.email = data.email;
+                this.state.account.name = data.name;
+                this.state.account.phone = data.phone;
+                this.state.account.gender = data.gender;
+                this.state.account.birth_Date = this.formatDate(data.birth_Date);
+                this.state.account.join_Date = this.formatDate(data.join_Date);
+                this.state.account.id_Title = data.id_Title;
+                this.state.account.role_Name = data.role_Name;
 
-                return this.account;
+                return this.state.account;
             })
             .catch((error)=>{
                 console.error(error);

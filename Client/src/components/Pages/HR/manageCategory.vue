@@ -22,7 +22,7 @@
                 </div>
 
                 <div  class="flex items-center">
-                    <button @click="openAddModal" class="btn btn-primary" title="Add Data">
+                    <button @click="openAddModal" class="btn bg-[#45aafd]" title="Add Data">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -41,11 +41,12 @@
                                 <input
                                     type="text"
                                     id="category"
-                                    v-model="category.category_Name"
+                                    v-model="state.category.category_Name"
                                     placeholder="Reimbursement Category Name"
                                     class="input input-bordered w-full"
                                     autofocus
                                 />
+                                <span v-if="v$.category.category_Name.$error" class="text-sm text-red-500">{{ v$.category.category_Name.$errors[0].$message }}</span>
                             </div>
                             <button
                                 type="submit"
@@ -68,8 +69,8 @@
               <input
                 type="text"
                 v-model="searchTerm"
-                placeholder="Search reimbursement category..."
-                class="bg-white text-black border border-gray-300 rounded p-2 w-full pr-8"
+                placeholder="Search reimbursement categories..."
+                class="input input-bordered w-full max-w-xs"
               />
               <!-- Clear button (shown when searchTerm is not empty) -->
               <button
@@ -83,20 +84,20 @@
           </div>
   
           <!-- Table -->
-          <table class="table">
+          <table class="table w-full border-collapse">
             <!-- Table Head -->
             <thead>
               <tr>
-                <th>Id Reimbursement Category</th>
-                <th>Reimbursement Category Name</th>
-                <th>Action</th>
+                <th class="p-2 text-center font-bold">Id Reimbursement Category</th>
+                <th class="p-2 text-center font-bold">Reimbursement Category Name</th>
+                <th class="p-2 text-center font-bold">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(category, index) in paginatedData" :key="category.id_Category">
-                <td>{{ category.id_Category }}</td>
-                <td>{{ category.category_Name }}</td>
-                <td>
+                <td class="p-2 text-center">{{ category.id_Category }}</td>
+                <td class="p-2 text-center">{{ category.category_Name }}</td>
+                <td class="p-2 text-center">
                   <div class="flex gap-5 justify-center">
                     <button class="btn btn-warning" @click="editData(category)" title="Edit Data">
                       <i class="fas fa-pencil-alt"></i>
@@ -175,6 +176,9 @@
   <script>
   import axios from "axios";
   import MainLayout from "../../layouts/MainLayout.vue";
+  import useVuelidate from '@vuelidate/core';
+  import { required } from '@vuelidate/validators';
+  import { reactive, computed } from "vue";
   
   export default {
     name: "manage-reimbursement-category",
@@ -184,10 +188,6 @@
     data() {
       return {
         categories: [],
-        category: {
-            id_Category: "",
-            category_Name: "",
-        },
         searchTerm: "",
         itemsPerPage: 10,
         currentPage: 1,
@@ -196,8 +196,28 @@
     },
     setup() {
         const token = localStorage.getItem("token");
+
+        const state = reactive({
+          category: {
+            id_Category: "",
+            category_Name: "",
+          },
+        });
+
+        const rules = computed(()=>{
+          return {
+            category: {
+            category_Name: { required },
+            },
+          };
+        });
+
+        const v$ = useVuelidate(rules, state);
+
         return {
             token,
+            state,
+            v$,
         };
     },
     computed: {
@@ -262,10 +282,11 @@
         this.$refs.theModal.showModal();
       },
       clearForm() {
-        this.category = { 
+        this.state.category = { 
             id_Category: "",
             category_Name: "",
         };
+        this.v$.$reset();
       },
       submitData(){
         if(this.isEditing){
@@ -275,9 +296,16 @@
         }
       },
       addData(){
+        this.v$.$validate();
+
+        if(this.v$.$error){
+          console.error("fix the error first!");
+          return;
+        }
+
         const api = "https://localhost:7102/api/Category";
         return axios
-            .post(api, this.category, {
+            .post(api, this.state.category, {
                     headers: {
                         Authorization: `Bearer ${this.token}`,
                         "Content-Type": "application/json",
@@ -313,14 +341,21 @@
       editData(category){
         this.isEditing = true;
         this.getDataById(category.id_Category).then((data)=>{
-            this.category = data;
+            this.state.category = data;
             this.$refs.theModal.showModal();
         });
       },
       updateData(){
-        const api = "https://localhost:7102/api/Category/" + this.category.id_Category;
+        this.v$.$validate();
+
+        if(this.v$.$error){
+          console.error("fix the error first!");
+          return;
+        }
+
+        const api = "https://localhost:7102/api/Category/" + this.state.category.id_Category;
         return axios
-            .put(api, this.category, {
+            .put(api, this.state.category, {
                     headers: {
                         Authorization: `Bearer ${this.token}`,
                         "Content-Type": "application/json",
