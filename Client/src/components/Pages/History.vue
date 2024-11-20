@@ -178,9 +178,9 @@
                     <div class="flex justify-between">
                         <span class="font-semibold">📈 Status:</span>
                         <span :class="{
-                            'badge badge-warning': selectedReimbursement.status && selectedReimbursement.status.includes('progress'),
-                            'badge badge-success': selectedReimbursement.status && selectedReimbursement.status.includes('approv'),
-                            'badge badge-error': selectedReimbursement.status && selectedReimbursement.status.includes('declined')
+                            'badge badge-warning': selectedReimbursement.status && selectedReimbursement.status.includes('Progress'),
+                            'badge badge-success': selectedReimbursement.status && selectedReimbursement.status.includes('Approv'),
+                            'badge badge-error': selectedReimbursement.status && selectedReimbursement.status.includes('Declined')
                         }">
                             {{ selectedReimbursement.status }}
                         </span>
