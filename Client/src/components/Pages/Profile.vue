@@ -12,7 +12,7 @@
         </div>
 
         <!-- Profile Header -->
-        <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6 flex justify-between">
+        <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6 flex justify-between border-2 border-[#17244b]">
             <div class="flex items-center">
                 <!-- Profile Image -->
                 <div class="w-24 h-24 rounded-full overflow-hidden mr-6 border-2 border-gray-300 flex items-center justify-center bg-gray-200">
@@ -52,9 +52,9 @@
 
 
         <!-- Profile Details Section -->
-        <div v-if="user" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div v-if="user" class="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
             <!-- Left Side (Account Information) -->
-            <div class="bg-white p-6 shadow rounded-lg">
+            <div class="bg-white p-6 shadow rounded-lg border-2 border-[#17244b]">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Account Information</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between">
@@ -77,7 +77,7 @@
             </div>
 
             <!-- Right Side (Personal Information) -->
-            <div class="bg-white p-6 shadow rounded-lg">
+            <div class="bg-white p-6 shadow rounded-lg border-2 border-[#17244b]">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between">
@@ -154,6 +154,7 @@
                         <div class="mb-4">
                             <label class="font-medium text-gray-600">Birth Date</label>
                             <input type="date" v-model="editableUser.birth_Date" class="input input-bordered w-full" />
+                            <span v-if="birthDateError" class="text-red-500 text-sm">Birth date is required</span>
                         </div>
                         <!-- <div class="mb-4">
                             <label class="font-medium text-gray-600">Join Date</label>
@@ -177,7 +178,7 @@
 
                     <div class="flex justify-end space-x-4 mt-3">
                         <button type="button" @click="closeEditModal" class="btn btn-ghost">Cancel</button>
-                        <button type="submit" class="btn bg-[#45aafd]">Save</button>
+                        <button type="submit" class="btn bg-[#45aafd] hover:bg-indigo-500 text-white">Save</button>
                     </div>
                 </form>
             </div>
@@ -205,7 +206,7 @@
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="closeChangePasswordModal" class="btn btn-ghost">Cancel</button>
-                        <button type="submit" class="btn bg-[#45aafd]">Change</button>
+                        <button type="submit" class="btn bg-[#45aafd] hover:bg-indigo-500 text-white">Change</button>
                     </div>
                 </form>
             </div>
@@ -213,12 +214,13 @@
     </MainLayout>
 </template>
 
-
 <script>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import MainLayout from '../layouts/MainLayout.vue';
 import Swal from 'sweetalert2';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 import moment from 'moment';
 
 export default {
@@ -257,13 +259,14 @@ export default {
         const emailError = ref(false);
         const nameError = ref(false);
         const phoneError = ref(false);
+        const birthDateError = ref(false);
         const oldPasswordError = ref(false);
         const passwordError = ref(false);
         const confirmPasswordError = ref(false);
 
         // Computed properties to check if the forms are invalid
         const isProfileFormInvalid = computed(() => {
-            return !editableUser.value.name || !editableUser.value.phone || !validateEmail(editableUser.value.email);
+            return !editableUser.value.name || !editableUser.value.phone || !editableUser.value.birth_Date || !validateEmail(editableUser.value.email);
         });
 
         const isPasswordFormInvalid = computed(() => {
@@ -316,9 +319,10 @@ export default {
             emailError.value = !validateEmail(editableUser.value.email);
             nameError.value = !editableUser.value.name;
             phoneError.value = !editableUser.value.phone;
+            birthDateError.value = !editableUser.value.birth_Date;
 
             // Jika ada error, berhenti
-            if (emailError.value || nameError.value || phoneError.value) return;
+            if (emailError.value || nameError.value || phoneError.value || birthDateError.value) return;
 
             try {
                 const response = await axios.put(
@@ -335,25 +339,25 @@ export default {
                 closeEditModal();
 
                 // Menampilkan SweetAlert tanpa tombol 'OK'
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Profile Updated Successfully!',
-                    text: 'Your profile information has been updated.',
-                    showConfirmButton: false,
-                    timer: 1500,
-                }).then(() => {
-                    fetchUserData(emailFromPayload);
+                // Swal.fire({
+                //     icon: 'success',
+                //     title: 'Profile Updated Successfully!',
+                //     text: 'Your profile information has been updated.',
+                //     showConfirmButton: false,
+                //     timer: 1500,
+                // }).then(() => {
+                // });
+                toast.success(response.data.message, {
+                    autoClose: 1000,
                 });
+                fetchUserData(emailFromPayload);
 
             } catch (err) {
                 console.error("Error updating profile:", err);
                 error.value = "Error updating profile: " + (err.response?.data?.message || err.message);
 
-                await Swal.fire({
-                    icon: 'error',
-                    title: 'Error Updating Profile',
-                    text: err.response?.data?.message || err.message,
-                    confirmButtonText: 'Try Again',
+                await toast.error(err.response.data.message, {
+                    autoClose: 1000,
                 });
             }
         };
@@ -392,22 +396,14 @@ export default {
                     }
                 );
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Password Changed Successfully!',
-                    text: 'Your password has been updated.',
-                    showConfirmButton: false,
-                    timer: 1500,
+                toast.success(response.data.message, {
+                    autoClose: 1000,
                 });
 
                 closeChangePasswordModal();
             } catch (err) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error Changing Password',
-                    text: err.response?.data?.message || err.message,
-                    showConfirmButton: false,
-                    timer: 1500,
+                toast.error(err.response.data.message, {
+                    autoClose: 1000,
                 });
             }
         };
@@ -431,6 +427,11 @@ export default {
 
         const closeEditModal = () => {
             showEditModal.value = false;
+
+            // emailError.value = false;
+            nameError.value = false;
+            phoneError.value = false;
+            birthDateError.value = false;
         };
 
         const openChangePasswordModal = () => {
@@ -439,6 +440,7 @@ export default {
 
         const closeChangePasswordModal = () => {
             showChangePasswordModal.value = false;
+            
         };
 
         const formatToISO = (date) => {
@@ -471,6 +473,7 @@ export default {
             emailError,
             nameError,
             phoneError,
+            birthDateError,
             passwordError,
             confirmPasswordError,
             oldPasswordError,

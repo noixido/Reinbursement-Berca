@@ -27,12 +27,12 @@
             <table class="table w-full">
                 <thead>
                     <tr>
-                        <th>Nomor</th>
-                        <th>Nama</th>
-                        <th>Kategori</th>
-                        <th>Tanggal Pengajuan</th>
-                        <th>Jumlah Dana</th>
-                        <th>Dana Disetujui</th>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Submit Date</th>
+                        <th>Total Funds</th>
+                        <th>Approved Funds</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -64,22 +64,19 @@
                                 'badge badge-warning': item.status.includes('Progress'),
                                 'badge badge-success': item.status.includes('Approved'),
                                 'badge badge-error': item.status.includes('Declined')
-                            }" class="badge-status">
+                            }" class="badge-status text-white">
                                 {{ item.status }}
                             </span>
                         </td>
                         <td class="p-2 text-center">
                             <button
                                 class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
-                                @click="openModal(item)"
-                                title="View Details"
-                            >
+                                @click="openModal(item)" title="View Details">
                                 <i class="fas fa-eye"></i>
                                 <!-- Tooltip -->
                                 <div
-                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
-                                >
-                                View Data
+                                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md">
+                                    View Data
                                 </div>
                             </button>
                         </td>
@@ -139,7 +136,7 @@
                             <span>{{ selectedReimbursement.id_Account }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="font-semibold">👤 Nama User:</span>
+                            <span class="font-semibold">👤 Name:</span>
                             <span>{{ selectedReimbursement.name }}</span>
                         </div>
                         <div class="flex justify-between">
@@ -150,12 +147,12 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📁 Kategori:</span>
+                        <span class="font-semibold">📁 Category:</span>
                         <span>{{ selectedReimbursement.category_Name }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📅 Tanggal Pengajuan:</span>
+                        <span class="font-semibold">📅 Submit Date:</span>
                         <span>{{
                             new Date(selectedReimbursement.submit_Date).toLocaleDateString(
                                 'id-ID',
@@ -169,12 +166,12 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">💰 Jumlah Dana:</span>
+                        <span class="font-semibold">💰 Total Funds:</span>
                         <span>Rp {{ formatCurrency(selectedReimbursement.amount) }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">✔️ Dana Disetujui:</span>
+                        <span class="font-semibold">✔️ Approved Funds:</span>
                         <span>Rp. {{ selectedReimbursement.approve_Amount ?
                             formatCurrency(selectedReimbursement.approve_Amount) : '-' }}</span>
                     </div>
@@ -194,7 +191,7 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📝 Catatan:</span>
+                        <span class="font-semibold">📝 Notes:</span>
                         <div class="md:max-w-md mt-2 md:mt-0 font-semibold whitespace-normal break-words">
                             {{ selectedReimbursement.note || 'Tidak ada catatan' }}
                         </div>
@@ -210,13 +207,13 @@
                     </div>
                 </div>
 
-                <div class="border-4 border-yellow-500 rounded-lg p-4 mb-3">
+                <div class="border border-blue-500 bg-gray-50 rounded-lg p-4 mb-3">
                     <!-- Tombol Approve dan Decline -->
                     <div class="flex justify-center space-x-4 text-white font-semibold">
-                        <button class="btn bg-blue-500 hover:bg-blue-900" @click="openApproveForm">
+                        <button class="btn bg-blue-500 hover:bg-blue-900 hover:text-white text-white" @click="openApproveForm">
                             Approve
                         </button>
-                        <button class="btn bg-red-500 hover:bg-red-900" @click="openDeclineForm">
+                        <button class="btn bg-red-500 hover:bg-red-900  hover:text-white text-white" @click="openDeclineForm">
                             Decline
                         </button>
                     </div>
@@ -234,7 +231,7 @@
                         </div> -->
                         <input v-model="formattedAmount" type="text" min="0" @input="formatAmount()" inputmode="numeric"
                             :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
-                            placeholder="Masukkan Dana Disetujui" class="input input-bordered" />
+                            placeholder="Masukkan Dana Disetujui" class="input input-bordered border border-gray-600" />
                         <p v-if="!isApproveAmountValid && showValidation" class="text-red-500 text-sm">
                             Jumlah harus lebih besar dari 0 dan tidak melebihi {{
                                 formatCurrency(Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount))
@@ -242,12 +239,12 @@
                         </p>
 
                         <label class="font-semibold">Catatan:</label>
-                        <textarea v-model="note" class="textarea textarea-bordered w-full"
+                        <textarea v-model="note" class="textarea textarea-bordered w-full border border-gray-600"
                             placeholder="Masukkan catatan"></textarea>
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
                         </p>
-                        <button class="btn bg-blue-500 mt-2 w-full text-white hover:bg-blue-900"
+                        <button class="btn bg-blue-500 mt-2 w-full  hover:bg-blue-900 hover:text-white text-white"
                             @click="submitApproval">
                             Submit Approval
                         </button>
@@ -255,12 +252,12 @@
 
                     <div v-if="showDeclineForm" class="mt-4 space-y-3">
                         <label class="font-semibold">Catatan:</label>
-                        <textarea v-model="note" class="textarea textarea-bordered w-full"
+                        <textarea v-model="note" class="textarea textarea-bordered w-full border border-gray-600"
                             placeholder="Masukkan alasan penolakan"></textarea>
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
                         </p>
-                        <button class="btn bg-red-500 mt-2 w-full text-white hover:bg-red-900" @click="submitDecline">
+                        <button class="btn bg-red-500 mt-2 w-full  hover:bg-red-900 hover:text-white text-white" @click="submitDecline">
                             Submit Decline
                         </button>
                     </div>
@@ -430,51 +427,61 @@ export default {
                 return
             }
 
-            const approvalData = {
-                approve_Amount: this.approveAmount,
-                note: this.note,
-                id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
-            };
+            this.$refs.reimbursementModal.close();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will approve this reimbursement!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes!",
+                customClass: {
+                    popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const approvalData = {
+                        approve_Amount: this.approveAmount,
+                        note: this.note,
+                        id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
+                    };
 
-            axios
-                .put(
-                    `https://localhost:7102/api/Reimbursement/approvefinance/${this.selectedReimbursement.id_Reimbursement}`,
-                    approvalData,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('token'),
-                        },
-                    }
-                )
-                .then((response) => {
-                    // Handle success
-                    this.fetchReimbursements(); // refresh the data
-                    this.$refs.reimbursementModal.close(); // close modal
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'success',
-                    //     title: 'Reimbursement Diterima',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.success(response.data.message, {
-                        autoClose: 1000,
-                    });
-                })
-                .catch((error) => {
-                    // Handle error
-                    console.error('Error approving reimbursement:', error);
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'error',
-                    //     title: 'Operasi Gagal',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
-                });
+                    axios
+                        .put(
+                            `https://localhost:7102/api/Reimbursement/approvefinance/${this.selectedReimbursement.id_Reimbursement}`,
+                            approvalData,
+                            {
+                                headers: {
+                                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                                },
+                            }
+                        )
+                        .then((response) => {
+                            // Handle success
+                            this.fetchReimbursements(); // refresh the data
+                            this.$refs.reimbursementModal.close(); // close modal
+                            // Swal.fire({
+                            //     position: 'center',
+                            //     icon: 'success',
+                            //     title: 'Reimbursement Diterima',
+                            //     showConfirmButton: false,
+                            //     timer: 1500,
+                            // });
+                            toast.success(response.data.message, {
+                                autoClose: 1000,
+                            });
+                        })
+                        .catch((error) => {
+                            // Handle error
+                            console.error('Error approving reimbursement:', error);
+                            toast.error(error.response.data.message, {
+                                autoClose: 1000,
+                            });
+                        });
+                }
+            });
+
         },
         submitDecline() {
             this.showValidation = true
@@ -482,50 +489,66 @@ export default {
                 return
             }
 
-            const declineData = {
-                note: this.note,
-                id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
-            };
+            this.$refs.reimbursementModal.close();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will approve this reimbursement!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes!",
+                customClass: {
+                    popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const declineData = {
+                        note: this.note,
+                        id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
+                    };
 
-            axios
-                .put(
-                    `https://localhost:7102/api/Reimbursement/declinefinance/${this.selectedReimbursement.id_Reimbursement}`,
-                    declineData,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('token'),
-                        },
-                    }
-                )
-                .then((response) => {
-                    // Handle success
-                    this.fetchReimbursements(); // refresh the data
-                    this.$refs.reimbursementModal.close(); // close modal
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'success',
-                    //     title: 'Reimbursement Ditolak',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.success(response.data.message, {
-                        autoClose: 1000,
-                    });
-                })
-                .catch((error) => {
-                    // Handle error
-                    console.error('Error declining reimbursement:', error);
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'error',
-                    //     title: 'Operasi Gagal',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
-                });
+                    axios
+                        .put(
+                            `https://localhost:7102/api/Reimbursement/declinefinance/${this.selectedReimbursement.id_Reimbursement}`,
+                            declineData,
+                            {
+                                headers: {
+                                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                                },
+                            }
+                        )
+                        .then((response) => {
+                            // Handle success
+                            this.fetchReimbursements(); // refresh the data
+                            this.$refs.reimbursementModal.close(); // close modal
+                            // Swal.fire({
+                            //     position: 'center',
+                            //     icon: 'success',
+                            //     title: 'Reimbursement Ditolak',
+                            //     showConfirmButton: false,
+                            //     timer: 1500,
+                            // });
+                            toast.success(response.data.message, {
+                                autoClose: 1000,
+                            });
+                        })
+                        .catch((error) => {
+                            // Handle error
+                            console.error('Error declining reimbursement:', error);
+                            // Swal.fire({
+                            //     position: 'center',
+                            //     icon: 'error',
+                            //     title: 'Operasi Gagal',
+                            //     showConfirmButton: false,
+                            //     timer: 1500,
+                            // });
+                            toast.error(error.response.data.message, {
+                                autoClose: 1000,
+                            });
+                        });
+                }
+            });
         },
     },
     mounted() {
@@ -544,14 +567,16 @@ export default {
 .table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #000; /* Border hitam pada tabel */
+    border: 1px solid #000;
+    /* Border hitam pada tabel */
 }
 
 .table th,
 .table td {
     padding: 8px;
     text-align: center;
-    border: 1px solid #000; /* Border hitam pada setiap sel */
+    border: 1px solid #000;
+    /* Border hitam pada setiap sel */
 }
 
 .table th {
@@ -584,7 +609,7 @@ export default {
     /* Membuat elemen berbentuk inline-block */
     font-size: 0.75rem;
     /* Ukuran font kecil */
-    font-weight: normal;
+    font-weight: bold;
     /* Tidak bold */
     white-space: nowrap;
     /* Menghindari teks terpotong ke bawah */

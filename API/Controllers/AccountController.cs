@@ -18,7 +18,7 @@ namespace API.Controllers
             _repository = repository;
         }
 
-        //[Authorize(Roles = "HR")]
+        [Authorize(Roles = "HR")]
         [HttpPost]
         public IActionResult AddAccount(AccountVM accountVM)
         {

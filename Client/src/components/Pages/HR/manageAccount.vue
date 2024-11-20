@@ -6,121 +6,146 @@
 
         <div class="flex justify-between items-center mb-4">
           <div class="flex gap-5">
-            <!-- Rows Per Page -->
-            <div class="flex items-center">
-              <label class="mr-2">Show</label>
-              <select v-model="itemsPerPage" @change="currentPage = 1"
-                class="border border-gray-300 rounded p-2 bg-white">
-                <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
-                  {{ option }}
-                </option>
-              </select>
-              <span class="ml-2">entries</span>
-            </div>
+              <!-- Rows Per Page -->
+              <div class="flex items-center">
+                  <label class="mr-2">Show</label>
+                  <select
+                      v-model="itemsPerPage"
+                      @change="currentPage = 1"
+                      class="border border-gray-300 rounded p-2 bg-white"
+                  >
+                      <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
+                      {{ option }}
+                      </option>
+                  </select>
+                  <span class="ml-2">entries</span>
+              </div>
 
-            <div class="relative group">
-              <div class="tooltip tooltip-black">
-                <button @click="openAddModal" class="btn bg-[#45aafd]">
-                  <i class="fas fa-plus"></i>
-                </button>
+              <div class="relative group">
+                <div class="tooltip tooltip-black">
+                  <button @click="openAddModal" class="btn bg-[#45aafd] hover:bg-indigo-500">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <!-- Tooltip custom with hidden class -->
+                <div
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
+                >
+                  Add Data
+                </div>
               </div>
-              <!-- Tooltip custom with hidden class -->
-              <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md">
-                Add Data
-              </div>
-            </div>
 
-            <dialog ref="theModal" class="modal">
-              <div class="modal-box">
-                <form method="dialog">
-                  <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                    ✕
-                  </button>
-                </form>
-                <h3 class="text-lg font-bold">{{ isEditing ? "Edit" : "Add" }} Account</h3>
-                <form @submit.prevent="submitAccount" id="accountForm" class="mt-5 flex flex-col gap-3">
-                  <div class="flex flex-col form-control">
-                    <label for="email" class="font-semibold ml-3 mb-2">Email</label>
-                    <input type="text" id="email" v-model="state.account.email" placeholder="Email"
-                      class="input input-bordered w-full" autofocus />
-                    <span v-if="v$.account.email.$error" class="text-sm text-red-500">{{
-                      v$.account.email.$errors[0].$message }}</span>
+              <dialog ref="theModal" class="modal">
+                  <div class="modal-box">
+                      <form method="dialog">
+                          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                              ✕
+                          </button>
+                      </form>
+                      <h3 class="text-lg font-bold">{{ isEditing ? "Edit" : "Add" }} Account</h3>
+                      <form @submit.prevent="submitAccount" id="accountForm" class="mt-5 flex flex-col gap-3">
+                          <div class="flex flex-col form-control">
+                              <label for="email" class="font-semibold ml-3 mb-2">Email</label>
+                              <input
+                                  type="text"
+                                  id="email"
+                                  v-model="state.account.email"
+                                  placeholder="Email"
+                                  class="input input-bordered w-full"
+                                  autofocus
+                              />
+                              <span v-if="v$.account.email.$error" class="text-sm text-red-500">{{ v$.account.email.$errors[0].$message }}</span>
+                          </div>
+                          <div class="flex flex-col form-control">
+                              <label for="name" class="font-semibold ml-3 mb-2">Employee Name</label>
+                              <input
+                                  type="text"
+                                  id="name"
+                                  v-model="state.account.name"
+                                  placeholder="Employee Name"
+                                  class="input input-bordered w-full"
+                                  autofocus
+                              />
+                              <span v-if="v$.account.name.$error" class="text-sm text-red-500">{{ v$.account.name.$errors[0].$message }}</span>
+                          </div>
+                          <div class="flex flex-col form-control">
+                              <label for="phone" class="font-semibold ml-3 mb-2">Phone</label>
+                              <input
+                                  type="text"
+                                  id="phone"
+                                  v-model="state.account.phone"
+                                  placeholder="Phone"
+                                  class="input input-bordered w-full"
+                                  autofocus
+                              />
+                              <span v-if="v$.account.phone.$error" class="text-sm text-red-500">{{ v$.account.phone.$errors[0].$message }}</span>
+                          </div>
+                          <div class="flex flex-col form-control">
+                              <label for="gender" class="font-semibold ml-3 mb-2">Gender</label>
+                              <select name="gender" id="gender" v-model="state.account.gender" class="select select-bordered w-full">
+                                  <option value="" disabled>== Select Gender ==</option>
+                                  <option value="Male">Male</option>
+                                  <option value="Female">Female</option>
+                              </select>
+                              <span v-if="v$.account.gender.$error" class="text-sm text-red-500">{{ v$.account.gender.$errors[0].$message }}</span>
+                          </div>
+                          <div class="flex flex-col form-control">
+                              <label for="birth_Date" class="font-semibold ml-3 mb-2">Birth Date</label>
+                              <input
+                                  type="date"
+                                  id="birth_Date"
+                                  v-model="state.account.birth_Date"
+                                  placeholder="Birth Date"
+                                  class="input input-bordered w-full"
+                                  autofocus
+                              />
+                              <span v-if="v$.account.birth_Date.$error" class="text-sm text-red-500">{{ v$.account.birth_Date.$errors[0].$message }}</span>
+                          </div>
+                          <!-- <div class="flex flex-col form-control">
+                              <label for="join_Date" class="font-semibold ml-3 mb-2">Join Date</label>
+                              <input
+                                  type="date"
+                                  id="join_Date"
+                                  v-model="state.account.join_Date"
+                                  placeholder="Join Date"
+                                  class="input input-bordered w-full"
+                                  autofocus
+                              />
+                              <span v-if="v$.account.join_Date.$error" class="text-sm text-red-500">{{ v$.account.join_Date.$errors[0].$message }}</span>
+                          </div> -->
+                          <div class="flex flex-col form-control">
+                              <label for="title" class="font-semibold ml-3 mb-2">Title</label>
+                              <select name="title" id="title" v-model="state.account.id_Title" class="select select-bordered w-full">
+                                  <option value="" selected disabled>== Select Title ==</option>
+                                  <option v-for="title in titles" :key="title.id_Title" :value="title.id_Title">{{ title.title_Name }}</option>
+                              </select>
+                              <span v-if="v$.account.id_Title.$error" class="text-sm text-red-500">{{ v$.account.id_Title.$errors[0].$message }}</span>
+                          </div>
+                          <div class="flex flex-col form-control">
+                              <label for="role_Name" class="font-semibold ml-3 mb-2">Role</label>
+                              <select name="role_Name" id="role_Name" v-model="state.account.role_Name" class="select select-bordered w-full">
+                                  <option value="" selected disabled>== Select Role ==</option>
+                                  <option value="Employee">Employee</option>
+                                  <option value="HR">Human Resource Department</option>
+                                  <option value="Finance">Finance</option>
+                              </select>
+                              <span v-if="v$.account.role_Name.$error" class="text-sm text-red-500">{{ v$.account.role_Name.$errors[0].$message }}</span>
+                          </div>
+                          <button
+                              type="submit"
+                              :class="isEditing ? 'btn-warning' : 'btn-primary'"
+                              class="btn btn-primary w-28"
+                          >
+                              {{ isEditing ? "Edit" : "Submit" }}
+                          </button>
+                      </form>
                   </div>
-                  <div class="flex flex-col form-control">
-                    <label for="name" class="font-semibold ml-3 mb-2">Employee Name</label>
-                    <input type="text" id="name" v-model="state.account.name" placeholder="Employee Name"
-                      class="input input-bordered w-full" autofocus />
-                    <span v-if="v$.account.name.$error" class="text-sm text-red-500">{{
-                      v$.account.name.$errors[0].$message }}</span>
-                  </div>
-                  <div class="flex flex-col form-control">
-                    <label for="phone" class="font-semibold ml-3 mb-2">Phone</label>
-                    <input type="text" id="phone" v-model="state.account.phone" placeholder="Phone"
-                      class="input input-bordered w-full" autofocus />
-                    <span v-if="v$.account.phone.$error" class="text-sm text-red-500">{{
-                      v$.account.phone.$errors[0].$message }}</span>
-                  </div>
-                  <div class="flex flex-col form-control">
-                    <label for="gender" class="font-semibold ml-3 mb-2">Gender</label>
-                    <select name="gender" id="gender" v-model="state.account.gender"
-                      class="select select-bordered w-full">
-                      <option value="" disabled>== Select Gender ==</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
-                    <span v-if="v$.account.gender.$error" class="text-sm text-red-500">{{
-                      v$.account.gender.$errors[0].$message }}</span>
-                  </div>
-                  <div class="flex flex-col form-control">
-                    <label for="birth_Date" class="font-semibold ml-3 mb-2">Birth Date</label>
-                    <input type="date" id="birth_Date" v-model="state.account.birth_Date" placeholder="Birth Date"
-                      class="input input-bordered w-full" autofocus />
-                    <span v-if="v$.account.birth_Date.$error" class="text-sm text-red-500">{{
-                      v$.account.birth_Date.$errors[0].$message }}</span>
-                  </div>
-                  <div class="flex flex-col form-control">
-                    <label for="join_Date" class="font-semibold ml-3 mb-2">Join Date</label>
-                    <input type="date" id="join_Date" v-model="state.account.join_Date" placeholder="Join Date"
-                      class="input input-bordered w-full" autofocus />
-                    <span v-if="v$.account.join_Date.$error" class="text-sm text-red-500">{{
-                      v$.account.join_Date.$errors[0].$message }}</span>
-                  </div>
-                  <div class="flex flex-col form-control">
-                    <label for="title" class="font-semibold ml-3 mb-2">Title</label>
-                    <select name="title" id="title" v-model="state.account.id_Title"
-                      class="select select-bordered w-full">
-                      <option value="" selected disabled>== Select Title ==</option>
-                      <option v-for="title in titles" :key="title.id_Title" :value="title.id_Title">{{ title.title_Name
-                        }}</option>
-                    </select>
-                    <span v-if="v$.account.id_Title.$error" class="text-sm text-red-500">{{
-                      v$.account.id_Title.$errors[0].$message }}</span>
-                  </div>
-                  <div class="flex flex-col form-control">
-                    <label for="role_Name" class="font-semibold ml-3 mb-2">Role</label>
-                    <select name="role_Name" id="role_Name" v-model="state.account.role_Name"
-                      class="select select-bordered w-full">
-                      <option value="" selected disabled>== Select Role ==</option>
-                      <option value="Employee">Employee</option>
-                      <option value="HR">Human Resource Department</option>
-                      <option value="Finance">Finance</option>
-                    </select>
-                    <span v-if="v$.account.role_Name.$error" class="text-sm text-red-500">{{
-                      v$.account.role_Name.$errors[0].$message }}</span>
-                  </div>
-                  <button type="submit" :class="isEditing ? 'btn-warning' : 'btn-primary'" class="btn btn-primary w-28">
-                    {{ isEditing ? "Edit" : "Submit" }}
-                  </button>
-                </form>
-              </div>
-              <form method="dialog" class="modal-backdrop">
-                <button>close</button>
-              </form>
-            </dialog>
+                  <form method="dialog" class="modal-backdrop">
+                      <button>close</button>
+                  </form>
+              </dialog>
 
           </div>
-
           <!-- Live Search Input -->
           <div class="relative w-full max-w-xs">
             <input type="text" v-model="searchTerm" placeholder="Search accounts..."

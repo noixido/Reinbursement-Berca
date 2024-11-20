@@ -23,7 +23,7 @@
 
                 <div class="relative group">
                   <div class="tooltip tooltip-black">
-                    <button @click="openAddModal" class="btn bg-[#45aafd]">
+                    <button @click="openAddModal" class="btn bg-[#45aafd] hover:bg-indigo-500">
                       <i class="fas fa-plus"></i>
                     </button>
                   </div>

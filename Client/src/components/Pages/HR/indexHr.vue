@@ -6,41 +6,25 @@
             <div class="flex space-x-6">
                 <!-- Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-clock text-3xl text-yellow-500 mr-4"></i>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Pending Approvals</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">In Progress</h3>
                             <p class="text-2xl font-bold text-yellow-900">{{ pendingApprovals }}</p>
                         </div>
                     </div>
-                    <div class="bg-red-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-red-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-times-circle text-3xl text-red-500 mr-4"></i>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Decline Status</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">Declined Status</h3>
                             <p class="text-2xl font-bold text-red-900">{{ rejectedRequests }}</p>
                         </div>
                     </div>
-                    <div class="bg-teal-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
-                        <i class="fas fa-check-circle text-3xl text-teal-600 mr-4"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Approved Status</h3>
-                            <p class="text-2xl font-bold text-teal-900">{{ approvedRequests }}</p>
-                        </div>
-                    </div>
-                    <div class="bg-blue-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-file-invoice text-3xl text-blue-600 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Total Requests</h3>
                             <p class="text-2xl font-bold text-blue-900">{{ totalRequests }}</p>
-                        </div>
-                    </div>
-                    <!-- Adjusted the width of the Monthly Reimbursements card -->
-                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
-                        <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">
-                                Approved Funds</h3>
-                            <p class="text-2xl font-bold text-black">{{ formattedMonthlyReimbursements }}</p>
                         </div>
                     </div>
                 </div>
@@ -50,14 +34,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                 <!-- Line Chart -->
                 <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">Total Reimbursement per Bulan</h3>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Total Reimbursement per Month</h3>
                     <div class="chart-container">
                         <canvas id="lineChart"></canvas>
                     </div>
                 </div>
                 <!-- Bar Chart -->
                 <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">Banyaknya Reimbursement per Kategori</h3>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Total Reimbursement per Category</h3>
                     <div class="chart-container">
                         <canvas id="barChart"></canvas>
                     </div>
@@ -83,7 +67,6 @@ export default defineComponent({
         const monthlyReimbursements = ref(0);
         const pendingApprovals = ref(0);
         const rejectedRequests = ref(0);
-        const approvedRequests = ref(0);
 
         // Fungsi untuk membuat line chart
         const createLineChart = (monthlyRequestCount) => {
@@ -93,7 +76,7 @@ export default defineComponent({
                     labels: Object.keys(monthlyRequestCount), // Nama bulan
                     datasets: [
                         {
-                            label: 'Jumlah Pengajuan Reimbursement',
+                            label: 'Total Reimbursement Submission',
                             data: Object.values(monthlyRequestCount), // Total pengajuan reimbursement per bulan
                             fill: false,
                             borderColor: '#3b82f6',
@@ -105,8 +88,8 @@ export default defineComponent({
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        x: { title: { display: true, text: 'Bulan' } },
-                        y: { title: { display: true, text: 'Jumlah Pengajuan' } }
+                        x: { title: { display: true, text: 'Month' } },
+                        y: { title: { display: true, text: 'Total Submission' } }
                     }
                 }
             });
@@ -119,7 +102,7 @@ export default defineComponent({
                     labels: categories.map(cat => cat.name),
                     datasets: [
                         {
-                            label: 'Jumlah Reimbursement',
+                            label: 'Total Reimbursement',
                             data: categories.map(cat => cat.count),
                             backgroundColor: ['#3b82f6', '#6366f1', '#10b981', '#f59e0b', '#f87171', '#34d399', '#818cf8'],
                             borderColor: '#1e3a8a',
@@ -132,11 +115,11 @@ export default defineComponent({
                     maintainAspectRatio: false,
                     scales: {
                         x: { 
-                            title: { display: true, text: 'Kategori' },
+                            title: { display: true, text: 'Category' },
                             ticks: { display: false } // Menyembunyikan label kategori
                         },
                         y: { 
-                            title: { display: true, text: 'Jumlah Reimbursement' },
+                            title: { display: true, text: 'Total Reimbursement' },
                             ticks: {
                                 beginAtZero: true, // Mulai dari 0
                                 stepSize: 1, // Langkah nilai adalah 1
@@ -150,13 +133,6 @@ export default defineComponent({
             });
         };
 
-
-
-        // Computed untuk format angka dengan titik koma
-        const formattedMonthlyReimbursements = computed(() => {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(monthlyReimbursements.value);
-        });
-
         const fetchData = async () => {
             try {
                 // Fetch data reimbursement
@@ -169,15 +145,16 @@ export default defineComponent({
                 // Total semua request
                 totalRequests.value = reimbursements.length;
 
-                // Hitung total dana yang disetujui untuk bulan berjalan
-                const currentMonth = new Date().getMonth(); // Index bulan berjalan (0 = Januari, 11 = Desember)
+                // Hitung total dana yang disetujui oleh HR untuk bulan berjalan
+                const currentMonth = new Date().getMonth(); 
                 const currentYear = new Date().getFullYear(); // Tahun berjalan
-                const totalApprovedThisMonth = reimbursements.reduce((sum, item) => {
+                const totalApprovedByHRThisMonth = reimbursements.reduce((sum, item) => {
                     const submitDate = new Date(item.submit_Date);
+
                     if (
-                        item.status.toLowerCase().includes('approved') && // Hanya yang berstatus approved
-                        submitDate.getMonth() === currentMonth && // Bulan saat ini
-                        submitDate.getFullYear() === currentYear // Tahun saat ini
+                        item.status.toLowerCase().includes('approved by hr') && 
+                        submitDate.getMonth() === currentMonth && 
+                        submitDate.getFullYear() === currentYear
                     ) {
                         return sum + item.approve_Amount;
                     }
@@ -185,26 +162,19 @@ export default defineComponent({
                 }, 0);
 
                 // Update nilai card Monthly Reimbursements
-                monthlyReimbursements.value = totalApprovedThisMonth;
+                monthlyReimbursements.value = totalApprovedByHRThisMonth;
 
-                // Reimbursement status "Progress in HR" atau "Progress in Finance"
-                const inProgressRequests = reimbursements.filter((request) =>
-                    ['Progress in HR', 'Progress in Finance'].includes(request.status)
+                // Reimbursement status "Progress in HR"
+                const inProgressHRRequests = reimbursements.filter((request) =>
+                    request.status.toLowerCase().includes('progress in hr')
                 );
-                pendingApprovals.value = inProgressRequests.length;
+                pendingApprovals.value = inProgressHRRequests.length;
 
-                // Hitung jumlah reimbursement yang ditolak
-                const declinedRequests = reimbursements.filter(request =>
-                    request.status.toLowerCase().includes('Decline')
+                // Hitung jumlah reimbursement yang ditolak oleh HR
+                const declinedByHRRequests = reimbursements.filter(request =>
+                    request.status.toLowerCase().includes('declined by hr')
                 );
-                rejectedRequests.value = declinedRequests.length;
-
-                // Hitung jumlah Approved Requests
-                const approved = reimbursements.filter(request =>
-                    request.status.toLowerCase().includes('Approved')
-                );
-                approvedRequests.value = approved.length;
-
+                rejectedRequests.value = declinedByHRRequests.length;
 
                 // Hitung jumlah reimbursement per kategori
                 const categoryCounts = reimbursements.reduce((acc, item) => {
@@ -248,6 +218,7 @@ export default defineComponent({
             }
         };
 
+
         onMounted(() => {
             fetchData();
         });
@@ -257,8 +228,6 @@ export default defineComponent({
             monthlyReimbursements,
             pendingApprovals,
             rejectedRequests,
-            formattedMonthlyReimbursements,
-            approvedRequests,
         };
     }
 });
