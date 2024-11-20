@@ -6,7 +6,7 @@
             <div class="flex space-x-6">
                 <!-- Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                    <div class="bg-blue-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-file-invoice text-3xl text-blue-600 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Total Requests</h3>
@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <!-- Adjusted the width of the Monthly Reimbursements card -->
-                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
                         <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">
@@ -66,7 +66,7 @@ export default defineComponent({
                     labels: categories.map(cat => cat.name),
                     datasets: [
                         {
-                            label: 'Jumlah Reimbursement',
+                            label: 'Total Reimbursement',
                             data: categories.map(cat => cat.count),
                             backgroundColor: ['#3b82f6', '#6366f1', '#10b981', '#f59e0b', '#f87171', '#34d399', '#818cf8'],
                             borderColor: '#1e3a8a',
@@ -79,14 +79,14 @@ export default defineComponent({
                     maintainAspectRatio: false,
                     scales: {
                         x: { 
-                            title: { display: true, text: 'Kategori' },
-                            ticks: { display: false } // Menyembunyikan label kategori
+                            title: { display: true, text: 'Category' },
+                            ticks: { display: false } 
                         },
                         y: { 
-                            title: { display: true, text: 'Jumlah Reimbursement' },
+                            title: { display: true, text: 'Total Reimbursement' },
                             ticks: {
                                 beginAtZero: true, // Mulai dari 0
-                                stepSize: 1, // Langkah nilai adalah 1
+                                stepSize: 1, 
                                 callback: function(value) {
                                     return Number.isInteger(value) ? value : ''; // Tampilkan hanya angka bulat
                                 }
@@ -98,50 +98,50 @@ export default defineComponent({
         };
 
         const createLineChart = (monthlyRequestCount) => {
-    new Chart(document.getElementById('lineChart'), {
-        type: 'line',
-        data: {
-            labels: Object.keys(monthlyRequestCount),
-            datasets: [
-                {
-                    label: 'Approved Requests',
-                    data: Object.values(monthlyRequestCount).map(month => month.approved), // Data untuk approved
-                    borderColor: 'green',
-                    backgroundColor: 'rgba(34, 197, 94, 0.2)', // Warna hijau muda
-                    fill: true,
-                    tension: 0.4,
+            new Chart(document.getElementById('lineChart'), {
+                type: 'line',
+                data: {
+                    labels: Object.keys(monthlyRequestCount),
+                    datasets: [
+                        {
+                            label: 'Approved Status',
+                            data: Object.values(monthlyRequestCount).map(month => month.approved),
+                            borderColor: 'green',
+                            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                            fill: true,
+                            tension: 0.4,
+                        },
+                        {
+                            label: 'Rejected Status',
+                            data: Object.values(monthlyRequestCount).map(month => month.rejected),
+                            borderColor: 'red',
+                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                            fill: true,
+                            tension: 0.4,
+                        }
+                    ]
                 },
-                {
-                    label: 'Rejected Requests',
-                    data: Object.values(monthlyRequestCount).map(month => month.rejected), // Data untuk rejected
-                    borderColor: 'red',
-                    backgroundColor: 'rgba(239, 68, 68, 0.2)', // Warna merah muda
-                    fill: true,
-                    tension: 0.4,
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: { display: true, text: 'Month' },
-                },
-                y: {
-                    title: { display: true, text: 'Count' },
-                    ticks: {
-                        beginAtZero: true, // Mulai dari 0
-                        stepSize: 1, // Langkah setiap angka adalah 1
-                        callback: function(value) {
-                            return value % 1 === 0 ? value : ''; // Hanya tampilkan angka bulat
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Month' },
+                        },
+                        y: {
+                            title: { display: true, text: 'Count' },
+                            ticks: {
+                                beginAtZero: true, // Mulai dari 0
+                                stepSize: 1, 
+                                callback: function(value) {
+                                    return value % 1 === 0 ? value : '';
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    });
-};
+            });
+        };
 
 
         // Computed untuk format angka dengan titik koma
@@ -163,13 +163,13 @@ export default defineComponent({
 
                 // Hitung total dana yang disetujui untuk bulan berjalan
                 const currentMonth = new Date().getMonth(); // Index bulan berjalan (0 = Januari, 11 = Desember)
-                const currentYear = new Date().getFullYear(); // Tahun berjalan
+                const currentYear = new Date().getFullYear(); 
                 const totalApprovedThisMonth = reimbursements.reduce((sum, item) => {
                     const submitDate = new Date(item.submit_Date);
                     if (
-                        item.status.toLowerCase().includes('approved') && // Hanya yang berstatus approved
-                        submitDate.getMonth() === currentMonth && // Bulan saat ini
-                        submitDate.getFullYear() === currentYear // Tahun saat ini
+                        item.status.toLowerCase().includes('approved') && 
+                        submitDate.getMonth() === currentMonth && 
+                        submitDate.getFullYear() === currentYear
                     ) {
                         return sum + item.approve_Amount;
                     }

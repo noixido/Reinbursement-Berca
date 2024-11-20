@@ -15,10 +15,10 @@
 
                             <div class="mb-4">
                                 <label for="inputCategory"
-                                    class="block text-gray-700 font-semibold mb-2">Kategori</label>
+                                    class="block text-gray-700 font-semibold mb-2">Category</label>
                                 <select v-model="form.id_Category"
                                     class="border border-gray-600 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                    <option value="" disabled>-- Pilih Kategori --</option>
+                                    <option value="" disabled>== Select Category ==</option>
                                     <option v-for="category in categories" :key="category.id_Category"
                                         :value="category.id_Category">
                                         {{ category.category_Name }}
