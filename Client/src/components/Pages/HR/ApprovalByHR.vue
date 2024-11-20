@@ -28,8 +28,8 @@
       <table class="table w-full border-collapse">
         <thead>
           <tr>
-            <th class="p-2 text-center font-bold">Nomor</th>
-            <th class="p-2 text-center font-bold">ID Reimbursement</th>
+            <th class="p-2 text-center font-bold">No</th>
+            <th class="p-2 text-center font-bold">Username</th>
             <th class="p-2 text-center font-bold">Kategori</th>
             <th class="p-2 text-center font-bold">Tanggal Pengajuan</th>
             <th class="p-2 text-center font-bold">Jumlah Dana</th>
@@ -40,7 +40,7 @@
         <tbody>
           <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement">
             <td class="p-2 text-center">{{ index + 1 }}</td>
-            <td class="p-2 text-center">{{ item.id_Reimbursement }}</td>
+            <td class="p-2 text-center">{{ item.name }}</td>
             <td class="p-2 text-center">{{ item.category_Name }}</td>
             <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
             <td class="p-2 text-center">Rp. {{ formatCurrency(item.amount) }}</td>
@@ -53,13 +53,20 @@
                                 {{ item.status }}
                             </span>
                         </td>
+
             <td class="p-2 text-center">
               <button
-                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
+                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
                 @click="openModal(item)"
                 title="View Details"
               >
                 <i class="fas fa-eye"></i>
+                <!-- Tooltip -->
+                <div
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
+                >
+                  View Data
+                </div>
               </button>
             </td>
           </tr>
@@ -166,30 +173,30 @@
           </div>
         </div>
 
-        <div class="border-4 border-yellow-500 rounded-lg p-4 mb-3">
+        <div class="border border-blue-500 bg-gray-50 rounded-lg p-4 mb-3">
           <!-- Tombol Approve dan Decline -->
-          <div class="flex justify-center space-x-4">
-            <button class="btn bg-blue-500" @click="openApproveForm">
-              Approve
-            </button>
-            <button class="btn bg-red-500" @click="openDeclineForm">
-              Decline
-            </button>
+          <div class="flex justify-center space-x-4 text-white font-semibold">
+              <button class="btn bg-blue-500 hover:bg-blue-900 hover:text-white text-white" @click="openApproveForm">
+                  Approve
+              </button>
+              <button class="btn bg-red-500 hover:bg-red-900  hover:text-white text-white" @click="openDeclineForm">
+                  Decline
+              </button>
           </div>
 
            <!-- Form Approve atau Decline -->
            <div v-if="showApproveForm" class="mt-4 space-y-3">
             <label class="font-semibold">Notes:</label>
-            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full" placeholder="Masukkan catatan persetujuan"></textarea>
-            <button class="btn bg-blue-500 mt-2 w-full" @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
+            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full border border-black" placeholder="Masukkan catatan persetujuan"></textarea>
+            <button class="btn bg-blue-500 mt-2 w-full  hover:bg-blue-900 hover:text-white text-white" @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Approval
             </button>
           </div>
 
           <div v-if="showDeclineForm" class="mt-4 space-y-3">
             <label class="font-semibold">Notes:</label>
-            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full" placeholder="Masukkan alasan penolakan"></textarea>
-            <button class="btn bg-red-500 mt-2 w-full" @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
+            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full border border-black" placeholder="Masukkan alasan penolakan"></textarea>
+            <button class="btn bg-red-500 mt-2 w-full  hover:bg-red-900 hover:text-white text-white" @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Decline
             </button>
           </div>
@@ -369,13 +376,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table tbody tr:nth-child(odd) {
-    background-color: #f2f2f2; /* Light gray for odd rows */
-  }
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000; /* Border hitam pada tabel */
+}
 
-  .table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* White for even rows */
-  }
+.table th,
+.table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #000; /* Border hitam pada setiap sel */
+}
+
+.table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
   .badge-status {
     display: inline-block; /* Membuat elemen berbentuk inline-block */
     font-size: 0.75rem; /* Ukuran font kecil */

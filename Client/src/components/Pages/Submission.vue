@@ -7,14 +7,15 @@
                         <div class="border border-gray-300 p-6 rounded-lg shadow-sm w-full md:w-[48%]">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-lg font-semibold text-gray-800">Form {{ index + 1 }}</h2>
-    
-                                <button type="button" @click="removeForm(index)" class="text-red-500 hover:text-red-700">
+
+                                <button v-if="forms.length > 1" type="button" @click="removeForm(index)" class="text-red-500 hover:text-red-700">
                                     &#x2716;
                                 </button>
                             </div>
-    
+
                             <div class="mb-4">
-                                <label for="inputCategory" class="block text-gray-700 font-semibold mb-2">Kategori</label>
+                                <label for="inputCategory"
+                                    class="block text-gray-700 font-semibold mb-2">Kategori</label>
                                 <select v-model="form.id_Category"
                                     class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                     <option value="" disabled>-- Pilih Kategori --</option>
@@ -23,26 +24,40 @@
                                         {{ category.category_Name }}
                                     </option>
                                 </select>
-                                <p v-if="formErrors[index]?.category" class="text-red-500 text-xs mt-1">Category is required!
+                                <p v-if="formErrors[index]?.category" class="text-red-500 text- mt-1">Category is
+                                    required!
                                 </p>
                             </div>
-    
+
                             <div class="mb-4">
-                                <label for="inputEvidence" class="block text-gray-700 font-semibold mb-2">Evidence</label>
+                                <label for="inputEvidence"
+                                    class="block text-gray-700 font-semibold mb-2">Evidence</label>
                                 <input type="file" @change="handleFileUpload($event, index)"
-                                    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                                <p v-if="formErrors[index]?.evidence" class="text-red-500 text-xs mt-1">Evidence is required!
+                                    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    accept=".pdf" />
+                                <p class="text-gray-600 text-sm mt-1">
+                                    Please upload a file in PDF format. (max size: 5 MB)
                                 </p>
-                                <p v-if="formErrors[index]?.evidenceFileType" class="text-red-500 text-xs mt-1">
+                                <p v-if="formErrors[index]?.evidence" class="text-red-500 text-sm mt-1">Evidence is
+                                    required!
+                                </p>
+                                <p v-if="formErrors[index]?.evidenceFileType" class="text-red-500 text-sm mt-1">
                                     Only PDF files are allowed!
                                 </p>
+                                <p v-if="formErrors[index]?.evidenceFileSize" class="text-red-500 text-sm mt-1">File
+                                    size must not exceed 5 MB!</p>
+
                             </div>
-    
+
                             <div class="mb-4">
                                 <label for="inputAmount" class="block text-gray-700 font-semibold mb-2">Amount</label>
-                                <input v-model="form.amount" type="number" min="0"
+                                <input v-model="forms[index].formattedAmount" @input="formatAmount(index)" type="text"
+                                    inputmode="numeric"
                                     class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                                <p v-if="formErrors[index]?.amount" class="text-red-500 text-xs mt-1">Amount is required and the value cannot be 0!</p>
+                                <!-- <input v-model="form.amount" type="number" min="0"
+                                    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" /> -->
+                                <p v-if="formErrors[index]?.amount" class="text-red-500 text-sm mt-1">Amount is required
+                                    and the value cannot be 0!</p>
                             </div>
                         </div>
                     </template>
@@ -94,13 +109,59 @@ onMounted(async () => {
     }
 });
 
+function formatAmount(index) {
+    // Hapus semua titik (pemformatan lama)
+    const rawValue = forms.value[index].formattedAmount.replace(/\./g, '');
+    if (isNaN(rawValue)) {
+        forms.value[index].formattedAmount = '';
+        forms.value[index].amount = 0;
+        return;
+    }
+
+    // Simpan nilai asli tanpa format
+    forms.value[index].amount = parseInt(rawValue, 10);
+
+    // Tambahkan titik pemisah ribuan
+    forms.value[index].formattedAmount = forms.value[index].amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+
 function addForm() {
-    forms.value.push({ id_Account: localAccount, id_Category: '', evidence: null, amount: 0 });
+    formErrors.value = []
+    // forms.value.push({ id_Account: localAccount, id_Category: '', evidence: null, amount: 0 });
+    forms.value.push({
+        id_Account: localAccount,
+        id_Category: '',
+        evidence: null,
+        amount: 0,
+        formattedAmount: '', // Untuk menampilkan angka terformat
+    });
 }
 
 function handleFileUpload(event, index) {
     const file = event.target.files[0];
-    forms.value[index].evidence = file;
+    if (file) {
+        const maxSize = 5 * 1024 * 1024; // 5 MB in bytes
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        // Reset error state for file size and type
+        formErrors.value[index] = { ...formErrors.value[index], evidenceFileType: false, evidenceFileSize: false };
+
+        if (fileExtension !== 'pdf') {
+            // Invalid file type
+            formErrors.value[index].evidenceFileType = true;
+            forms.value[index].evidence = null;
+        } else if (file.size > maxSize) {
+            // Invalid file size
+            formErrors.value[index].evidenceFileSize = true;
+            forms.value[index].evidence = null;
+        } else {
+            // Valid file
+            forms.value[index].evidence = file;
+        }
+    }
 }
 
 function removeForm(index) {
@@ -120,7 +181,7 @@ function validateForm() {
         if (!form.evidence) {
             errors.evidence = true;
             valid = false;
-        }else {
+        } else {
             // Validate evidence file type (only PDF allowed)
             const fileExtension = form.evidence.name.split('.').pop().toLowerCase();
             if (fileExtension !== 'pdf') {
@@ -146,8 +207,8 @@ async function submitForm() {
     const formData = forms.value.map((form, index) => {
         return {
             ...form,
+            amount: form.amount, // Kirim angka asli tanpa format
             submit_Date: new Date().toISOString(),
-            // evidence: "ini evidence"
             index: index + 1  // Tambahkan indeks untuk identifikasi
         };
     });
@@ -188,7 +249,7 @@ async function submitForm() {
         Swal.fire({
             position: "center",
             icon: "success",
-            title: "All forms processed!",
+            title: "Reimbursement Submitted",
             showConfirmButton: false,
             timer: 1500
         }).then(() => {
