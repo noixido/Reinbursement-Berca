@@ -1,159 +1,232 @@
 <template>
     <MainLayout>
-        <div class="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Left Section: Cards -->
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Total Reimbursement Requests -->
-                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
-                    <i class="fas fa-file-invoice text-4xl text-blue-500 mr-4"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-black">Total Requests</h3>
-                        <p class="text-2xl font-bold text-blue-900">{{ totalRequests }}</p>
-                    </div>
-                </div>
+        <div class="container mx-auto p-6 bg-gray-50 min-h-screen">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Finance Dashboard</h1>
 
-                <!-- Approved Requests -->
-                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
-                    <i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-black">Approved Status</h3>
-                        <p class="text-2xl font-bold text-green-900">{{ approvedRequests }}</p>
+            <div class="flex space-x-6">
+                <!-- Cards Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+                    <div class="bg-blue-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                        <i class="fas fa-file-invoice text-3xl text-blue-600 mr-4"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Total Requests</h3>
+                            <p class="text-2xl font-bold text-blue-900">{{ totalRequests }}</p>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Declined Requests -->
-                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
-                    <i class="fas fa-times-circle text-4xl text-red-500 mr-4"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-black">Declined Status</h3>
-                        <p class="text-2xl font-bold text-red-900">{{ declinedRequests }}</p>
-                    </div>
-                </div>
-
-                <!-- Total Dana Bulan Ini -->
-                <div class="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition duration-300">
-                    <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-black">Approved Funds</h3>
-                        <p class="text-2xl font-bold text-black">{{ formatToRupiah(totalDanaBulanIni) }}</p>
+                    <!-- Adjusted the width of the Monthly Reimbursements card -->
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
+                        <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">
+                                Approved Funds</h3>
+                            <p class="text-2xl font-bold text-black">{{ formattedMonthlyReimbursements }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Section: Line Chart -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Jumlah Dana yang Disetujui per Bulan</h3>
-                <line-chart :data="danaPerBulanData" :options="lineChartOptions"></line-chart>
+            <!-- Charts Section -->
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 mt-8">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Banyaknya Reimbursement per Kategori</h3>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Line Chart Section -->
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 mt-8">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Tracking Status (Approved vs Declined)</h3>
+                <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
+                </div>
             </div>
         </div>
     </MainLayout>
 </template>
 
-
-
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { Line } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import Chart from 'chart.js/auto';
 import MainLayout from '../../layouts/MainLayout.vue';
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
 
 export default defineComponent({
     components: {
-        'line-chart': Line,
-        MainLayout,
+        MainLayout
     },
     setup() {
         const totalRequests = ref(0);
-        const totalDanaBulanIni = ref(0);
-        const approvedRequests = ref(0);
-        const declinedRequests = ref(0);
+        const monthlyReimbursements = ref(0);
 
-        const danaPerBulanData = ref({
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        // Fungsi untuk membuat bar chart
+        const createBarChart = (categories) => {
+            new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: categories.map(cat => cat.name),
+                    datasets: [
+                        {
+                            label: 'Jumlah Reimbursement',
+                            data: categories.map(cat => cat.count),
+                            backgroundColor: ['#3b82f6', '#6366f1', '#10b981', '#f59e0b', '#f87171', '#34d399', '#818cf8'],
+                            borderColor: '#1e3a8a',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'Kategori' },
+                            ticks: { display: false } // Menyembunyikan label kategori
+                        },
+                        y: { 
+                            title: { display: true, text: 'Jumlah Reimbursement' },
+                            ticks: {
+                                beginAtZero: true, // Mulai dari 0
+                                stepSize: 1, // Langkah nilai adalah 1
+                                callback: function(value) {
+                                    return Number.isInteger(value) ? value : ''; // Tampilkan hanya angka bulat
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        const createLineChart = (monthlyRequestCount) => {
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+            labels: Object.keys(monthlyRequestCount),
             datasets: [
                 {
-                    label: 'Dana Disetujui (Rp)',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    label: 'Approved Requests',
+                    data: Object.values(monthlyRequestCount).map(month => month.approved), // Data untuk approved
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)', // Warna hijau muda
                     fill: true,
                     tension: 0.4,
                 },
-            ],
-        });
-
-        const lineChartOptions = ref({
+                {
+                    label: 'Rejected Requests',
+                    data: Object.values(monthlyRequestCount).map(month => month.rejected), // Data untuk rejected
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)', // Warna merah muda
+                    fill: true,
+                    tension: 0.4,
+                }
+            ]
+        },
+        options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `Rp ${context.raw.toLocaleString()}`,
-                    },
-                },
-            },
+            maintainAspectRatio: false,
             scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: (value) => `Rp ${value.toLocaleString()}`,
-                    },
+                x: {
+                    title: { display: true, text: 'Month' },
                 },
-            },
-        });
+                y: {
+                    title: { display: true, text: 'Count' },
+                    ticks: {
+                        beginAtZero: true, // Mulai dari 0
+                        stepSize: 1, // Langkah setiap angka adalah 1
+                        callback: function(value) {
+                            return value % 1 === 0 ? value : ''; // Hanya tampilkan angka bulat
+                        }
+                    }
+                }
+            }
+        }
+    });
+};
 
-        const formatToRupiah = (value) => {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
-        };
+
+        // Computed untuk format angka dengan titik koma
+        const formattedMonthlyReimbursements = computed(() => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(monthlyReimbursements.value);
+        });
 
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://localhost:7102/api/Reimbursement', {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                // Fetch data reimbursement
+                const reimbursementResponse = await axios.get('https://localhost:7102/api/Reimbursement', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
                 });
 
-                const reimbursements = response.data.data;
+                const reimbursements = reimbursementResponse.data.data;
 
+                // Total semua request
                 totalRequests.value = reimbursements.length;
-                approvedRequests.value = reimbursements.filter(
-                    (item) => item.status.toLowerCase() === 'approved'
-                ).length;
-                declinedRequests.value = reimbursements.filter(
-                    (item) => item.status.toLowerCase().includes('decline')
-                ).length;
 
-                const currentMonth = new Date().getMonth();
-                const currentYear = new Date().getFullYear();
-                totalDanaBulanIni.value = reimbursements.reduce((total, item) => {
+                // Hitung total dana yang disetujui untuk bulan berjalan
+                const currentMonth = new Date().getMonth(); // Index bulan berjalan (0 = Januari, 11 = Desember)
+                const currentYear = new Date().getFullYear(); // Tahun berjalan
+                const totalApprovedThisMonth = reimbursements.reduce((sum, item) => {
                     const submitDate = new Date(item.submit_Date);
                     if (
-                        submitDate.getMonth() === currentMonth &&
-                        submitDate.getFullYear() === currentYear &&
-                        item.status.toLowerCase() === 'approved'
+                        item.status.toLowerCase().includes('approved') && // Hanya yang berstatus approved
+                        submitDate.getMonth() === currentMonth && // Bulan saat ini
+                        submitDate.getFullYear() === currentYear // Tahun saat ini
                     ) {
-                        return total + item.approve_Amount;
+                        return sum + item.approve_Amount;
                     }
-                    return total;
+                    return sum;
                 }, 0);
 
-                const monthlyDana = Array(12).fill(0);
-                reimbursements.forEach((item) => {
-                    const submitDate = new Date(item.submit_Date);
-                    const month = submitDate.getMonth();
-                    if (item.status.toLowerCase() === 'approved') {
-                        monthlyDana[month] += item.approve_Amount;
-                    }
-                });
+                // Update nilai card Monthly Reimbursements
+                monthlyReimbursements.value = totalApprovedThisMonth;
 
-                danaPerBulanData.value.datasets[0].data = monthlyDana;
+                // Hitung jumlah reimbursement per kategori
+                const categoryCounts = reimbursements.reduce((acc, item) => {
+                    const categoryName = item.category_Name;
+                    acc[categoryName] = (acc[categoryName] || 0) + 1;
+                    return acc;
+                }, {});
+
+                // Format data untuk bar chart
+                const categories = Object.keys(categoryCounts).map(name => ({
+                    name,
+                    count: categoryCounts[name]
+                }));
+
+                // Buat bar chart berdasarkan data kategori
+                createBarChart(categories);
+
+                // Menghitung status Reimbursement berdasarkan bulan
+                const monthlyStatusCounts = {};
+
+                for (let month = 0; month < 12; month++) {
+                    const monthData = reimbursements.filter(item => {
+                        const submitDate = new Date(item.submit_Date);
+                        return submitDate.getMonth() === month;
+                    });
+
+                    const approved = monthData.filter(item => item.status.toLowerCase().includes('approved')).length;
+                    const declined = monthData.filter(item => item.status.toLowerCase().includes('decline')).length;
+
+                    // Set default jika belum ada data untuk bulan tertentu
+                    monthlyStatusCounts[new Date(2024, month).toLocaleString('default', { month: 'short' })] = {
+                        approved,
+                        rejected: declined
+                    };
+                }
+
+                // Filter data hanya sampai bulan berjalan
+                const currentMonthIndex = new Date().getMonth(); // 0 = Januari
+                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const filteredMonthlyStatusCounts = months.slice(0, currentMonthIndex + 1).reduce((filtered, month) => {
+                    filtered[month] = monthlyStatusCounts[month] || { approved: 0, rejected: 0 };
+                    return filtered;
+                }, {});
+
+                // Buat line chart berdasarkan data status
+                createLineChart(filteredMonthlyStatusCounts);
+
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error.response?.data?.message || error.message);
             }
         };
 
@@ -163,47 +236,32 @@ export default defineComponent({
 
         return {
             totalRequests,
-            approvedRequests,
-            declinedRequests,
-            totalDanaBulanIni,
-            danaPerBulanData,
-            lineChartOptions,
-            formatToRupiah,
+            monthlyReimbursements,
+            formattedMonthlyReimbursements,
         };
-    },
+    }
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
-    max-width: 1200px;
+    padding: 1.5rem;
 }
 
-.text-blue-500 {
-    color: #3b82f6;
+.grid {
+    gap: 1.5rem; /* Perlebar jarak antar grid */
 }
 
-.text-green-500 {
-    color: #10b981;
+.card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
 }
 
-.text-red-500 {
-    color: #ef4444;
+.chart-container {
+    height: 350px; /* Diperlebar untuk tampilan chart */
 }
 
-.text-yellow-500 {
-    color: #f59e0b;
-}
-
-.text-lg {
-    font-size: 1.125rem;
-}
-
-.text-sm {
-    font-size: 0.875rem;
-}
-
-.text-gray-800 {
-    color: #1f2937;
+.flex {
+    gap: 1.5rem; /* Jarak antar kartu dan chart */ 
 }
 </style>
