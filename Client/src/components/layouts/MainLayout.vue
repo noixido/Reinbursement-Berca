@@ -21,6 +21,7 @@ import Breadcrumb from './partials/Breadcrumb.vue';
 import { useRoute } from 'vue-router';
 import { computed, ref } from 'vue';
 import Footer from './partials/Footer.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -50,11 +51,36 @@ export default {
 
         return { sidebarOpen };
     },
+    // mounted(){
+    //     this.updateCurrentLimit();
+    //     this.startInterval();
+    // },
     methods: {
         toggleSidebar() {
             this.sidebarOpen = !this.sidebarOpen;
         },
+        // updateCurrentLimit(){
+        //     const api = "https://localhost:7102/api/Account/updateCurrentLimitPeriodically";
+        //     return axios
+        //         .post(api, {}, {
+        //             headers: {
+        //             Authorization: `Bearer ${this.token}`,
+        //             },
+        //         })
+        //         .then((response)=>{
+        //             console.log(response.data.message);
+        //         })
+        //         .catch((error)=>{
+        //             console.error(error);
+        //         });
+        // },
+        // startInterval(){
+        //     setInterval(()=>{
+        //         this.updateCurrentLimit();
+        //     }, 86400000);
+        // }
     },
+
 };
 </script>
 

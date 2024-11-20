@@ -189,7 +189,7 @@ namespace API.Controllers
         [HttpGet("hr")]
         public IActionResult GetAllReimbursementsHR()
         {
-            var reimbursements = _reimbursementRepositories.GetAllReimbursementsByStatus("progress in hr");
+            var reimbursements = _reimbursementRepositories.GetAllReimbursementsByStatus("Progress in HR");
 
             if (reimbursements.Count() == 0)
             {
@@ -210,7 +210,7 @@ namespace API.Controllers
         [HttpGet("finance")]
         public IActionResult GetAllReimbursementsFinance()
         {
-            var reimbursements = _reimbursementRepositories.GetAllReimbursementsByStatus("progress in finance");
+            var reimbursements = _reimbursementRepositories.GetAllReimbursementsByStatus("Progress in Finance");
 
             if (reimbursements.Count() == 0)
             {

@@ -45,14 +45,15 @@
             <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
             <td class="p-2 text-center">Rp. {{ formatCurrency(item.amount) }}</td>
             <td>
-                <span :class="{
-                  'badge badge-warning': item.status.includes('progress'),
-                  'badge badge-success': item.status.includes('approved'),
-                  'badge badge-error': item.status.includes('declined')
-                  }" class="badge-status">
-                      {{ item.status }}
-                </span>
-            </td>
+                            <span :class="{
+                                'badge badge-warning': item.status.includes('Progress'),
+                                'badge badge-success': item.status.includes('Approved'),
+                                'badge badge-error': item.status.includes('Declined')
+                            }" class="badge-status">
+                                {{ item.status }}
+                            </span>
+                        </td>
+
             <td class="p-2 text-center">
               <button
                 class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
@@ -208,6 +209,8 @@
 <script>
 import axios from 'axios';
 import MainLayout from '../../layouts/MainLayout.vue';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
   components: {
@@ -278,6 +281,9 @@ export default {
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
+          // toast.error(error.response.data.message, {
+          //               autoClose: 1000,
+          //           });
         });
     },
     openModal(item) {
@@ -300,7 +306,10 @@ export default {
     },
     approveReimbursement(id) {
       if (!this.selectedReimbursement.note) {
-        alert("Catatan persetujuan harus diisi.");
+        // alert("Catatan persetujuan harus diisi.");
+        toast.error("Catatan persetujuan harus diisi.", {
+                        autoClose: 1000,
+                    });
         return;
       }
       if (confirm("Anda yakin ingin menyetujui reimbursement ini?")) {
@@ -310,20 +319,29 @@ export default {
               'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
           })
-          .then(() => {
+          .then((response) => {
             this.selectedReimbursement.status = 'Approved';
-            alert("Reimbursement telah disetujui!");
+            // alert("Reimbursement telah disetujui!");
+            toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
             this.$refs.reimbursementModal.close();
             this.fetchReimbursements();
           })
           .catch((error) => {
             console.error('Error approving reimbursement:', error);
+            // toast.error(error.response.data.message, {
+            //             autoClose: 1000,
+            //         });
           });
       }
     },
     declineReimbursement(id) {
       if (!this.selectedReimbursement.note) {
-        alert("Catatan penolakan harus diisi.");
+        // alert("Catatan penolakan harus diisi.");
+        toast.error("Catatan penolakan harus diisi.", {
+                        autoClose: 1000,
+                    });
         return;
       }
       if (confirm("Anda yakin ingin menolak reimbursement ini?")) {
@@ -333,14 +351,20 @@ export default {
               'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
           })
-          .then(() => {
+          .then((response) => {
             this.selectedReimbursement.status = 'Rejected';
-            alert("Reimbursement telah ditolak!");
+            // alert("Reimbursement telah ditolak!");
+            toast.success(response.data.message, {
+                        autoClose: 1000,
+                    });
             this.$refs.reimbursementModal.close();
             this.fetchReimbursements();
           })
           .catch((error) => {
             console.error('Error declining reimbursement:', error);
+            // toast.error(error.response.data.message, {
+            //             autoClose: 1000,
+            //         });
           });
       }
     }
