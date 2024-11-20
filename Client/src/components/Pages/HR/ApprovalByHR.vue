@@ -7,11 +7,7 @@
     <div class="mb-4 flex justify-between items-center">
       <div class="flex items-center">
         <label class="mr-2">Show</label>
-        <select
-          v-model="itemsPerPage"
-          @change="currentPage = 1"
-          class="border border-gray-300 rounded p-2 bg-white"
-        >
+        <select v-model="itemsPerPage" @change="currentPage = 1" class="border border-gray-300 rounded p-2 bg-white">
           <option v-for="option in [10, 25, 50, 100]" :key="option" :value="option">
             {{ option }}
           </option>
@@ -42,29 +38,29 @@
             <td class="p-2 text-center">{{ index + 1 }}</td>
             <td class="p-2 text-center">{{ item.name }}</td>
             <td class="p-2 text-center">{{ item.category_Name }}</td>
-            <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</td>
+            <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', {
+              year: 'numeric',
+              month: 'long', day: '2-digit'
+            }) }}</td>
             <td class="p-2 text-center">Rp. {{ formatCurrency(item.amount) }}</td>
             <td>
-                            <span :class="{
-                                'badge badge-warning': item.status.includes('Progress'),
-                                'badge badge-success': item.status.includes('Approved'),
-                                'badge badge-error': item.status.includes('Declined')
-                            }" class="badge-status">
-                                {{ item.status }}
-                            </span>
-                        </td>
+              <span :class="{
+                'badge badge-warning': item.status.includes('Progress'),
+                'badge badge-success': item.status.includes('Approved'),
+                'badge badge-error': item.status.includes('Declined')
+              }" class="badge-status">
+                {{ item.status }}
+              </span>
+            </td>
 
             <td class="p-2 text-center">
               <button
                 class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
-                @click="openModal(item)"
-                title="View Details"
-              >
+                @click="openModal(item)" title="View Details">
                 <i class="fas fa-eye"></i>
                 <!-- Tooltip -->
                 <div
-                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
-                >
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md">
                   View Data
                 </div>
               </button>
@@ -88,13 +84,8 @@
         <button class="join-item btn" @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage <= 1">
           Prev
         </button>
-        <button
-          v-for="page in pageNumbers"
-          :key="page"
-          class="join-item btn"
-          @click="currentPage = page"
-          :class="{'btn-active': currentPage === page}"
-        >
+        <button v-for="page in pageNumbers" :key="page" class="join-item btn" @click="currentPage = page"
+          :class="{ 'btn-active': currentPage === page }">
           {{ page }}
         </button>
         <button class="join-item btn" @click="currentPage = totalPages" :disabled="currentPage >= totalPages">
@@ -106,11 +97,17 @@
     <!-- Modal -->
     <!-- Modal -->
     <dialog ref="reimbursementModal" class="modal">
-      <div class="modal-box max-w-3xl">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="text-center text-2xl font-bold mb-4">Detail Reimbursement</h3>
+      <div class="modal-box max-w-3xl py-0">
+        <div class="bg-white sticky top-0 p-3">
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 class="text-center text-2xl font-bold mb-4">
+            Detail Reimbursement
+          </h3>
+        </div>
         <div class="py-4 space-y-3 text-gray-800">
           <div class="text-center">
             <div class="font-semibold">📌 ID Reimbursement:</div>
@@ -139,7 +136,10 @@
 
           <div class="flex justify-between">
             <span class="font-semibold">📅 Submission Date:</span>
-            <span>{{ new Date(selectedReimbursement.submit_Date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' }) }}</span>
+            <span>{{ new Date(selectedReimbursement.submit_Date).toLocaleDateString('id-ID', {
+              year: 'numeric', month:
+                'long', day: '2-digit'
+            }) }}</span>
           </div>
 
           <div class="flex justify-between">
@@ -167,7 +167,8 @@
 
           <div class="flex justify-between">
             <span class="font-semibold">📎 Evidence:</span>
-            <a :href="`https://localhost:7102/api/file/` + selectedReimbursement.evidence" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">
+            <a :href="`https://localhost:7102/api/file/` + selectedReimbursement.evidence" target="_blank"
+              rel="noopener noreferrer" class="text-blue-500 hover:underline">
               Lihat evidence
             </a>
           </div>
@@ -176,32 +177,41 @@
         <div class="border border-blue-500 bg-gray-50 rounded-lg p-4 mb-3">
           <!-- Tombol Approve dan Decline -->
           <div class="flex justify-center space-x-4 text-white font-semibold">
-              <button class="btn bg-blue-500 hover:bg-blue-900 hover:text-white text-white" @click="openApproveForm">
-                  Approve
-              </button>
-              <button class="btn bg-red-500 hover:bg-red-900  hover:text-white text-white" @click="openDeclineForm">
-                  Decline
-              </button>
+            <button class="btn bg-blue-500 hover:bg-blue-900 hover:text-white text-white" @click="openApproveForm">
+              Approve
+            </button>
+            <button class="btn bg-red-500 hover:bg-red-900  hover:text-white text-white" @click="openDeclineForm">
+              Decline
+            </button>
           </div>
 
-           <!-- Form Approve atau Decline -->
-           <div v-if="showApproveForm" class="mt-4 space-y-3">
+          <!-- Form Approve atau Decline -->
+          <div v-if="showApproveForm" class="mt-4 space-y-3">
             <label class="font-semibold">Notes:</label>
-            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full border border-black" placeholder="Masukkan catatan persetujuan"></textarea>
-            <button class="btn bg-blue-500 mt-2 w-full  hover:bg-blue-900 hover:text-white text-white" @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
+            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full border border-black"
+              placeholder="Masukkan catatan persetujuan"></textarea>
+            <button class="btn bg-blue-500 mt-2 w-full  hover:bg-blue-900 hover:text-white text-white"
+              @click.prevent="approveReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Approval
             </button>
           </div>
 
           <div v-if="showDeclineForm" class="mt-4 space-y-3">
             <label class="font-semibold">Notes:</label>
-            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full border border-black" placeholder="Masukkan alasan penolakan"></textarea>
-            <button class="btn bg-red-500 mt-2 w-full  hover:bg-red-900 hover:text-white text-white" @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
+            <textarea v-model="selectedReimbursement.note" class="textarea textarea-bordered w-full border border-black"
+              placeholder="Masukkan alasan penolakan"></textarea>
+            <button class="btn bg-red-500 mt-2 w-full  hover:bg-red-900 hover:text-white text-white"
+              @click.prevent="declineReimbursement(selectedReimbursement.id_Reimbursement)">
               Submit Decline
             </button>
           </div>
         </div>
+        <div class="bg-white sticky bottom-0 p-3">
+        </div>
       </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
     </dialog>
   </MainLayout>
 </template>
@@ -211,6 +221,7 @@ import axios from 'axios';
 import MainLayout from '../../layouts/MainLayout.vue';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import Swal from 'sweetalert2';
 
 export default {
   components: {
@@ -308,65 +319,95 @@ export default {
       if (!this.selectedReimbursement.note) {
         // alert("Catatan persetujuan harus diisi.");
         toast.error("Catatan persetujuan harus diisi.", {
-                        autoClose: 1000,
-                    });
+          autoClose: 1000,
+        });
         return;
       }
-      if (confirm("Anda yakin ingin menyetujui reimbursement ini?")) {
-        axios
-          .put(`https://localhost:7102/api/Reimbursement/approvehr/${id}`, { note: this.selectedReimbursement.note }, {
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-          })
-          .then((response) => {
-            this.selectedReimbursement.status = 'Approved';
-            // alert("Reimbursement telah disetujui!");
-            toast.success(response.data.message, {
-                        autoClose: 1000,
-                    });
-            this.$refs.reimbursementModal.close();
-            this.fetchReimbursements();
-          })
-          .catch((error) => {
-            console.error('Error approving reimbursement:', error);
-            // toast.error(error.response.data.message, {
-            //             autoClose: 1000,
-            //         });
-          });
-      }
+
+      this.$refs.reimbursementModal.close();
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will approve this reimbursement!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+        customClass: {
+          popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .put(`https://localhost:7102/api/Reimbursement/approvehr/${id}`, { note: this.selectedReimbursement.note }, {
+              headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }
+            })
+            .then((response) => {
+              this.selectedReimbursement.status = 'Approved';
+              // alert("Reimbursement telah disetujui!");
+              toast.success(response.data.message, {
+                autoClose: 1000,
+              });
+              this.$refs.reimbursementModal.close();
+              this.fetchReimbursements();
+            })
+            .catch((error) => {
+              console.error('Error approving reimbursement:', error);
+              // toast.error(error.response.data.message, {
+              //             autoClose: 1000,
+              //         });
+            });
+        }
+      });
     },
     declineReimbursement(id) {
       if (!this.selectedReimbursement.note) {
         // alert("Catatan penolakan harus diisi.");
         toast.error("Catatan penolakan harus diisi.", {
-                        autoClose: 1000,
-                    });
+          autoClose: 1000,
+        });
         return;
       }
-      if (confirm("Anda yakin ingin menolak reimbursement ini?")) {
-        axios
-          .put(`https://localhost:7102/api/Reimbursement/declinehr/${id}`, { note: this.selectedReimbursement.note }, {
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-          })
-          .then((response) => {
-            this.selectedReimbursement.status = 'Rejected';
-            // alert("Reimbursement telah ditolak!");
-            toast.success(response.data.message, {
-                        autoClose: 1000,
-                    });
-            this.$refs.reimbursementModal.close();
-            this.fetchReimbursements();
-          })
-          .catch((error) => {
-            console.error('Error declining reimbursement:', error);
-            // toast.error(error.response.data.message, {
-            //             autoClose: 1000,
-            //         });
-          });
-      }
+
+      this.$refs.reimbursementModal.close();
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will decline this reimbursement!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+        customClass: {
+          popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .put(`https://localhost:7102/api/Reimbursement/declinehr/${id}`, { note: this.selectedReimbursement.note }, {
+              headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }
+            })
+            .then((response) => {
+              this.selectedReimbursement.status = 'Rejected';
+              // alert("Reimbursement telah ditolak!");
+              toast.success(response.data.message, {
+                autoClose: 1000,
+              });
+              this.$refs.reimbursementModal.close();
+              this.fetchReimbursements();
+            })
+            .catch((error) => {
+              console.error('Error declining reimbursement:', error);
+              // toast.error(error.response.data.message, {
+              //             autoClose: 1000,
+              //         });
+            });
+        }
+      });
     }
   },
   mounted() {
@@ -377,37 +418,47 @@ export default {
 
 <style lang="scss" scoped>
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #000; /* Border hitam pada tabel */
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #000;
+  /* Border hitam pada tabel */
 }
 
 .table th,
 .table td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #000; /* Border hitam pada setiap sel */
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #000;
+  /* Border hitam pada setiap sel */
 }
 
 .table th {
-    background-color: #f8f8f8;
-    font-weight: bold;
+  background-color: #f8f8f8;
+  font-weight: bold;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .table tr:nth-child(odd) {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
-  .badge-status {
-    display: inline-block; /* Membuat elemen berbentuk inline-block */
-    font-size: 0.75rem; /* Ukuran font kecil */
-    font-weight: normal; /* Tidak bold */
-    white-space: nowrap; /* Menghindari teks terpotong ke bawah */
-    overflow: hidden; /* Menyembunyikan teks yang melebihi area */
-    text-align: center; /* Memastikan teks selalu rata tengah */
+
+.badge-status {
+  display: inline-block;
+  /* Membuat elemen berbentuk inline-block */
+  font-size: 0.75rem;
+  /* Ukuran font kecil */
+  font-weight: normal;
+  /* Tidak bold */
+  white-space: nowrap;
+  /* Menghindari teks terpotong ke bawah */
+  overflow: hidden;
+  /* Menyembunyikan teks yang melebihi area */
+  text-align: center;
+  /* Memastikan teks selalu rata tengah */
 }
+
 /* Sesuaikan style sesuai kebutuhan */
 </style>

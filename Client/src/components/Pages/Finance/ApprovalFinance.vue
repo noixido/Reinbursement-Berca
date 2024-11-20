@@ -71,15 +71,12 @@
                         <td class="p-2 text-center">
                             <button
                                 class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
-                                @click="openModal(item)"
-                                title="View Details"
-                            >
+                                @click="openModal(item)" title="View Details">
                                 <i class="fas fa-eye"></i>
                                 <!-- Tooltip -->
                                 <div
-                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
-                                >
-                                View Data
+                                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md">
+                                    View Data
                                 </div>
                             </button>
                         </td>
@@ -234,7 +231,7 @@
                         </div> -->
                         <input v-model="formattedAmount" type="text" min="0" @input="formatAmount()" inputmode="numeric"
                             :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
-                            placeholder="Masukkan Dana Disetujui" class="input input-bordered" />
+                            placeholder="Masukkan Dana Disetujui" class="input input-bordered border border-gray-600" />
                         <p v-if="!isApproveAmountValid && showValidation" class="text-red-500 text-sm">
                             Jumlah harus lebih besar dari 0 dan tidak melebihi {{
                                 formatCurrency(Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount))
@@ -242,7 +239,7 @@
                         </p>
 
                         <label class="font-semibold">Catatan:</label>
-                        <textarea v-model="note" class="textarea textarea-bordered w-full"
+                        <textarea v-model="note" class="textarea textarea-bordered w-full border border-gray-600"
                             placeholder="Masukkan catatan"></textarea>
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
@@ -255,7 +252,7 @@
 
                     <div v-if="showDeclineForm" class="mt-4 space-y-3">
                         <label class="font-semibold">Catatan:</label>
-                        <textarea v-model="note" class="textarea textarea-bordered w-full"
+                        <textarea v-model="note" class="textarea textarea-bordered w-full border border-gray-600"
                             placeholder="Masukkan alasan penolakan"></textarea>
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
@@ -430,51 +427,61 @@ export default {
                 return
             }
 
-            const approvalData = {
-                approve_Amount: this.approveAmount,
-                note: this.note,
-                id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
-            };
+            this.$refs.reimbursementModal.close();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will approve this reimbursement!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes!",
+                customClass: {
+                    popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const approvalData = {
+                        approve_Amount: this.approveAmount,
+                        note: this.note,
+                        id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
+                    };
 
-            axios
-                .put(
-                    `https://localhost:7102/api/Reimbursement/approvefinance/${this.selectedReimbursement.id_Reimbursement}`,
-                    approvalData,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('token'),
-                        },
-                    }
-                )
-                .then((response) => {
-                    // Handle success
-                    this.fetchReimbursements(); // refresh the data
-                    this.$refs.reimbursementModal.close(); // close modal
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'success',
-                    //     title: 'Reimbursement Diterima',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.success(response.data.message, {
-                        autoClose: 1000,
-                    });
-                })
-                .catch((error) => {
-                    // Handle error
-                    console.error('Error approving reimbursement:', error);
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'error',
-                    //     title: 'Operasi Gagal',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
-                });
+                    axios
+                        .put(
+                            `https://localhost:7102/api/Reimbursement/approvefinance/${this.selectedReimbursement.id_Reimbursement}`,
+                            approvalData,
+                            {
+                                headers: {
+                                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                                },
+                            }
+                        )
+                        .then((response) => {
+                            // Handle success
+                            this.fetchReimbursements(); // refresh the data
+                            this.$refs.reimbursementModal.close(); // close modal
+                            // Swal.fire({
+                            //     position: 'center',
+                            //     icon: 'success',
+                            //     title: 'Reimbursement Diterima',
+                            //     showConfirmButton: false,
+                            //     timer: 1500,
+                            // });
+                            toast.success(response.data.message, {
+                                autoClose: 1000,
+                            });
+                        })
+                        .catch((error) => {
+                            // Handle error
+                            console.error('Error approving reimbursement:', error);
+                            toast.error(error.response.data.message, {
+                                autoClose: 1000,
+                            });
+                        });
+                }
+            });
+
         },
         submitDecline() {
             this.showValidation = true
@@ -482,50 +489,66 @@ export default {
                 return
             }
 
-            const declineData = {
-                note: this.note,
-                id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
-            };
+            this.$refs.reimbursementModal.close();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will approve this reimbursement!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes!",
+                customClass: {
+                    popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const declineData = {
+                        note: this.note,
+                        id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
+                    };
 
-            axios
-                .put(
-                    `https://localhost:7102/api/Reimbursement/declinefinance/${this.selectedReimbursement.id_Reimbursement}`,
-                    declineData,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('token'),
-                        },
-                    }
-                )
-                .then((response) => {
-                    // Handle success
-                    this.fetchReimbursements(); // refresh the data
-                    this.$refs.reimbursementModal.close(); // close modal
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'success',
-                    //     title: 'Reimbursement Ditolak',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.success(response.data.message, {
-                        autoClose: 1000,
-                    });
-                })
-                .catch((error) => {
-                    // Handle error
-                    console.error('Error declining reimbursement:', error);
-                    // Swal.fire({
-                    //     position: 'center',
-                    //     icon: 'error',
-                    //     title: 'Operasi Gagal',
-                    //     showConfirmButton: false,
-                    //     timer: 1500,
-                    // });
-                    toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
-                });
+                    axios
+                        .put(
+                            `https://localhost:7102/api/Reimbursement/declinefinance/${this.selectedReimbursement.id_Reimbursement}`,
+                            declineData,
+                            {
+                                headers: {
+                                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                                },
+                            }
+                        )
+                        .then((response) => {
+                            // Handle success
+                            this.fetchReimbursements(); // refresh the data
+                            this.$refs.reimbursementModal.close(); // close modal
+                            // Swal.fire({
+                            //     position: 'center',
+                            //     icon: 'success',
+                            //     title: 'Reimbursement Ditolak',
+                            //     showConfirmButton: false,
+                            //     timer: 1500,
+                            // });
+                            toast.success(response.data.message, {
+                                autoClose: 1000,
+                            });
+                        })
+                        .catch((error) => {
+                            // Handle error
+                            console.error('Error declining reimbursement:', error);
+                            // Swal.fire({
+                            //     position: 'center',
+                            //     icon: 'error',
+                            //     title: 'Operasi Gagal',
+                            //     showConfirmButton: false,
+                            //     timer: 1500,
+                            // });
+                            toast.error(error.response.data.message, {
+                                autoClose: 1000,
+                            });
+                        });
+                }
+            });
         },
     },
     mounted() {
@@ -544,14 +567,16 @@ export default {
 .table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #000; /* Border hitam pada tabel */
+    border: 1px solid #000;
+    /* Border hitam pada tabel */
 }
 
 .table th,
 .table td {
     padding: 8px;
     text-align: center;
-    border: 1px solid #000; /* Border hitam pada setiap sel */
+    border: 1px solid #000;
+    /* Border hitam pada setiap sel */
 }
 
 .table th {
