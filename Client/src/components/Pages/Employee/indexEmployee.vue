@@ -20,9 +20,9 @@
                     </div>
 
                     <!-- Saldo Card -->
-                    <div class="bg-purple-100 p-4 md:p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
+                    <div class="bg-green-100 p-4 md:p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
                         <div class="w-1/4">
-                            <i class="fas fa-piggy-bank text-3xl md:text-4xl text-purple-500"></i>
+                            <i class="fas fa-piggy-bank text-3xl md:text-4xl text-green-500"></i>
                         </div>
                         <div class="w-3/4 pl-2 md:pl-4">
                             <h3 class="text-lg md:text-xl font-semibold">Current Funds</h3>
