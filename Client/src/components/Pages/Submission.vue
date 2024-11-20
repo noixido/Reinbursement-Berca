@@ -4,7 +4,7 @@
             <div class="space-y-6">
                 <div class="flex flex-wrap justify-center items-center gap-8 mt-6">
                     <template v-for="(form, index) in forms" :key="index">
-                        <div class="border border-gray-300 p-6 rounded-lg shadow-sm w-full md:w-[48%]">
+                        <div class="border-2 border-gray-600 p-6 rounded-lg shadow-sm w-full md:w-[48%]">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-lg font-semibold text-gray-800">Form {{ index + 1 }}</h2>
 
@@ -17,7 +17,7 @@
                                 <label for="inputCategory"
                                     class="block text-gray-700 font-semibold mb-2">Category</label>
                                 <select v-model="form.id_Category"
-                                    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    class="border border-gray-600 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                     <option value="" disabled>== Select Category ==</option>
                                     <option v-for="category in categories" :key="category.id_Category"
                                         :value="category.id_Category">
@@ -33,7 +33,7 @@
                                 <label for="inputEvidence"
                                     class="block text-gray-700 font-semibold mb-2">Evidence</label>
                                 <input type="file" @change="handleFileUpload($event, index)"
-                                    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    class="border border-gray-600 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     accept=".pdf" />
                                 <p class="text-gray-600 text-sm mt-1">
                                     Please upload a file in PDF format. (max size: 5 MB)
@@ -53,7 +53,7 @@
                                 <label for="inputAmount" class="block text-gray-700 font-semibold mb-2">Amount</label>
                                 <input v-model="forms[index].formattedAmount" @input="formatAmount(index)" type="text"
                                     inputmode="numeric"
-                                    class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                    class="border border-gray-600 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                                 <!-- <input v-model="form.amount" type="number" min="0"
                                     class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" /> -->
                                 <p v-if="formErrors[index]?.amount" class="text-red-500 text-sm mt-1">Amount is required
