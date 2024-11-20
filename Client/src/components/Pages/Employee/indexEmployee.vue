@@ -55,7 +55,7 @@
                             <span class="text-lg font-medium text-green-700">{{ approvedCount }}</span>
                         </div>
                         <div class="w-full rounded-full h-4 border-green-500 border">
-                                <div :style="{ width: approvedPercentage + '%' }" class="bg-green-500 h-4 rounded-full border">
+                                <div :style="{ width: approvedPercentage + '%' }" class="bg-green-500 h-full rounded-full">
                                 </div>
                         </div>
                     </div>
@@ -63,11 +63,11 @@
                     <!-- In Progress Progress Bar -->
                     <div class="mb-4">
                         <div class="flex justify-between mb-1">
-                            <span class="text-lg font-medium text-yellow-700">In Progress</span>
+                            <span class="text-lg font-semibold text-yellow-700">In Progress</span>
                             <span class="text-lg font-medium text-yellow-700">{{ inProgressCount }}</span>
                         </div>
                         <div class="w-full border-yellow-500 border rounded-full h-4">
-                            <div :style="{ width: inProgressPercentage + '%' }" class="bg-yellow-500 h-4 rounded-full">
+                            <div :style="{ width: inProgressPercentage + '%' }" class="bg-yellow-500 h-full rounded-full">
                             </div>
                         </div>
                     </div>
@@ -75,22 +75,22 @@
                     <!-- Declined Progress Bar -->
                     <div class="mb-4">
                         <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-red-700">Declined</span>
-                            <span class="text-sm font-medium text-red-700">{{ declinedCount }}</span>
+                            <span class="text-lg font-semibold text-red-700">Declined</span>
+                            <span class="text-lg font-medium text-red-700">{{ declinedCount }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-4">
-                            <div :style="{ width: declinedPercentage + '%' }" class="bg-red-500 h-4 rounded-full"></div>
+                        <div class="w-full border-red-500 border rounded-full h-4">
+                            <div :style="{ width: declinedPercentage + '%' }" class="bg-red-500 h-full rounded-full"></div>
                         </div>
                     </div>
 
                     <!-- Total Progress Bar -->
                     <div class="mb-4">
                         <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-blue-700">Total Reimbursement</span>
-                            <span class="text-sm font-medium text-blue-700">{{ totalReimbursements }}</span>
+                            <span class="text-lg font-semibold text-blue-700">Total Reimbursement</span>
+                            <span class="text-lg font-medium text-blue-700">{{ totalReimbursements }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-4">
-                            <div class="bg-blue-500 h-4 rounded-full" :class="totalReimbursements ? 'w-full' : 'w-0'">
+                        <div class="w-full border-blue-500 border rounded-full h-4">
+                            <div class="bg-blue-500 h-full rounded-full" :class="totalReimbursements ? 'w-full' : 'w-0'">
                             </div>
                         </div>
                     </div>
