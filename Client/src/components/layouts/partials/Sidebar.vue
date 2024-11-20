@@ -29,7 +29,7 @@
             <!-- FINANCE -->
 
             <!-- Divider for Finance -->
-            <div v-if="role === 'Finance'" class="divider divider-neutral">Manage Reimbursement</div>
+            <div v-if="role === 'Finance'" class="divider divider-error">Manage Reimbursement</div>
 
             <!-- Dashboard Finance -->
             <li v-if="role === 'Finance'" class="mb-1">
@@ -57,7 +57,7 @@
             <!-- HUMAN RESOURCE -->
 
             <!-- Divider for HR -->
-            <div v-if="role === 'HR'" class="divider divider-neutral">Manage Data</div>
+            <div v-if="role === 'HR'" class="divider divider-error">Manage Data</div>
 
             <li v-if="role === 'HR'" class="mb-1">
                 <RouterLink to="/hr/manage-account" exact-active-class="active">
@@ -90,7 +90,7 @@
             </li>
 
 
-            <div v-if="role === 'HR'" class="divider divider-neutral">Manage Reimbursement</div>
+            <div v-if="role === 'HR'" class="divider divider-error">Manage Reimbursement</div>
             <!-- Dashboard HR -->
             <li v-if="role === 'HR'" class="mb-1">
                 <RouterLink to="/hr/dashboard" exact-active-class="active">
@@ -113,7 +113,7 @@
                 </RouterLink>
             </li>
 
-            <div class="divider divider-neutral">Reimbursement</div>
+            <div class="divider divider-error">Reimbursement</div>
             <li class="mb-1">
                 <RouterLink to="/submission" exact-active-class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

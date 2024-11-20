@@ -189,19 +189,19 @@ export default defineComponent({
 
                 // Reimbursement status "Progress in HR" atau "Progress in Finance"
                 const inProgressRequests = reimbursements.filter((request) =>
-                    ['progress in hr', 'progress in finance'].includes(request.status)
+                    ['Progress in HR', 'Progress in Finance'].includes(request.status)
                 );
                 pendingApprovals.value = inProgressRequests.length;
 
                 // Hitung jumlah reimbursement yang ditolak
                 const declinedRequests = reimbursements.filter(request =>
-                    request.status.toLowerCase().includes('decline')
+                    request.status.toLowerCase().includes('Decline')
                 );
                 rejectedRequests.value = declinedRequests.length;
 
                 // Hitung jumlah Approved Requests
                 const approved = reimbursements.filter(request =>
-                    request.status.toLowerCase().includes('approved')
+                    request.status.toLowerCase().includes('Approved')
                 );
                 approvedRequests.value = approved.length;
 

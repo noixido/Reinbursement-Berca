@@ -313,11 +313,9 @@ export default {
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         const updateProfile = async () => {
-            debugger;
             emailError.value = !validateEmail(editableUser.value.email);
             nameError.value = !editableUser.value.name;
             phoneError.value = !editableUser.value.phone;
-            console.log(editableUser.value);
 
             // Jika ada error, berhenti
             if (emailError.value || nameError.value || phoneError.value) return;

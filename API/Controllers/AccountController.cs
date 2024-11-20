@@ -52,7 +52,7 @@ namespace API.Controllers
             }
         }
 
-        [Authorize(Roles = "HR")]
+        //[Authorize(Roles = "HR")]
         [HttpGet]
         public IActionResult GetAllAccounts()
         {
@@ -241,6 +241,37 @@ namespace API.Controllers
                     status = StatusCodes.Status200OK,
                     message = "Data updated!",
                     data = (object)true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = StatusCodes.Status400BadRequest,
+                    message = ex.Message,
+                });
+            }
+        }        
+        
+        [Authorize(Roles = "HR")]
+        [HttpPut("ResetPassword/{email}")]
+        public IActionResult ResetPassword(string email)
+        {
+            try
+            {
+                var data = _repository.ResetPassword(email);
+                if (data == 0)
+                {
+                    return NotFound(new
+                    {
+                        status = StatusCodes.Status404NotFound,
+                        message = "Data Not Found",
+                    });
+                }
+                return Ok(new
+                {
+                    status = StatusCodes.Status200OK,
+                    message = "Password Reset!",
                 });
             }
             catch (Exception ex)

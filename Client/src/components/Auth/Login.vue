@@ -100,9 +100,9 @@ export default {
                     this.router.push(redirectPath);
                 }catch(error){
                     console.error(error.response.data.message);
-                    // toast.error(error.response.data.message, {
-                    //     autoClose: 1000,
-                    // });
+                    toast.error(error.response.data.message, {
+                        autoClose: 1000,
+                    });
                 }finally{
                     this.stateLoading = false;
                 }
