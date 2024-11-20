@@ -7,35 +7,35 @@
                 <!-- Left Column (Cards Column) -->
                 <div class="flex flex-col gap-6 w-1/3">
                     <!-- Max Saldo Card -->
-                    <div class="bg-blue-200 p-6 rounded-lg shadow-md flex items-center">
+                    <div class="bg-blue-100 p-6 rounded-lg shadow-md  hover:shadow-xl flex items-center">
                         <div class="w-1/4">
                             <i class="fas fa-wallet text-4xl text-blue-500"></i>
                         </div>
                         <div class="w-3/4 pl-4">
-                            <h3 class="text-xl font-semibold">Max Saldo</h3>
+                            <h3 class="text-xl font-semibold">Maximum Funds</h3>
                             <p class="text-2xl font-bold">Rp. {{ formatCurrency(maxSaldo) }},00</p>
                         </div>
                     </div>
 
                     <!-- Saldo Card -->
-                    <div class="bg-purple-100 p-6 rounded-lg shadow-md flex items-center">
+                    <div class="bg-purple-100 p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
                         <div class="w-1/4">
                             <i class="fas fa-piggy-bank text-4xl text-purple-500"></i>
                         </div>
                         <div class="w-3/4 pl-4">
-                            <h3 class="text-xl font-semibold">Current Saldo</h3>
+                            <h3 class="text-xl font-semibold">Current Funds</h3>
                             <p class="text-2xl font-bold">Rp. {{ formatCurrency(Math.floor(accountDetail.current_Limit))
                                 }},00</p>
                         </div>
                     </div>
 
                     <!-- Approved Card -->
-                    <div class="bg-green-100 p-6 rounded-lg shadow-md flex items-center">
+                    <div class="bg-green-100 p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
                         <div class="w-1/4">
                             <i class="fas fa-thumbs-up text-4xl text-green-500"></i>
                         </div>
                         <div class="w-3/4 pl-4">
-                            <h3 class="text-xl font-semibold">Approved Saldo</h3>
+                            <h3 class="text-xl font-semibold">Approved Funds</h3>
                             <p class="text-2xl font-bold">Rp. {{ formatCurrency(approvedAmountTotal) }},00</p>
                         </div>
                     </div>

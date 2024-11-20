@@ -27,12 +27,12 @@
             <table class="table w-full">
                 <thead>
                     <tr>
-                        <th>Nomor</th>
-                        <th>Nama</th>
-                        <th>Kategori</th>
-                        <th>Tanggal Pengajuan</th>
-                        <th>Jumlah Dana</th>
-                        <th>Dana Disetujui</th>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Submit Date</th>
+                        <th>Total Funds</th>
+                        <th>Approved Funds</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -139,7 +139,7 @@
                             <span>{{ selectedReimbursement.id_Account }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="font-semibold">👤 Nama User:</span>
+                            <span class="font-semibold">👤 Name:</span>
                             <span>{{ selectedReimbursement.name }}</span>
                         </div>
                         <div class="flex justify-between">
@@ -150,12 +150,12 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📁 Kategori:</span>
+                        <span class="font-semibold">📁 Category:</span>
                         <span>{{ selectedReimbursement.category_Name }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📅 Tanggal Pengajuan:</span>
+                        <span class="font-semibold">📅 Submit Date:</span>
                         <span>{{
                             new Date(selectedReimbursement.submit_Date).toLocaleDateString(
                                 'id-ID',
@@ -169,12 +169,12 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">💰 Jumlah Dana:</span>
+                        <span class="font-semibold">💰 Total Funds:</span>
                         <span>Rp {{ formatCurrency(selectedReimbursement.amount) }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">✔️ Dana Disetujui:</span>
+                        <span class="font-semibold">✔️ Approved Funds:</span>
                         <span>Rp. {{ selectedReimbursement.approve_Amount ?
                             formatCurrency(selectedReimbursement.approve_Amount) : '-' }}</span>
                     </div>
@@ -194,7 +194,7 @@
                     </div>
 
                     <div class="flex justify-between">
-                        <span class="font-semibold">📝 Catatan:</span>
+                        <span class="font-semibold">📝 Notes:</span>
                         <div class="md:max-w-md mt-2 md:mt-0 font-semibold whitespace-normal break-words">
                             {{ selectedReimbursement.note || 'Tidak ada catatan' }}
                         </div>
@@ -210,13 +210,13 @@
                     </div>
                 </div>
 
-                <div class="border-4 border-yellow-500 rounded-lg p-4 mb-3">
+                <div class="border border-blue-500 bg-gray-50 rounded-lg p-4 mb-3">
                     <!-- Tombol Approve dan Decline -->
                     <div class="flex justify-center space-x-4 text-white font-semibold">
-                        <button class="btn bg-blue-500 hover:bg-blue-900" @click="openApproveForm">
+                        <button class="btn bg-blue-500 hover:bg-blue-900 hover:text-white text-white" @click="openApproveForm">
                             Approve
                         </button>
-                        <button class="btn bg-red-500 hover:bg-red-900" @click="openDeclineForm">
+                        <button class="btn bg-red-500 hover:bg-red-900  hover:text-white text-white" @click="openDeclineForm">
                             Decline
                         </button>
                     </div>
@@ -247,7 +247,7 @@
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
                         </p>
-                        <button class="btn bg-blue-500 mt-2 w-full text-white hover:bg-blue-900"
+                        <button class="btn bg-blue-500 mt-2 w-full  hover:bg-blue-900 hover:text-white text-white"
                             @click="submitApproval">
                             Submit Approval
                         </button>
@@ -260,7 +260,7 @@
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
                         </p>
-                        <button class="btn bg-red-500 mt-2 w-full text-white hover:bg-red-900" @click="submitDecline">
+                        <button class="btn bg-red-500 mt-2 w-full  hover:bg-red-900 hover:text-white text-white" @click="submitDecline">
                             Submit Decline
                         </button>
                     </div>

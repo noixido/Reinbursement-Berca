@@ -29,10 +29,10 @@
         <thead>
           <tr>
             <th class="p-2 text-center font-bold">No</th>
-            <th class="p-2 text-center font-bold">Username</th>
-            <th class="p-2 text-center font-bold">Kategori</th>
-            <th class="p-2 text-center font-bold">Tanggal Pengajuan</th>
-            <th class="p-2 text-center font-bold">Jumlah Dana</th>
+            <th class="p-2 text-center font-bold">Name</th>
+            <th class="p-2 text-center font-bold">Category</th>
+            <th class="p-2 text-center font-bold">Submit Date</th>
+            <th class="p-2 text-center font-bold">Total Funds</th>
             <th class="p-2 text-center font-bold">Status</th>
             <th class="p-2 text-center font-bold">Actions</th>
           </tr>
@@ -123,7 +123,7 @@
               <span>{{ selectedReimbursement.id_Account }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="font-semibold">👤 User Name:</span>
+              <span class="font-semibold">👤 Name:</span>
               <span>{{ selectedReimbursement.name }}</span>
             </div>
             <div class="flex justify-between">

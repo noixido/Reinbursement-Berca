@@ -12,7 +12,7 @@
         </div>
 
         <!-- Profile Header -->
-        <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6 flex justify-between">
+        <div v-if="user" class="bg-white p-6 shadow rounded-lg mb-6 flex justify-between border-2 border-[#17244b]">
             <div class="flex items-center">
                 <!-- Profile Image -->
                 <div class="w-24 h-24 rounded-full overflow-hidden mr-6 border-2 border-gray-300 flex items-center justify-center bg-gray-200">
@@ -52,9 +52,9 @@
 
 
         <!-- Profile Details Section -->
-        <div v-if="user" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div v-if="user" class="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
             <!-- Left Side (Account Information) -->
-            <div class="bg-white p-6 shadow rounded-lg">
+            <div class="bg-white p-6 shadow rounded-lg border-2 border-[#17244b]">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Account Information</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between">
@@ -77,7 +77,7 @@
             </div>
 
             <!-- Right Side (Personal Information) -->
-            <div class="bg-white p-6 shadow rounded-lg">
+            <div class="bg-white p-6 shadow rounded-lg border-2 border-[#17244b]">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between">
