@@ -1,6 +1,7 @@
 using API.Context;
 using API.Models;
 using API.Repositories;
+using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -79,6 +80,8 @@ builder.Services.AddAuthentication(auth =>
     };
 });
 
+// background services untuk update currentLimit pada account
+//builder.Services.AddHostedService<CurrentLimitHostedService>(); 
 
 var app = builder.Build();
 

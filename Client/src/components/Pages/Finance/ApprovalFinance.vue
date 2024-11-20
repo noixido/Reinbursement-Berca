@@ -28,7 +28,7 @@
                 <thead>
                     <tr>
                         <th>Nomor</th>
-                        <th>ID Reimbursement</th>
+                        <th>Nama</th>
                         <th>Kategori</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Jumlah Dana</th>
@@ -41,7 +41,7 @@
                     <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement"
                         v-if="paginatedData.length > 0">
                         <td>{{ index + 1 }}</td>
-                        <td>{{ item.id_Reimbursement }}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ item.category_Name }}</td>
                         <td>
                             {{
@@ -107,15 +107,17 @@
 
         <!-- Modal -->
         <dialog ref="reimbursementModal" class="modal">
-            <div class="modal-box max-w-3xl">
-                <form method="dialog">
-                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                        ✕
-                    </button>
-                </form>
-                <h3 class="text-center text-2xl font-bold mb-4">
-                    Detail Reimbursement
-                </h3>
+            <div class="modal-box max-w-3xl py-0">
+                <div class="bg-white sticky top-0 p-3">
+                    <form method="dialog">
+                        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                            ✕
+                        </button>
+                    </form>
+                    <h3 class="text-center text-2xl font-bold mb-4">
+                        Detail Reimbursement
+                    </h3>
+                </div>
                 <div class="py-4 space-y-3 text-gray-800">
                     <div class="text-center">
                         <div class="font-semibold">📌 ID Reimbursement:</div>
@@ -201,11 +203,11 @@
 
                 <div class="border-4 border-yellow-500 rounded-lg p-4 mb-3">
                     <!-- Tombol Approve dan Decline -->
-                    <div class="flex justify-center space-x-4">
-                        <button class="btn bg-blue-500" @click="openApproveForm">
+                    <div class="flex justify-center space-x-4 text-white font-semibold">
+                        <button class="btn bg-blue-500 hover:bg-blue-900" @click="openApproveForm">
                             Approve
                         </button>
-                        <button class="btn bg-red-500" @click="openDeclineForm">
+                        <button class="btn bg-red-500 hover:bg-red-900" @click="openDeclineForm">
                             Decline
                         </button>
                     </div>
@@ -213,22 +215,21 @@
                     <!-- Form Approve atau Decline -->
                     <div v-if="showApproveForm" class="mt-4 space-y-3 flex flex-col">
                         <label class="font-semibold">Jumlah Dana Disetujui:</label>
-                        <div class="flex justify-center space-x-2">
+                        <!-- <div class="flex justify-center space-x-2">
                             <span class="text-gray-700">{{ 0 }}</span>
                             <input v-model="approveAmount" type="range"
                                 :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
                                 class="range range-info w-2/3" />
                             <span class="text-gray-700">{{ Math.min(selectedReimbursement.current_Limit,
                                 selectedReimbursement.amount) }}</span>
-                        </div>
-                        <div class="flex justify-center">
-                            <input v-model="approveAmount" type="number"
-                                min="0"
-                                :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
-                                class="input input-bordered w-2/3" />
-                        </div>
+                        </div> -->
+                        <input v-model="formattedAmount" type="text" min="0" @input="formatAmount()" inputmode="numeric"
+                            :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
+                            placeholder="Masukkan Dana Disetujui" class="input input-bordered" />
                         <p v-if="!isApproveAmountValid && showValidation" class="text-red-500 text-sm">
-                            Jumlah harus lebih besar dari 0 dan tidak melebihi batas maksimal.
+                            Jumlah harus lebih besar dari 0 dan tidak melebihi {{
+                                formatCurrency(Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount))
+                            }}.
                         </p>
 
                         <label class="font-semibold">Catatan:</label>
@@ -237,24 +238,30 @@
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
                         </p>
-                        <button class="btn bg-blue-500 mt-2 w-full" @click="submitApproval">
+                        <button class="btn bg-blue-500 mt-2 w-full text-white hover:bg-blue-900"
+                            @click="submitApproval">
                             Submit Approval
                         </button>
                     </div>
-                    
+
                     <div v-if="showDeclineForm" class="mt-4 space-y-3">
                         <label class="font-semibold">Catatan:</label>
                         <textarea v-model="note" class="textarea textarea-bordered w-full"
-                        placeholder="Masukkan alasan penolakan"></textarea>
+                            placeholder="Masukkan alasan penolakan"></textarea>
                         <p v-if="!isNoteValid && showValidation" class="text-red-500 text-sm">
                             Catatan harus diisi.
                         </p>
-                        <button class="btn bg-red-500 mt-2 w-full" @click="submitDecline">
+                        <button class="btn bg-red-500 mt-2 w-full text-white hover:bg-red-900" @click="submitDecline">
                             Submit Decline
                         </button>
                     </div>
                 </div>
+                <div class="bg-white sticky bottom-0 p-3">
+                </div>
             </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
         </dialog>
     </MainLayout>
 </template>
@@ -285,6 +292,8 @@ export default {
             approveAmount: 0, // amount to approve
             note: '', // note for approval or decline
             showValidation: false,
+
+            formattedAmount: '', // Untuk menampilkan angka terformat
         };
     },
     computed: {
@@ -359,6 +368,7 @@ export default {
             this.showDeclineForm = false;
             this.approveAmount = 0;
             this.note = '';
+            this.formattedAmount = ''
 
             this.selectedReimbursement = item; // set the selected reimbursement
             this.$refs.reimbursementModal.showModal(); // open the modal
@@ -367,15 +377,38 @@ export default {
             if (!value) return '0';
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         },
+        formatAmount() {
+            // Hapus semua titik (pemformatan lama)
+            const rawValue = this.formattedAmount.replace(/\./g, '');
+            if (isNaN(rawValue)) {
+                this.formattedAmount = '';
+                this.approveAmount = 0;
+                return;
+            }
+
+            // Simpan nilai asli tanpa format
+            this.approveAmount = parseInt(rawValue, 10);
+
+            // Tambahkan titik pemisah ribuan
+            this.formattedAmount = this.approveAmount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        },
         openApproveForm() {
             this.showValidation = false;
             this.showApproveForm = true;
             this.showDeclineForm = false;
+            this.formattedAmount = ''
+            this.amount = 0
+            this.note = ''
         },
         openDeclineForm() {
             this.showValidation = false;
             this.showDeclineForm = true;
             this.showApproveForm = false;
+            this.formattedAmount = ''
+            this.amount = 0
+            this.note = ''
         },
         submitApproval() {
             this.showValidation = true;
