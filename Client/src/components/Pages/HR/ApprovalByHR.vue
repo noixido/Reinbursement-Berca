@@ -48,7 +48,7 @@
                 'badge badge-warning': item.status.includes('Progress'),
                 'badge badge-success': item.status.includes('Approved'),
                 'badge badge-error': item.status.includes('Declined')
-              }" class="badge-status">
+              }" class="badge-status text-white">
                 {{ item.status }}
               </span>
             </td>
@@ -450,7 +450,7 @@ export default {
   /* Membuat elemen berbentuk inline-block */
   font-size: 0.75rem;
   /* Ukuran font kecil */
-  font-weight: normal;
+  font-weight: bold;
   /* Tidak bold */
   white-space: nowrap;
   /* Menghindari teks terpotong ke bawah */
