@@ -176,8 +176,6 @@ export default defineComponent({
                 );
                 rejectedRequests.value = declinedByHRRequests.length;
 
-
-
                 // Hitung jumlah reimbursement per kategori
                 const categoryCounts = reimbursements.reduce((acc, item) => {
                     const categoryName = item.category_Name;

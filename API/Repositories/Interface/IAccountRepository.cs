@@ -16,6 +16,7 @@ namespace API.Repositories.Interface
         string GenerateCustomIdForAccount(); // generate custom id untuk tabel Account
         LastInsertedAccountVM GetLastInsertedAccount(); // ambil data terakhir yang disimpan
         int ChangePassword(ChangePasswordVM changePasswordVM);
-        void UpdateLimitPeriodically();
+        //void UpdateLimitPeriodically();
+        Task UpdateLimitPeriodically();
     }
 }

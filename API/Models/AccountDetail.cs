@@ -22,6 +22,9 @@ namespace API.Models
         public DateTime Join_Date { get; set; }
         public float Current_Limit { get; set; }
         public int IsEmployee { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? Limit_Updated_At { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Title Title { get; set; }

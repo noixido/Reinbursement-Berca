@@ -67,6 +67,7 @@ namespace API.Repositories
             accountDetail.Gender = accountVM.Gender;
             accountDetail.Birth_Date = accountVM.Birth_Date;
             accountDetail.Join_Date = accountVM.Join_Date;
+            accountDetail.Limit_Updated_At = DateTime.Now;
 
             var title = _context.Titles
                 .Where(id => id.Id_Title == accountDetail.Id_Title)
@@ -109,6 +110,24 @@ namespace API.Repositories
 
             var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
             account.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordVM.NewPassword, salt);
+
+            _context.Entry(account).State = EntityState.Modified;
+            return _context.SaveChanges();
+        }
+        public int ResetPassword(string email)
+        {
+            var account = _context.Accounts
+                .Where(e => e.Email == email)
+                .Where(ie => ie.AccountDetails.IsEmployee == 1)
+                .FirstOrDefault();
+            if (account == null)
+            {
+                throw new Exception("Data not found!");
+            }
+
+
+            var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+            account.Password = BCrypt.Net.BCrypt.HashPassword("12345", salt);
 
             _context.Entry(account).State = EntityState.Modified;
             return _context.SaveChanges();
@@ -304,58 +323,63 @@ namespace API.Repositories
             return account;
         }
 
-        public void UpdateLimitPeriodically()
+        public async Task UpdateLimitPeriodically()
         {
             var now = DateTime.Now;
-            var accountDetails = _context.AccountDetails.ToList();
+            var accountDetails = _context.AccountDetails.Where(ie => ie.IsEmployee == 1).ToList();
 
-            foreach( var account in accountDetails )
+            foreach (var account in accountDetails)
             {
-                float accountAge = ((now.Year - account.Join_Date.Year) * 12) + now.Month - account.Join_Date.Month;
-                bool hasBeenAYear = account.Join_Date.Day == now.Day && account.Join_Date.Month == now.Month;
-                var titleId = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
+                // Hitung umur akun dalam bulan sejak Join_Date
+                float accountAgeInMonths = ((now.Year - account.Join_Date.Year) * 12) + now.Month - account.Join_Date.Month;
 
-                if (hasBeenAYear)
+                // Hitung bulan sejak Limit_Updated_At terakhir
+                var monthsSinceLastUpdate = ((now.Year - account.Limit_Updated_At?.Year) * 12) + now.Month - account.Limit_Updated_At?.Month;
+
+                // Cari Title terkait
+                var title = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
+
+                if (title == null) continue; // Jika Title tidak ditemukan, lewati akun ini
+
+                // Reset tahunan (ulang tahun akun)
+                bool isAnniversary = account.Join_Date.Day == now.Day && account.Join_Date.Month == now.Month && account.Join_Date.Year < now.Year;
+
+                if (isAnniversary)
                 {
-                    account.Current_Limit = titleId.Reimburse_Limit;
+                    // Reset Current_Limit ke Reimburse_Limit
+                    account.Current_Limit = title.Reimburse_Limit;
                 }
-
-                if (accountAge < 12)
+                else if (accountAgeInMonths < 12) // Akun dengan umur di bawah 1 tahun
                 {
-                    // buat ngedapetin angkat 1 sebagai 1 bulan
-                    float oneMonth = (float)(accountAge - (accountAge - 1));
-                    // ngitung reimbursement limit untuk 1 bulan aja
-                    float totalReimburseForAMonth = (float)((oneMonth / 12) * titleId.Reimburse_Limit);
-
-                    // ngitung prorate untuk jumlah bulan pegawai kerja
-                    float prorate = (float)((accountAge / 12) * titleId.Reimburse_Limit);
-
-                    if (now.Day >= account.Join_Date.Day)
+                    // Tambahkan prorata untuk bulan-bulan yang belum diproses
+                    if (monthsSinceLastUpdate > 0)
                     {
-                        // nambah current limit yang di database
-                        float currentLimit = (float)(account.Current_Limit + totalReimburseForAMonth);
-
-                        if(currentLimit > prorate)
+                        float prorate = (float)(accountAgeInMonths / 12 * title.Reimburse_Limit);
+                        float prorateAmount = (float)(monthsSinceLastUpdate * (title.Reimburse_Limit / 12.0f));
+                        float total = (float)(prorateAmount + account.Current_Limit);
+                        
+                        if(total <= prorate)
                         {
-                            account.Current_Limit = prorate;
-                        }
-                        else
-                        {
-                            account.Current_Limit = currentLimit;
+                            account.Current_Limit = (float)Math.Round(total);
                         }
                     }
-                    else
+                }
+                else // Akun dengan umur di atas atau sama dengan 1 tahun
+                {
+                    if (monthsSinceLastUpdate > 0)
                     {
-                        account.Current_Limit = account.Current_Limit;
+                        // Tambahkan prorata untuk bulan-bulan yang belum diproses
+                        float prorateAmount = (float)(monthsSinceLastUpdate * (title.Reimburse_Limit / 12.0f));
+                        account.Current_Limit += prorateAmount;
                     }
                 }
-                else
-                {
-                    account.Current_Limit = titleId.Reimburse_Limit;
-                }
+
+                // Perbarui tanggal terakhir Limit_Updated_At
+                account.Limit_Updated_At = now;
             }
 
-            _context.SaveChanges();
+            // Simpan perubahan ke database
+            await _context.SaveChangesAsync();
         }
     }
 }
