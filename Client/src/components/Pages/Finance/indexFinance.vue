@@ -6,7 +6,7 @@
             <div class="flex space-x-6">
                 <!-- Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                    <div class="bg-blue-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-file-invoice text-3xl text-blue-600 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Total Requests</h3>
@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <!-- Adjusted the width of the Monthly Reimbursements card -->
-                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
                         <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">

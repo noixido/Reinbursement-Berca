@@ -6,21 +6,21 @@
             <div class="flex space-x-6">
                 <!-- Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-clock text-3xl text-yellow-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">In Progress</h3>
                             <p class="text-2xl font-bold text-yellow-900">{{ pendingApprovals }}</p>
                         </div>
                     </div>
-                    <div class="bg-red-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-red-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-times-circle text-3xl text-red-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Declined Status</h3>
                             <p class="text-2xl font-bold text-red-900">{{ rejectedRequests }}</p>
                         </div>
                     </div>
-                    <div class="bg-blue-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-file-invoice text-3xl text-blue-600 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Total Requests</h3>

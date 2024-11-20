@@ -65,12 +65,12 @@
 
                 <div class="flex justify-between mt-6">
                     <button type="button" @click="addForm"
-                        class="w-1/2 mr-2 flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50">
+                        class="w-1/2 mr-2 flex items-center justify-center rounded-md border border-gray-900 bg-white py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50">
                         Add another form
                     </button>
 
                     <button type="submit"
-                        class="w-1/2 ml-2 flex items-center justify-center rounded-md bg-indigo-600 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                        class="w-1/2 ml-2 flex items-center justify-center rounded-md bg-[#45aafd] py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                         Submit
                     </button>
                 </div>
