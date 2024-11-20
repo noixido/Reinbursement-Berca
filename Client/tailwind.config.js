@@ -12,11 +12,6 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      {
-        mytheme: {
-          "neutral": "#ffffff",
-        },
-      },
-      "acid",
+      "light",
     ],  },
 }
