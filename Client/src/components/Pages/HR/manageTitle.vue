@@ -21,10 +21,18 @@
                     <span class="ml-2">entries</span>
                 </div>
 
-                <div  class="flex items-center">
-                    <button @click="openAddModal" class="btn bg-[#45aafd]" title="Add Data">
-                        <i class="fas fa-plus"></i>
+                <div class="relative group">
+                  <div class="tooltip tooltip-black">
+                    <button @click="openAddModal" class="btn bg-[#45aafd]">
+                      <i class="fas fa-plus"></i>
                     </button>
+                  </div>
+                  <!-- Tooltip custom with hidden class -->
+                  <div
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
+                  >
+                    Add Data
+                  </div>
                 </div>
 
                 <dialog ref="theModal" class="modal">
@@ -112,16 +120,35 @@
                 <td class="p-2 text-center">{{ formatToRupiah(title.reimburse_Limit) }}</td>
                 <td class="p-2 text-center">
                   <div class="flex gap-5 justify-center">
-                    <button class="btn btn-warning" @click="editData(title)" title="Edit Data">
-                      <i class="fas fa-pencil-alt"></i>
-                    </button>
-                    <button
-                      class="btn btn-error"
-                      @click="deleteData(title.id_Title)"
-                      title="Delete Data"
-                    >
-                      <i class="fas fa-trash"></i>
-                    </button>
+                    <!-- Tooltip Edit -->
+                    <div class="relative group">
+                      <div class="tooltip tooltip-black">
+                        <button class="btn btn-warning" @click="editData(title)">
+                          <i class="fas fa-pencil-alt"></i>
+                        </button>
+                      </div>
+                      <!-- Tooltip custom for Edit -->
+                      <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
+                      >
+                        Edit Data
+                      </div>
+                    </div>
+
+                    <!-- Tooltip Delete -->
+                    <div class="relative group">
+                      <div class="tooltip tooltip-black">
+                        <button class="btn btn-error" @click="deleteData(title.id_Title)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                      <!-- Tooltip custom for Delete -->
+                      <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
+                      >
+                        Delete Data
+                      </div>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -423,14 +450,31 @@
   };
   </script>
   
-  <style scoped>
-  .table tbody tr:nth-child(odd) {
-    background-color: #f2f2f2; /* Light gray for odd rows */
-  }
+<style scoped>
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000; /* Border hitam pada tabel */
+}
 
-  .table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* White for even rows */
-  }
+.table th,
+.table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #000; /* Border hitam pada setiap sel */
+}
 
-  </style>
+.table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+</style>
   

@@ -109,71 +109,79 @@
         </div>
 
         <!-- Edit Profile Modal -->
-<div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" @click.self="closeEditModal">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-2/3"> <!-- Adjusted width -->
-        <h2 class="text-xl font-semibold mb-4">Edit Profile</h2>
-        <!-- Scrollable Form -->
-        <form @submit.prevent="updateProfile">
-            <div class="modal-body space-y-4">
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Id</label>
-                    <input type="text" v-model="editableUser.id_Account" class="input input-bordered w-full bg-gray-200" disabled />
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Role Name</label>
-                    <input type="text" v-model="editableUser.role_Name" class="input input-bordered w-full bg-gray-200" disabled />
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Email</label>
-                    <input type="text" v-model="editableUser.email" class="input input-bordered w-full" :class="{'input-error': emailError}" />
-                    <span v-if="emailError" class="text-red-500 text-sm">Invalid email format</span>
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Name</label>
-                    <input type="text" v-model="editableUser.name" class="input input-bordered w-full" :class="{'input-error': nameError}" />
-                    <span v-if="nameError" class="text-red-500 text-sm">Name is required</span>
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Phone</label>
-                    <input type="number" v-model="editableUser.phone" class="input input-bordered w-full" :class="{'input-error': phoneError}" />
-                    <span v-if="phoneError" class="text-red-500 text-sm">Phone number is required</span>
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Gender</label>
-                    <input type="text" v-model="editableUser.gender" class="input input-bordered w-full" />
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Birth Date</label>
-                    <input type="date" v-model="editableUser.birth_Date" class="input input-bordered w-full" />
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Join Date</label>
-                    <input type="date" v-model="editableUser.join_Date" class="input input-bordered w-full" />
-                </div>
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Current Limit</label>
-                    <input type="text" v-model="editableUser.current_Limit" class="input input-bordered w-full" />
-                </div>
+        <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-40" @click.self="closeEditModal">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-1/3"> <!-- Adjusted width -->
+                <h2 class="text-xl font-semibold mb-4">Edit Profile</h2>
+                <!-- Scrollable Form -->
+                <form @submit.prevent="updateProfile">
+                    <div class="modal-body space-y-4">
+                        <!-- <div class="mb-4">
+                            <label class="font-medium text-gray-600">Id</label>
+                            <input type="text" v-model="editableUser.id_Account" class="input input-bordered w-full bg-gray-200" disabled />
+                        </div> -->
+                        <!-- <div class="mb-4">
+                            <label class="font-medium text-gray-600">Role Name</label>
+                            <input type="text" v-model="editableUser.role_Name" class="input input-bordered w-full bg-gray-200" disabled />
+                        </div> -->
+                        <div class="mb-4">
+                            <label class="font-medium text-gray-600">Email</label>
+                            <input type="text" v-model="editableUser.email" class="input input-bordered w-full" :class="{'input-error': emailError}" disabled/>
+                            <span v-if="emailError" class="text-red-500 text-sm">Invalid email format</span>
+                        </div>
+                        <div class="mb-4">
+                            <label class="font-medium text-gray-600">Name</label>
+                            <input type="text" v-model="editableUser.name" class="input input-bordered w-full" :class="{'input-error': nameError}" />
+                            <span v-if="nameError" class="text-red-500 text-sm">Name is required</span>
+                        </div>
+                        <div class="mb-4">
+                            <label class="font-medium text-gray-600">Phone</label>
+                            <input type="text" v-model="editableUser.phone" class="input input-bordered w-full" :class="{'input-error': phoneError}" />
+                            <span v-if="phoneError" class="text-red-500 text-sm">Phone number is required</span>
+                        </div>
+                        <!-- <div class="mb-4">
+                            <label class="font-medium text-gray-600">Gender</label>
+                            <input type="text" v-model="editableUser.gender" class="input input-bordered w-full" />
+                        </div> -->
+                        <div class="mb-4">
+                                <label for="gender" class="font-medium text-gray-600">Gender</label>
+                                <select name="gender" id="gender" v-model="editableUser.gender" class="select select-bordered w-full">
+                                    <option value="" disabled>== Select Gender ==</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <!-- <span v-if="v$.account.gender.$error" class="text-sm text-red-500">{{ v$.account.gender.$errors[0].$message }}</span> -->
+                            </div>
+                        <div class="mb-4">
+                            <label class="font-medium text-gray-600">Birth Date</label>
+                            <input type="date" v-model="editableUser.birth_Date" class="input input-bordered w-full" />
+                        </div>
+                        <!-- <div class="mb-4">
+                            <label class="font-medium text-gray-600">Join Date</label>
+                            <input type="date" v-model="editableUser.join_Date" class="input input-bordered w-full" />
+                        </div> -->
+                        <!-- <div class="mb-4">
+                            <label class="font-medium text-gray-600">Current Limit</label>
+                            <input type="text" v-model="editableUser.current_Limit" class="input input-bordered w-full" disabled/>
+                        </div> -->
 
-                <!-- Title Selection -->
-                <div class="mb-4">
-                    <label class="font-medium text-gray-600">Title</label>
-                    <select v-model="editableUser.id_Title" class="input input-bordered w-full">
-                        <option v-for="title in titleList" :key="title.id_Title" :value="title.id_Title">
-                            {{ title.title_Name }}
-                        </option>
-                    </select>
-                </div>
+                        <!-- Title Selection -->
+                        <!-- <div class="mb-4">
+                            <label class="font-medium text-gray-600">Title</label>
+                            <select v-model="editableUser.id_Title" class="input input-bordered w-full">
+                                <option v-for="title in titleList" :key="title.id_Title" :value="title.id_Title">
+                                    {{ title.title_Name }}
+                                </option>
+                            </select>
+                        </div> -->
+                    </div>
+
+                    <div class="flex justify-end space-x-4 mt-3">
+                        <button type="button" @click="closeEditModal" class="btn btn-ghost">Cancel</button>
+                        <button type="submit" class="btn bg-[#45aafd]">Save</button>
+                    </div>
+                </form>
             </div>
-
-            <div class="flex justify-end space-x-4">
-                <button type="button" @click="closeEditModal" class="btn btn-ghost">Cancel</button>
-                <button type="submit" class="btn bg-[#45aafd]" :disabled="isProfileFormInvalid">Save</button>
-            </div>
-        </form>
-    </div>
-</div>
-
+        </div>
 
         <!-- Change Password Modal -->
         <div v-if="showChangePasswordModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -181,22 +189,23 @@
                 <h2 class="text-xl font-semibold mb-4">Change Password</h2>
                 <form @submit.prevent="changePassword">
                     <div class="mb-4">
-                        <label class="font-medium text-gray-600">Old Password</label>
-                        <input type="password" v-model="changePasswordData.oldPassword" class="input input-bordered w-full" placeholder="Enter your old password" required />
+                        <label for="oldPassword" class="font-medium text-gray-600">Old Password</label>
+                        <input id="oldPassword" type="password" v-model="changePasswordData.oldPassword" class="input input-bordered w-full" placeholder="Enter your old password" />
+                        <span v-if="oldPasswordError" class="text-red-500 text-sm">Old password is required</span>
                     </div>
                     <div class="mb-4">
-                        <label class="font-medium text-gray-600">New Password</label>
-                        <input type="password" v-model="changePasswordData.newPassword" class="input input-bordered w-full" placeholder="Enter your new password" required :class="{'input-error': passwordError}" />
+                        <label for="newPassword" class="font-medium text-gray-600">New Password</label>
+                        <input id="newPassword" type="password" v-model="changePasswordData.newPassword" class="input input-bordered w-full" placeholder="Enter your new password" />
                         <span v-if="passwordError" class="text-red-500 text-sm">Password must be at least 6 characters</span>
                     </div>
                     <div class="mb-4">
-                        <label class="font-medium text-gray-600">Confirm New Password</label>
-                        <input type="password" v-model="changePasswordData.confirmNewPassword" class="input input-bordered w-full" placeholder="Confirm your new password" required :class="{'input-error': confirmPasswordError}" />
+                        <label for="confirmNewPassword" class="font-medium text-gray-600">Confirm New Password</label>
+                        <input id="confirmNewPassword" type="password" v-model="changePasswordData.confirmNewPassword" class="input input-bordered w-full" placeholder="Confirm your new password" />
                         <span v-if="confirmPasswordError" class="text-red-500 text-sm">Passwords do not match</span>
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="closeChangePasswordModal" class="btn btn-ghost">Cancel</button>
-                        <button type="submit" class="btn bg-[#45aafd]" :disabled="isPasswordFormInvalid">Change</button>
+                        <button type="submit" class="btn bg-[#45aafd]">Change</button>
                     </div>
                 </form>
             </div>
@@ -245,10 +254,10 @@ export default {
             newPassword: '',
             confirmNewPassword: ''
         });
-
         const emailError = ref(false);
         const nameError = ref(false);
         const phoneError = ref(false);
+        const oldPasswordError = ref(false);
         const passwordError = ref(false);
         const confirmPasswordError = ref(false);
 
@@ -304,10 +313,11 @@ export default {
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         const updateProfile = async () => {
-            // Validasi email
+            debugger;
             emailError.value = !validateEmail(editableUser.value.email);
             nameError.value = !editableUser.value.name;
             phoneError.value = !editableUser.value.phone;
+            console.log(editableUser.value);
 
             // Jika ada error, berhenti
             if (emailError.value || nameError.value || phoneError.value) return;
@@ -322,7 +332,7 @@ export default {
                         }
                     }
                 );
-
+                console.log(response);
                 user.value = response.data.data;
                 closeEditModal();
 
@@ -351,13 +361,29 @@ export default {
         };
 
         const changePassword = async () => {
-            // Validasi password
-            passwordError.value = changePasswordData.value.newPassword.length < 6;
-            confirmPasswordError.value = changePasswordData.value.newPassword !== changePasswordData.value.confirmNewPassword;
+            // Reset error states terlebih dahulu
+            oldPasswordError.value = false;
+            passwordError.value = false;
+            confirmPasswordError.value = false;
 
-            if (passwordError.value || confirmPasswordError.value) return;
+            // Validasi form input setelah tombol Change diklik
+            if (!changePasswordData.value.oldPassword) {
+                oldPasswordError.value = true;
+            }
+
+            if (!changePasswordData.value.newPassword || changePasswordData.value.newPassword.length < 6) {
+                passwordError.value = true;
+            }
+
+            if (changePasswordData.value.newPassword !== changePasswordData.value.confirmNewPassword) {
+                confirmPasswordError.value = true;
+            }
+
+            // Jika ada error, berhenti dan tampilkan pesan error
+            if (oldPasswordError.value || passwordError.value || confirmPasswordError.value) return;
 
             try {
+                // Jika semua validasi lolos, lanjutkan proses pengubahan password
                 const response = await axios.put(
                     `https://localhost:7102/api/Account/ChangePassword/${user.value.email}`,
                     changePasswordData.value,
@@ -449,6 +475,7 @@ export default {
             phoneError,
             passwordError,
             confirmPasswordError,
+            oldPasswordError,
         };
     },
     methods: {

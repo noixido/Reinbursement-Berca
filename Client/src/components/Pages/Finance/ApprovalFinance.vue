@@ -68,10 +68,19 @@
                                 {{ item.status }}
                             </span>
                         </td>
-                        <td>
-                            <button class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
-                                @click="openModal(item)" title="View Details">
+                        <td class="p-2 text-center">
+                            <button
+                                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
+                                @click="openModal(item)"
+                                title="View Details"
+                            >
                                 <i class="fas fa-eye"></i>
+                                <!-- Tooltip -->
+                                <div
+                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
+                                >
+                                View Data
+                                </div>
                             </button>
                         </td>
                     </tr>
@@ -518,13 +527,14 @@ export default {
 .table {
     width: 100%;
     border-collapse: collapse;
+    border: 1px solid #000; /* Border hitam pada tabel */
 }
 
 .table th,
 .table td {
-    /* Hapus border */
     padding: 8px;
     text-align: center;
+    border: 1px solid #000; /* Border hitam pada setiap sel */
 }
 
 .table th {
@@ -534,6 +544,10 @@ export default {
 
 .table tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #ffffff;
 }
 
 #kontrol .btn {

@@ -6,28 +6,28 @@
             <div class="flex space-x-6">
                 <!-- Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-clock text-3xl text-yellow-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Pending Approvals</h3>
                             <p class="text-2xl font-bold text-yellow-900">{{ pendingApprovals }}</p>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-red-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-times-circle text-3xl text-red-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Decline Status</h3>
                             <p class="text-2xl font-bold text-red-900">{{ rejectedRequests }}</p>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-teal-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-check-circle text-3xl text-teal-600 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Approved Status</h3>
                             <p class="text-2xl font-bold text-teal-900">{{ approvedRequests }}</p>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-file-invoice text-3xl text-blue-600 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Total Requests</h3>
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <!-- Adjusted the width of the Monthly Reimbursements card -->
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
                         <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">

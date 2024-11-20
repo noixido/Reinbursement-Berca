@@ -30,8 +30,8 @@
         <table class="table w-full border-collapse">
             <thead>
                 <tr>
-                    <th class="p-2 text-center font-bold">Nomor</th>
-                    <th class="p-2 text-center font-bold">ID Reimbursement</th>
+                    <th class="p-2 text-center font-bold">No</th>
+                    <th class="p-2 text-center font-bold">Username</th>
                     <th class="p-2 text-center font-bold">Kategori</th>
                     <th class="p-2 text-center font-bold">Tanggal Pengajuan</th>
                     <th class="p-2 text-center font-bold">Jumlah Dana</th>
@@ -43,7 +43,7 @@
             <tbody>
                 <tr v-for="(item, index) in paginatedData" :key="item.id_Reimbursement" v-if="paginatedData.length > 0">
                     <td class="p-2 text-center">{{ index + 1 }}</td>
-                    <td class="p-2 text-center">{{ item.id_Reimbursement }}</td>
+                    <td class="p-2 text-center">{{ item.name }}</td>
                     <td class="p-2 text-center">{{ item.category_Name }}</td>
                     <td class="p-2 text-center">{{ new Date(item.submit_Date).toLocaleDateString('id-ID', {
                         year: 'numeric', month: 'long', day:
@@ -62,11 +62,17 @@
                     </td>
                     <td class="p-2 text-center">
                         <button
-                                class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white"
-                                @click="openModal(item)"
-                                title="View Details"
+                            class="btn btn-info mr-2 bg-[#45aafd] focus:outline-none focus:ring-none text-white relative group"
+                            @click="openModal(item)"
+                            title="View Details"
+                        >
+                            <i class="fas fa-eye"></i>
+                            <!-- Tooltip -->
+                            <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm py-1 px-2 rounded shadow-md"
                             >
-                                <i class="fas fa-eye"></i>
+                            View Data
+                            </div>
                         </button>
                     </td>
                 </tr>
@@ -311,12 +317,14 @@ export default {
 .table {
     width: 100%;
     border-collapse: collapse;
+    border: 1px solid #000; /* Border hitam pada tabel */
 }
 
 .table th,
 .table td {
     padding: 8px;
     text-align: center;
+    border: 1px solid #000; /* Border hitam pada setiap sel */
 }
 
 .table th {
@@ -350,12 +358,12 @@ export default {
 }
 
 
-.table tbody tr:nth-child(odd) {
-    background-color: #f2f2f2; /* Light gray for odd rows */
-  }
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
 
-  .table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* White for even rows */
-  }
+.table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
 
 </style>
