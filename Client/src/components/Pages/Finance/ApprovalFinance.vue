@@ -61,9 +61,9 @@
                         </td>
                         <td>
                             <span :class="{
-                                'badge badge-warning': item.status.includes('progress'),
-                                'badge badge-success': item.status.includes('approved'),
-                                'badge badge-error': item.status.includes('declined')
+                                'badge badge-warning': item.status.includes('Progress'),
+                                'badge badge-success': item.status.includes('Approved'),
+                                'badge badge-error': item.status.includes('Declined')
                             }" class="badge-status">
                                 {{ item.status }}
                             </span>
@@ -354,9 +354,9 @@ export default {
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
-                    toast.error(error.response.data.message, {
-                            autoClose: 1000,
-                        });
+                    // toast.error(error.response.data.message, {
+                    //         autoClose: 1000,
+                    //     });
                 });
         },
         openModal(item) {

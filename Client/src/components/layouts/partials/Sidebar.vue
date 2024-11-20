@@ -15,8 +15,8 @@
             <!-- EMPLOYEE -->
             
             <!-- Dashboard Employee -->
-            <li v-if="role === 'Employee'">
-                <RouterLink to="/employee/dashboard" exact-active-class="active">
+            <li v-if="role === 'Employee' || role === 'HR' || role === 'Finance'">
+                <RouterLink to="/dashboard" exact-active-class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -28,6 +28,9 @@
 
             <!-- FINANCE -->
 
+            <!-- Divider for Finance -->
+            <div v-if="role === 'Finance'" class="divider divider-neutral">Manage Reimbursement</div>
+
             <!-- Dashboard Finance -->
             <li v-if="role === 'Finance'" class="mb-1">
                 <RouterLink to="/finance/dashboard" exact-active-class="active">
@@ -36,12 +39,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    Dashboard
+                    Finance Dashboard
                 </RouterLink>
             </li>
-
-            <!-- Divider for Finance -->
-            <div v-if="role === 'Finance'" class="divider divider-neutral">Manage Reimbursement</div>
 
             <!-- Approval Finance -->
             <li v-if="role === 'Finance'" class="mb-1">
@@ -55,18 +55,6 @@
             </li>
 
             <!-- HUMAN RESOURCE -->
-
-            <!-- Dashboard HR -->
-            <li v-if="role === 'HR'" class="mb-1">
-                <RouterLink to="/hr/dashboard" exact-active-class="active">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    Dashboard
-                </RouterLink>
-            </li>
 
             <!-- Divider for HR -->
             <div v-if="role === 'HR'" class="divider divider-neutral">Manage Data</div>
@@ -103,6 +91,18 @@
 
 
             <div v-if="role === 'HR'" class="divider divider-neutral">Manage Reimbursement</div>
+            <!-- Dashboard HR -->
+            <li v-if="role === 'HR'" class="mb-1">
+                <RouterLink to="/hr/dashboard" exact-active-class="active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    HRD Dashboard
+                </RouterLink>
+            </li>
+
             <li v-if="role === 'HR'" class="mb-1">
                 <RouterLink to="/hr/approval-hr" exact-active-class="active">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

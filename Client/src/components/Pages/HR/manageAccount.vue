@@ -388,9 +388,7 @@
           })
           .catch((error) => {
             console.error(error.response?.data?.message || error.message);
-            toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
+            
           });
       },
       fetchTitle(){
@@ -406,9 +404,7 @@
           })
           .catch((error) => {
             console.error(error.response?.data?.message || error.message);
-            toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
+            
           });
       },
       formatToRupiah(number) {
@@ -480,9 +476,7 @@
                 })
                 .catch((error) => {
                     console.error(error.response?.data?.message || error.message);
-                    toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
+                    
                 });
         },
       getAccountByEmail(emailParams){
@@ -510,9 +504,7 @@
             })
             .catch((error)=>{
                 console.error(error);
-                toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
+                
             });
       },
       editAccount(account) {
@@ -540,9 +532,7 @@
           })
           .catch((error) => {
             console.error(error);
-            toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
+            
           });
       },
       deleteAccount(email) {

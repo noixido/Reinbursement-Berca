@@ -80,7 +80,8 @@ namespace API.Repositories
             }
             else
             {
-                accountDetail.Current_Limit = (float)(totalWorkMonth/12) * title.Reimburse_Limit;
+                var limit = (float)(totalWorkMonth / 12) * title.Reimburse_Limit;
+                accountDetail.Current_Limit = (float)Math.Round(limit);
             }
 
             accountDetail.IsEmployee = 1;
@@ -301,6 +302,60 @@ namespace API.Repositories
                 })
                 .FirstOrDefault();
             return account;
+        }
+
+        public void UpdateLimitPeriodically()
+        {
+            var now = DateTime.Now;
+            var accountDetails = _context.AccountDetails.ToList();
+
+            foreach( var account in accountDetails )
+            {
+                float accountAge = ((now.Year - account.Join_Date.Year) * 12) + now.Month - account.Join_Date.Month;
+                bool hasBeenAYear = account.Join_Date.Day == now.Day && account.Join_Date.Month == now.Month;
+                var titleId = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
+
+                if (hasBeenAYear)
+                {
+                    account.Current_Limit = titleId.Reimburse_Limit;
+                }
+
+                if (accountAge < 12)
+                {
+                    // buat ngedapetin angkat 1 sebagai 1 bulan
+                    float oneMonth = (float)(accountAge - (accountAge - 1));
+                    // ngitung reimbursement limit untuk 1 bulan aja
+                    float totalReimburseForAMonth = (float)((oneMonth / 12) * titleId.Reimburse_Limit);
+
+                    // ngitung prorate untuk jumlah bulan pegawai kerja
+                    float prorate = (float)((accountAge / 12) * titleId.Reimburse_Limit);
+
+                    if (now.Day >= account.Join_Date.Day)
+                    {
+                        // nambah current limit yang di database
+                        float currentLimit = (float)(account.Current_Limit + totalReimburseForAMonth);
+
+                        if(currentLimit > prorate)
+                        {
+                            account.Current_Limit = prorate;
+                        }
+                        else
+                        {
+                            account.Current_Limit = currentLimit;
+                        }
+                    }
+                    else
+                    {
+                        account.Current_Limit = account.Current_Limit;
+                    }
+                }
+                else
+                {
+                    account.Current_Limit = titleId.Reimburse_Limit;
+                }
+            }
+
+            _context.SaveChanges();
         }
     }
 }

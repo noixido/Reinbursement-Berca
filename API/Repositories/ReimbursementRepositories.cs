@@ -34,7 +34,7 @@ namespace API.Repositories
                 Amount = (float)reimbursement.Amount,
                 Approve_Amount = 0,
                 Note = reimbursement.Note,
-                Status = "progress in hr",
+                Status = "Progress in HR",
                 Submit_Date = (DateTime)reimbursement.Submit_Date,
             };
             _myContext.Reimbursements.Add(newReimbursement);
@@ -141,11 +141,11 @@ namespace API.Repositories
 
             if (isApprove)
             {
-                reimbursement.Status = "progress in finance";
+                reimbursement.Status = "Progress in Finance";
             }
             else
             {
-                reimbursement.Status = "declined by HR";
+                reimbursement.Status = "Declined by HR";
             }
 
             reimbursement.Note = changeReimbursement.Note;
@@ -163,7 +163,7 @@ namespace API.Repositories
 
             if (isAprrove)
             {
-                reimbursement.Status = "approved";
+                reimbursement.Status = "Approved";
                 reimbursement.Approve_Amount = approveReimbursement.Approve_Amount;
 
                 var reimbursementProfiling = _myContext.ReimbursementProfilings
@@ -175,7 +175,7 @@ namespace API.Repositories
             }
             else
             {
-                reimbursement.Status = "declined by finance";
+                reimbursement.Status = "Declined by Finance";
             }
             reimbursement.Note = approveReimbursement.Note;
 

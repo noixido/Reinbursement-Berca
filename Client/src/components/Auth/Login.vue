@@ -91,17 +91,18 @@ export default {
                     const redirectPath =
                         this.$route.query.redirect ||
                         (role === "Employee"
-                            ? "/employee/dashboard"
+                            ? "/dashboard"
                             : role === "HR"
-                            ? "/hr/dashboard"
+                            ? "/dashboard"
                             : role === "Finance"
-                            ? "/finance/dashboard"
+                            ? "/dashboard"
                             : "/"); // Default fallback path if none match
                     this.router.push(redirectPath);
                 }catch(error){
-                    toast.error(error.response.data.message, {
-                        autoClose: 1000,
-                    });
+                    console.error(error.response.data.message);
+                    // toast.error(error.response.data.message, {
+                    //     autoClose: 1000,
+                    // });
                 }finally{
                     this.stateLoading = false;
                 }

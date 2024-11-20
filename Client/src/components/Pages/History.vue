@@ -53,9 +53,9 @@
                     <td class="p-2 text-center">Rp. {{ item.approve_Amount ? formatCurrency(item.approve_Amount) : "-" }}</td>
                     <td class="p-2 text-center">
                         <span :class="{
-                            'badge badge-warning': item.status.includes('progress'),
-                            'badge badge-success': item.status.includes('approved'),
-                            'badge badge-error': item.status.includes('declined')
+                            'badge badge-warning': item.status.includes('Progress'),
+                            'badge badge-success': item.status.includes('Approved'),
+                            'badge badge-error': item.status.includes('Declined')
                         }" class="badge-status">
                             {{ item.status }}
                         </span>

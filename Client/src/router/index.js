@@ -9,7 +9,6 @@ import ApprovalByHR from "../components/pages/HR/ApprovalByHR.vue";
 import ApprovalFinance from "../components/pages/Finance/ApprovalFinance.vue";
 import Profile from "../components/pages/Profile.vue";
 import IndexEmployee from "../components/Pages/Employee/indexEmployee.vue";
-// import IndexFinance from "../components/Pages/Finance/indexFinance.vue";
 import IndexHr from "../components/pages/HR/indexHr.vue";
 import NotFound from "../components/pages/NotFound.vue";
 import IndexFinance from "../components/pages/Finance/indexFinance.vue";
@@ -23,13 +22,12 @@ const routes = [{
             guest: true,
         }
     },{
-      path: '/employee/dashboard',
+      path: '/dashboard',
       name: 'employee-dashboard',
       component: IndexEmployee,
       props: true,
       meta: {
         requiresAuth: true,
-        role: 'Employee',
     },
     },{
         path: '/hr/dashboard',
@@ -163,7 +161,7 @@ router.beforeEach((to, from, next) => {
   
         if(role === 'Employee'){
           next({
-            path: '/employee/dashboard',
+            path: '/dashboard',
           });
         }else if(role === 'HR'){
           next({

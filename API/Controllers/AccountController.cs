@@ -252,5 +252,17 @@ namespace API.Controllers
                 });
             }
         }
+
+        [HttpPost("updateCurrentLimitPeriodically")]
+        public IActionResult UpdateCurrentLimitPeriodically()
+        {
+            _repository.UpdateLimitPeriodically();
+            return Ok(new
+            {
+                status = StatusCodes.Status200OK,
+                message = "Data updated!",
+                data = (object)true
+            });
+        }
     }
 }
