@@ -1,106 +1,109 @@
 <template>
     <MainLayout>
-        <div class="container mx-auto p-6">
-            <h1 class="text-3xl font-semibold text-gray-800 mb-6">Dashboard Employee</h1>
+        <div class="container mx-auto p-4 md:p-6">
+            <h1 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-6 text-center md:text-left">
+                Dashboard Employee
+            </h1>
 
-            <div class="flex gap-6">
+            <div class="flex flex-col lg:flex-row gap-6">
                 <!-- Left Column (Cards Column) -->
-                <div class="flex flex-col gap-6 w-1/3">
+                <div class="flex flex-col gap-4 md:gap-6 lg:w-1/3">
                     <!-- Max Saldo Card -->
-                    <div class="bg-blue-100 p-6 rounded-lg shadow-md  hover:shadow-xl flex items-center">
+                    <div class="bg-blue-100 p-4 md:p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
                         <div class="w-1/4">
-                            <i class="fas fa-wallet text-4xl text-blue-500"></i>
+                            <i class="fas fa-wallet text-3xl md:text-4xl text-blue-500"></i>
                         </div>
-                        <div class="w-3/4 pl-4">
-                            <h3 class="text-xl font-semibold">Maximum Funds</h3>
-                            <p class="text-2xl font-bold">Rp. {{ formatCurrency(maxSaldo) }},00</p>
+                        <div class="w-3/4 pl-2 md:pl-4">
+                            <h3 class="text-lg md:text-xl font-semibold">Maximum Funds</h3>
+                            <p class="text-xl md:text-2xl font-bold">Rp. {{ formatCurrency(maxSaldo) }},00</p>
                         </div>
                     </div>
 
                     <!-- Saldo Card -->
-                    <div class="bg-purple-100 p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
+                    <div class="bg-purple-100 p-4 md:p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
                         <div class="w-1/4">
-                            <i class="fas fa-piggy-bank text-4xl text-purple-500"></i>
+                            <i class="fas fa-piggy-bank text-3xl md:text-4xl text-purple-500"></i>
                         </div>
-                        <div class="w-3/4 pl-4">
-                            <h3 class="text-xl font-semibold">Current Funds</h3>
-                            <p class="text-2xl font-bold">Rp. {{ formatCurrency(Math.floor(accountDetail.current_Limit))
-                                }},00</p>
+                        <div class="w-3/4 pl-2 md:pl-4">
+                            <h3 class="text-lg md:text-xl font-semibold">Current Funds</h3>
+                            <p class="text-xl md:text-2xl font-bold">
+                                Rp. {{ formatCurrency(Math.floor(accountDetail.current_Limit)) }},00
+                            </p>
                         </div>
                     </div>
 
                     <!-- Approved Card -->
-                    <div class="bg-green-100 p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
+                    <div class="bg-yellow-100 p-4 md:p-6 rounded-lg shadow-md hover:shadow-xl flex items-center">
                         <div class="w-1/4">
-                            <i class="fas fa-thumbs-up text-4xl text-green-500"></i>
+                            <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
                         </div>
-                        <div class="w-3/4 pl-4">
-                            <h3 class="text-xl font-semibold">Approved Funds</h3>
-                            <p class="text-2xl font-bold">Rp. {{ formatCurrency(approvedAmountTotal) }},00</p>
+                        <div class="w-3/4 pl-2 md:pl-4">
+                            <h3 class="text-lg font-semibold text-gray-900">
+                                Approved Funds</h3>
+                            <p class="text-2xl font-bold text-black">Rp. {{ formatCurrency(approvedAmountTotal) }},00</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Column (Reimbursement Card) -->
-                <div class="w-2/3 bg-gray-100 p-6 rounded-lg shadow-md flex flex-col justify-center">
+                <div class="lg:w-2/3 bg-gray-100 p-4 md:p-6 rounded-lg shadow-md">
                     <div>
-                        <h3 class="text-xl font-semibold text-center">Reimbursement Status</h3>
+                        <h3 class="text-lg md:text-xl font-semibold text-center">Reimbursement Status</h3>
                         <h3 class="font-semibold mb-4 text-center">{{ startPeriode }} - {{ endPeriode }}</h3>
                     </div>
 
-                    <!-- Approved Progress Bar -->
-                    <div class="mb-4">
-                        <div class="flex justify-between mb-1">
-                            <span class="text-lg font-semibold text-green-700">Approved</span>
-                            <span class="text-lg font-medium text-green-700">{{ approvedCount }}</span>
-                        </div>
-                        <div class="w-full rounded-full h-4 border-green-500 border">
-                                <div :style="{ width: approvedPercentage + '%' }" class="bg-green-500 h-full rounded-full">
-                                </div>
-                        </div>
-                    </div>
-
-                    <!-- In Progress Progress Bar -->
-                    <div class="mb-4">
-                        <div class="flex justify-between mb-1">
-                            <span class="text-lg font-semibold text-yellow-700">In Progress</span>
-                            <span class="text-lg font-medium text-yellow-700">{{ inProgressCount }}</span>
-                        </div>
-                        <div class="w-full border-yellow-500 border rounded-full h-4">
-                            <div :style="{ width: inProgressPercentage + '%' }" class="bg-yellow-500 h-full rounded-full">
+                    <!-- Progress Bars -->
+                    <div class="space-y-4">
+                        <!-- Approved -->
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm md:text-lg font-semibold text-green-700">Approved</span>
+                                <span class="text-sm md:text-lg font-medium text-green-700">{{ approvedCount }}</span>
+                            </div>
+                            <div class="w-full h-4 rounded-full border border-green-500">
+                                <div :style="{ width: approvedPercentage + '%' }" class="bg-green-500 h-full rounded-full"></div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Declined Progress Bar -->
-                    <div class="mb-4">
-                        <div class="flex justify-between mb-1">
-                            <span class="text-lg font-semibold text-red-700">Declined</span>
-                            <span class="text-lg font-medium text-red-700">{{ declinedCount }}</span>
+                        <!-- In Progress -->
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm md:text-lg font-semibold text-yellow-700">In Progress</span>
+                                <span class="text-sm md:text-lg font-medium text-yellow-700">{{ inProgressCount }}</span>
+                            </div>
+                            <div class="w-full h-4 rounded-full border border-yellow-500">
+                                <div :style="{ width: inProgressPercentage + '%' }" class="bg-yellow-500 h-full rounded-full"></div>
+                            </div>
                         </div>
-                        <div class="w-full border-red-500 border rounded-full h-4">
-                            <div :style="{ width: declinedPercentage + '%' }" class="bg-red-500 h-full rounded-full"></div>
-                        </div>
-                    </div>
 
-                    <!-- Total Progress Bar -->
-                    <div class="mb-4">
-                        <div class="flex justify-between mb-1">
-                            <span class="text-lg font-semibold text-blue-700">Total Reimbursement</span>
-                            <span class="text-lg font-medium text-blue-700">{{ totalReimbursements }}</span>
+                        <!-- Declined -->
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm md:text-lg font-semibold text-red-700">Declined</span>
+                                <span class="text-sm md:text-lg font-medium text-red-700">{{ declinedCount }}</span>
+                            </div>
+                            <div class="w-full h-4 rounded-full border border-red-500">
+                                <div :style="{ width: declinedPercentage + '%' }" class="bg-red-500 h-full rounded-full"></div>
+                            </div>
                         </div>
-                        <div class="w-full border-blue-500 border rounded-full h-4">
-                            <div class="bg-blue-500 h-full rounded-full" :class="totalReimbursements ? 'w-full' : 'w-0'">
+
+                        <!-- Total -->
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm md:text-lg font-semibold text-blue-700">Total Reimbursement</span>
+                                <span class="text-sm md:text-lg font-medium text-blue-700">{{ totalReimbursements }}</span>
+                            </div>
+                            <div class="w-full h-4 rounded-full border border-blue-500">
+                                <div class="bg-blue-500 h-full rounded-full" :class="totalReimbursements ? 'w-full' : 'w-0'"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </MainLayout>
 </template>
+
 
 <script>
 import axios from 'axios';

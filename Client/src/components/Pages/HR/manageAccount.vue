@@ -23,7 +23,7 @@
 
                 <div class="relative group">
                   <div class="tooltip tooltip-black">
-                    <button @click="openAddModal" class="btn bg-[#45aafd]">
+                    <button @click="openAddModal" class="btn bg-[#45aafd] hover:bg-indigo-500">
                       <i class="fas fa-plus"></i>
                     </button>
                   </div>
@@ -101,7 +101,7 @@
                                 />
                                 <span v-if="v$.account.birth_Date.$error" class="text-sm text-red-500">{{ v$.account.birth_Date.$errors[0].$message }}</span>
                             </div>
-                            <div class="flex flex-col form-control">
+                            <!-- <div class="flex flex-col form-control">
                                 <label for="join_Date" class="font-semibold ml-3 mb-2">Join Date</label>
                                 <input
                                     type="date"
@@ -112,7 +112,7 @@
                                     autofocus
                                 />
                                 <span v-if="v$.account.join_Date.$error" class="text-sm text-red-500">{{ v$.account.join_Date.$errors[0].$message }}</span>
-                            </div>
+                            </div> -->
                             <div class="flex flex-col form-control">
                                 <label for="title" class="font-semibold ml-3 mb-2">Title</label>
                                 <select name="title" id="title" v-model="state.account.id_Title" class="select select-bordered w-full">
