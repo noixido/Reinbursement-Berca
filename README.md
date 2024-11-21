@@ -17,12 +17,13 @@ this project is using .Net 6.0 and .Net SDK 8.0.403 as a backend (API), so here 
 also this project is using Vue.Js as a frontend (Client)
 
 ## Things you need to do to run the project
-- open appsetting.json on the API and change the connectionstring base on empty database you have and your sql server credentials
+- open `appsetting.json` on the API and change the connectionstring base on empty database you have and your sql server credentials
+- do a migration first, type `add-migration "<your comment>"` and enter, then type `update-database`
 - try to run the code, it should show you a swagger ui on the new tab/windows of your browser
-- if there is no problem running the code, now open the client
-- run this syntax on the terminal `npm install` to instal some required dependencies/library
+- if there is no problem running the code, now open terminal/cmd for the client
+- run this command on the terminal `npm install` to instal some required dependencies/library
 - type `npm run dev` to run the code, and go to the link when you run the command
-- cuz we dont include account seeder to this program so you need to input one account to the program manually first, open the AccountController and TitleController and go to `AddAccount` and `AddTitle` on the API and comment or remove this line `[Authorize(Roles = "HR")]` from the code and save then rerun the API
+- cuz we dont include account seeder to this program so you need to input one account to the program manually first, open the `AccountController` and `TitleController` and go to `AddAccount` and `AddTitle` on the API and comment or remove this line `[Authorize(Roles = "HR")]` from the code and save then rerun the API
 - input this to the `POST /api/Title` endpoint :
 ```
 {
