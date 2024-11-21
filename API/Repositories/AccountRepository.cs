@@ -366,11 +366,9 @@ namespace API.Repositories
                 }
                 else // Akun dengan umur di atas atau sama dengan 1 tahun
                 {
-                    if (monthsSinceLastUpdate > 0)
+                    if (monthsSinceLastUpdate >= 12)
                     {
-                        // Tambahkan prorata untuk bulan-bulan yang belum diproses
-                        float prorateAmount = (float)(monthsSinceLastUpdate * (title.Reimburse_Limit / 12.0f));
-                        account.Current_Limit += prorateAmount;
+                        account.Current_Limit = title.Reimburse_Limit;
                     }
                 }
 
