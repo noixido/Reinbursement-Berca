@@ -151,13 +151,17 @@
                                 </select>
                                 <!-- <span v-if="v$.account.gender.$error" class="text-sm text-red-500">{{ v$.account.gender.$errors[0].$message }}</span> -->
                             </div>
-                        <div class="mb-4">
-                            <label class="font-medium text-gray-600">Birth Date</label>
-                            <input type="date" 
-                            v-model="editableUser.birth_Date" 
-                            class="input input-bordered w-full" />
-                            <span v-if="birthDateError" class="text-red-500 text-sm">Birth date is required</span>
-                        </div>
+                            <div class="mb-4">
+    <label class="font-medium text-gray-600">Birth Date</label>
+    <input 
+        type="date" 
+        v-model="editableUser.birth_Date" 
+        :max="maxBirthDate"
+        class="input input-bordered w-full" 
+    />
+    <span v-if="birthDateError" class="text-red-500 text-sm">Birth date is required</span>
+</div>
+
                         <!-- <div class="mb-4">
                             <label class="font-medium text-gray-600">Join Date</label>
                             <input type="date" v-model="editableUser.join_Date" class="input input-bordered w-full" />
@@ -316,6 +320,9 @@ export default {
         };
 
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+        const maxBirthDate = new Date().toISOString().split('T')[0];
 
         const updateProfile = async () => {
             emailError.value = !validateEmail(editableUser.value.email);
@@ -479,6 +486,7 @@ export default {
             passwordError,
             confirmPasswordError,
             oldPasswordError,
+            maxBirthDate,
         };
     },
     methods: {

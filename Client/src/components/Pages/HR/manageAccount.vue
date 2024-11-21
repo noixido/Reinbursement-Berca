@@ -97,11 +97,12 @@
                                   v-model="state.account.birth_Date"
                                   placeholder="Birth Date"
                                   class="input input-bordered w-full"
+                                  :max="maxDate"
                                   autofocus
                               />
                               <span v-if="v$.account.birth_Date.$error" class="text-sm text-red-500">{{ v$.account.birth_Date.$errors[0].$message }}</span>
                           </div>
-                          <div class="flex flex-col form-control" v-if="isEditing == false">
+                          <div class="flex flex-col form-control">
                               <label for="join_Date" class="font-semibold ml-3 mb-2">Join Date</label>
                               <input
                                   type="date"
@@ -109,6 +110,7 @@
                                   v-model="state.account.join_Date"
                                   placeholder="Join Date"
                                   class="input input-bordered w-full"
+                                  :max="maxDate"
                                   autofocus
                               />
                               <span v-if="v$.account.join_Date.$error" class="text-sm text-red-500">{{ v$.account.join_Date.$errors[0].$message }}</span>
@@ -287,7 +289,7 @@ import axios from "axios";
 import MainLayout from "../../layouts/MainLayout.vue";
 import useVuelidate from '@vuelidate/core';
 import { required, email } from '@vuelidate/validators';
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import Swal from 'sweetalert2'
@@ -309,6 +311,8 @@ export default {
   },
   setup() {
     const token = localStorage.getItem("token");
+
+    const maxDate = ref(new Date().toISOString().split('T')[0]);
 
     const state = reactive({
       account: {
@@ -345,6 +349,7 @@ export default {
       token,
       state,
       v$,
+      maxDate,
     };
   },
   computed: {
