@@ -24,7 +24,7 @@ namespace API.Models
         public int IsEmployee { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? Limit_Updated_At { get; set; }
+        public DateTime Limit_Updated_At { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Title Title { get; set; }

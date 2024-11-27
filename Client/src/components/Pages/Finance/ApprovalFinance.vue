@@ -307,20 +307,24 @@ export default {
     computed: {
         filteredData() {
             // Filter data based on search query
-            return this.reimbursements.filter(
-                (item) =>
-                    item.category_Name
-                        .toLowerCase()
-                        .includes(this.searchQuery.toLowerCase()) ||
-                    item.status
-                        .toLowerCase()
-                        .includes(this.searchQuery.toLowerCase()) ||
-                    item.id_Reimbursement
-                        .toLowerCase()
-                        .toString()
-                        .includes(this.searchQuery) ||
-                    item.status.toLowerCase().toString().includes(this.searchQuery)
-            );
+            return this.reimbursements
+                .filter(
+                    (item) =>
+                        item.category_Name
+                            .toLowerCase()
+                            .includes(this.searchQuery.toLowerCase()) ||
+                        item.status
+                            .toLowerCase()
+                            .includes(this.searchQuery.toLowerCase()) ||
+                        item.id_Reimbursement
+                            .toLowerCase()
+                            .toString()
+                            .includes(this.searchQuery) ||
+                        item.status.toLowerCase().toString().includes(this.searchQuery)
+                )
+                .filter(
+                    item => item.name !== this.account_Name
+                );
         },
         totalPages() {
             // Calculate total pages

@@ -250,16 +250,21 @@ export default {
       selectedReimbursement: {},
       showApproveForm: false,
       showDeclineForm: false,
-      note: ''
+      note: '',
     };
   },
   computed: {
     filteredData() {
-      return this.reimbursements.filter(item =>
-        item.category_Name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        item.status.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        item.id_Reimbursement.toLowerCase().includes(this.searchQuery)
-      );
+      return this.reimbursements
+        .filter(
+          item =>
+            item.category_Name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+            item.status.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+            item.id_Reimbursement.toLowerCase().includes(this.searchQuery)
+        )
+        .filter(
+          item => item.name !== this.account_Name
+        );
     },
     paginatedData() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
