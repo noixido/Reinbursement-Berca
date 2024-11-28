@@ -9,8 +9,15 @@
                     <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
                         <i class="fas fa-clock text-3xl text-yellow-500 mr-4"></i>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">In Progress</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">Progress in HR</h3>
                             <p class="text-2xl font-bold text-yellow-900">{{ pendingApprovals }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-green-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                        <i class="fas fa-check-circle text-3xl text-green-500 mr-4"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Approved by HR</h3>
+                            <p class="text-2xl font-bold text-green-900">{{ approvedRequests }}</p>
                         </div>
                     </div>
                     <div class="bg-red-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
@@ -67,6 +74,7 @@ export default defineComponent({
         const monthlyReimbursements = ref(0);
         const pendingApprovals = ref(0);
         const rejectedRequests = ref(0);
+        const approvedRequests = ref(0);
 
         // Fungsi untuk membuat line chart
         const createLineChart = (monthlyRequestCount) => {
@@ -113,10 +121,35 @@ export default defineComponent({
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true, // Aktifkan legend
+                            position: 'top', // Posisi legend ('top', 'bottom', 'left', 'right')
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const dataset = chart.data.datasets[0];
+                                    const labels = chart.data.labels;
+
+                                    return labels.map((label, index) => {
+                                        return {
+                                            text: label, // Teks label berdasarkan kategori
+                                            fillStyle: dataset.backgroundColor[index], // Warna sesuai kategori
+                                            strokeStyle: dataset.borderColor, // Warna garis tepi
+                                            lineWidth: dataset.borderWidth, // Lebar garis tepi
+                                        };
+                                    });
+                                },
+                                color: '#333', // Warna teks pada legend
+                                font: {
+                                    size: 12 // Ukuran font legend
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: { 
                             title: { display: true, text: 'Category' },
-                            ticks: { display: false } // Menyembunyikan label kategori
+                            ticks: { display: false } // Menyembunyikan label kategori pada sumbu X
                         },
                         y: { 
                             title: { display: true, text: 'Total Reimbursement' },
@@ -132,6 +165,7 @@ export default defineComponent({
                 }
             });
         };
+
 
         const fetchData = async () => {
             try {
@@ -169,6 +203,11 @@ export default defineComponent({
                     request.status.toLowerCase().includes('progress in hr')
                 );
                 pendingApprovals.value = inProgressHRRequests.length;
+                
+                const approvedByHRRequests = reimbursements.filter(request =>
+                    request.status.toLowerCase().includes('progress in finance')
+                );
+                approvedRequests.value = approvedByHRRequests.length;
 
                 // Hitung jumlah reimbursement yang ditolak oleh HR
                 const declinedByHRRequests = reimbursements.filter(request =>
@@ -228,6 +267,7 @@ export default defineComponent({
             monthlyReimbursements,
             pendingApprovals,
             rejectedRequests,
+            approvedRequests
         };
     }
 });
