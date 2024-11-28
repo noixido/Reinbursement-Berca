@@ -354,10 +354,11 @@ namespace API.Repositories
                     // Tambahkan prorata untuk bulan-bulan yang belum diproses
                     if (monthsSinceLastUpdate > 0)
                     {
-                        float prorate = (float)(accountAgeInMonths / 12 * title.Reimburse_Limit);
                         float prorateAmount = (float)(monthsSinceLastUpdate * (title.Reimburse_Limit / 12.0f));
                         float total = (float)(prorateAmount + account.Current_Limit);
                         
+                        float prorate = (float)(accountAgeInMonths / 12 * title.Reimburse_Limit);
+
                         if(total <= prorate)
                         {
                             account.Current_Limit = (float)Math.Round(total);

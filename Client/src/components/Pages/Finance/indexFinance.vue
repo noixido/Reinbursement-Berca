@@ -13,9 +13,16 @@
                             <p class="text-2xl font-bold text-blue-900">{{ totalRequests }}</p>
                         </div>
                     </div>
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300">
+                        <i class="fas fa-clock text-3xl text-yellow-500 mr-4"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-yellow-900">Progress in Finance</h3>
+                            <p class="text-2xl font-bold text-yellow-900">{{ approvedRequests }}</p>
+                        </div>
+                    </div>
                     <!-- Adjusted the width of the Monthly Reimbursements card -->
-                    <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
-                        <i class="fas fa-coins text-4xl text-yellow-500 mr-4"></i>
+                    <div class="bg-green-100 p-6 rounded-lg shadow-lg flex items-center hover:shadow-xl transition duration-300 w-full">
+                        <i class="fas fa-coins text-4xl text-green-500 mr-4"></i>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">
                                 Approved Funds</h3>
@@ -57,6 +64,7 @@ export default defineComponent({
     setup() {
         const totalRequests = ref(0);
         const monthlyReimbursements = ref(0);
+        const approvedRequests = ref(0);
 
         // Fungsi untuk membuat bar chart
         const createBarChart = (categories) => {
@@ -77,16 +85,41 @@ export default defineComponent({
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true, // Aktifkan legend
+                            position: 'top', // Posisi legend ('top', 'bottom', 'left', 'right')
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const dataset = chart.data.datasets[0];
+                                    const labels = chart.data.labels;
+
+                                    return labels.map((label, index) => {
+                                        return {
+                                            text: label, // Teks label berdasarkan kategori
+                                            fillStyle: dataset.backgroundColor[index], // Warna sesuai kategori
+                                            strokeStyle: dataset.borderColor, // Warna garis tepi
+                                            lineWidth: dataset.borderWidth, // Lebar garis tepi
+                                        };
+                                    });
+                                },
+                                color: '#333', // Warna teks pada legend
+                                font: {
+                                    size: 12 // Ukuran font legend
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: { 
                             title: { display: true, text: 'Category' },
-                            ticks: { display: false } 
+                            ticks: { display: false } // Menyembunyikan label kategori pada sumbu X
                         },
                         y: { 
                             title: { display: true, text: 'Total Reimbursement' },
                             ticks: {
                                 beginAtZero: true, // Mulai dari 0
-                                stepSize: 1, 
+                                stepSize: 1, // Langkah nilai adalah 1
                                 callback: function(value) {
                                     return Number.isInteger(value) ? value : ''; // Tampilkan hanya angka bulat
                                 }
@@ -179,6 +212,11 @@ export default defineComponent({
                 // Update nilai card Monthly Reimbursements
                 monthlyReimbursements.value = totalApprovedThisMonth;
 
+                const approvedByHRRequests = reimbursements.filter(request =>
+                    request.status.toLowerCase().includes('progress in finance')
+                );
+                approvedRequests.value = approvedByHRRequests.length;
+
                 // Hitung jumlah reimbursement per kategori
                 const categoryCounts = reimbursements.reduce((acc, item) => {
                     const categoryName = item.category_Name;
@@ -238,6 +276,7 @@ export default defineComponent({
             totalRequests,
             monthlyReimbursements,
             formattedMonthlyReimbursements,
+            approvedRequests,
         };
     }
 });
