@@ -229,9 +229,14 @@
                             <span class="text-gray-700">{{ Math.min(selectedReimbursement.current_Limit,
                                 selectedReimbursement.amount) }}</span>
                         </div> -->
-                        <input v-model="formattedAmount" type="text" min="0" @input="formatAmount()" inputmode="numeric"
-                            :max="Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount)"
-                            placeholder="Masukkan Dana Disetujui" class="input input-bordered border border-gray-600" />
+                        <input
+                            type="text"
+                            readonly
+                            :value="formatCurrency(selectedReimbursement.amount)" 
+                            placeholder="Masukkan Dana Disetujui"
+                            class="input input-bordered border border-gray-600"
+                        />
+
                         <p v-if="!isApproveAmountValid && showValidation" class="text-red-500 text-sm">
                             Jumlah harus lebih besar dari 0 dan tidak melebihi {{
                                 formatCurrency(Math.min(selectedReimbursement.current_Limit, selectedReimbursement.amount))
@@ -348,7 +353,9 @@ export default {
 
         // validasi
         isApproveAmountValid() {
-            return this.approveAmount > 0 && this.approveAmount <= Math.min(this.selectedReimbursement.current_Limit, this.selectedReimbursement.amount);
+            return this.approveAmount > 0 &&
+            this.approveAmount <= Math.min(this.selectedReimbursement.current_Limit, 
+            this.selectedReimbursement.amount);
         },
         isNoteValid() {
             return this.note.trim().length > 0;
@@ -381,9 +388,9 @@ export default {
         openModal(item) {
             this.showApproveForm = false;
             this.showDeclineForm = false;
-            this.approveAmount = 0;
+            this.approveAmount = item.approve_Amount || item.amount; // Gunakan dana yang disetujui oleh HR atau total dana diajukan
             this.note = '';
-            this.formattedAmount = ''
+            this.formattedAmount = this.formatCurrency(this.approveAmount);
 
             this.selectedReimbursement = item; // set the selected reimbursement
             this.$refs.reimbursementModal.showModal(); // open the modal
@@ -427,9 +434,6 @@ export default {
         },
         submitApproval() {
             this.showValidation = true;
-            if (!this.isApproveFormValid) {
-                return
-            }
 
             this.$refs.reimbursementModal.close();
             Swal.fire({
@@ -446,7 +450,7 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const approvalData = {
-                        approve_Amount: this.approveAmount,
+                        approve_Amount: this.selectedReimbursement.amount, // Gunakan nilai pengajuan langsung
                         note: this.note,
                         id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
                     };
@@ -462,22 +466,13 @@ export default {
                             }
                         )
                         .then((response) => {
-                            // Handle success
-                            this.fetchReimbursements(); // refresh the data
-                            this.$refs.reimbursementModal.close(); // close modal
-                            // Swal.fire({
-                            //     position: 'center',
-                            //     icon: 'success',
-                            //     title: 'Reimbursement Diterima',
-                            //     showConfirmButton: false,
-                            //     timer: 1500,
-                            // });
+                            // Refresh data
+                            this.fetchReimbursements();
                             toast.success(response.data.message, {
                                 autoClose: 1000,
                             });
                         })
                         .catch((error) => {
-                            // Handle error
                             console.error('Error approving reimbursement:', error);
                             toast.error(error.response.data.message, {
                                 autoClose: 1000,
@@ -485,8 +480,69 @@ export default {
                         });
                 }
             });
-
         },
+
+        //     this.showValidation = true;
+        //     if (!this.isApproveFormValid) {
+        //         return
+        //     }
+
+        //     this.$refs.reimbursementModal.close();
+        //     Swal.fire({
+        //         title: "Are you sure?",
+        //         text: "You will approve this reimbursement!",
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonColor: "#3085d6",
+        //         cancelButtonColor: "#d33",
+        //         confirmButtonText: "Yes!",
+        //         customClass: {
+        //             popup: 'z-[99999999]' // Tambahkan kelas dengan z-index tinggi
+        //         }
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             const approvalData = {
+        //                 approve_Amount: this.approveAmount,
+        //                 note: this.note,
+        //                 id_Reimbursement: this.selectedReimbursement.id_Reimbursement,
+        //             };
+
+        //             axios
+        //                 .put(
+        //                     `https://localhost:7102/api/Reimbursement/approvefinance/${this.selectedReimbursement.id_Reimbursement}`,
+        //                     approvalData,
+        //                     {
+        //                         headers: {
+        //                             Authorization: 'Bearer ' + localStorage.getItem('token'),
+        //                         },
+        //                     }
+        //                 )
+        //                 .then((response) => {
+        //                     // Handle success
+        //                     this.fetchReimbursements(); // refresh the data
+        //                     this.$refs.reimbursementModal.close(); // close modal
+        //                     // Swal.fire({
+        //                     //     position: 'center',
+        //                     //     icon: 'success',
+        //                     //     title: 'Reimbursement Diterima',
+        //                     //     showConfirmButton: false,
+        //                     //     timer: 1500,
+        //                     // });
+        //                     toast.success(response.data.message, {
+        //                         autoClose: 1000,
+        //                     });
+        //                 })
+        //                 .catch((error) => {
+        //                     // Handle error
+        //                     console.error('Error approving reimbursement:', error);
+        //                     toast.error(error.response.data.message, {
+        //                         autoClose: 1000,
+        //                     });
+        //                 });
+        //         }
+        //     });
+
+        // },
         submitDecline() {
             this.showValidation = true
             if (!this.isDeclineFormValid) {

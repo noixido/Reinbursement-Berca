@@ -345,7 +345,7 @@ namespace API.Repositories
 
             foreach (var account in accountDetails)
             {
-                if(now.Day != account.Limit_Updated_At.Day)
+                if (now.Day != account.Limit_Updated_At.Day)
                 {
                     var janFirst = new DateTime(now.Year + 1, 1, 1);
                     var title = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
@@ -357,6 +357,7 @@ namespace API.Repositories
                     // Perbarui tanggal terakhir Limit_Updated_At
                     account.Limit_Updated_At = now;
                 }
+            }
                 
                 //    // Hitung umur akun dalam bulan sejak Join_Date
                 //    float accountAgeInMonths = ((now.Year - account.Join_Date.Year) * 12) + now.Month - account.Join_Date.Month;
@@ -399,10 +400,6 @@ namespace API.Repositories
                 //            account.Current_Limit = title.Reimburse_Limit;
                 //        }
                 //    }
-
-
-            }
-
 
 
             // Simpan perubahan ke database
