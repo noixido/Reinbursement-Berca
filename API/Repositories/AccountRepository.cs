@@ -73,15 +73,30 @@ namespace API.Repositories
                 .Where(id => id.Id_Title == accountDetail.Id_Title)
                 .FirstOrDefault();
 
-            DateTime now = DateTime.Now;
-            float totalWorkMonth = (now.Year - accountDetail.Join_Date.Year) * 12 + now.Month - accountDetail.Join_Date.Month;
-            if(totalWorkMonth > 12)
+            //DateTime now = DateTime.Now;
+            //float totalWorkMonth = (now.Year - accountDetail.Join_Date.Year) * 12 + now.Month - accountDetail.Join_Date.Month;
+            //if(totalWorkMonth >= 12)
+            //{
+            //    accountDetail.Current_Limit = title.Reimburse_Limit;
+            //}
+            //else
+            //{
+            //    var limit = (float)(totalWorkMonth / 12) * title.Reimburse_Limit;
+            //    accountDetail.Current_Limit = (float)Math.Round(limit);
+            //}
+
+            DateTime endOfTheYear = new DateTime(DateTime.Now.Year, 12, 31);
+            float accountAge = ((endOfTheYear.Year - accountDetail.Join_Date.Year) * 12) + (endOfTheYear.Month - accountDetail.Join_Date.Month);
+            float totalMonthInAYear = 12;
+            accountAge = Math.Max(accountAge, 0);
+
+            if (accountAge >= totalMonthInAYear)
             {
                 accountDetail.Current_Limit = title.Reimburse_Limit;
             }
             else
             {
-                var limit = (float)(totalWorkMonth / 12) * title.Reimburse_Limit;
+                float limit = (float)(title.Reimburse_Limit * accountAge / totalMonthInAYear);
                 accountDetail.Current_Limit = (float)Math.Round(limit);
             }
 
@@ -330,52 +345,62 @@ namespace API.Repositories
 
             foreach (var account in accountDetails)
             {
-                // Hitung umur akun dalam bulan sejak Join_Date
-                float accountAgeInMonths = ((now.Year - account.Join_Date.Year) * 12) + now.Month - account.Join_Date.Month;
-
-                // Hitung bulan sejak Limit_Updated_At terakhir
-                var monthsSinceLastUpdate = ((now.Year - account.Limit_Updated_At?.Year) * 12) + now.Month - account.Limit_Updated_At?.Month;
-
-                // Cari Title terkait
-                var title = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
-
-                if (title == null) continue; // Jika Title tidak ditemukan, lewati akun ini
-
-                // Reset tahunan (ulang tahun akun)
-                bool isAnniversary = account.Join_Date.Day == now.Day && account.Join_Date.Month == now.Month && account.Join_Date.Year < now.Year;
-
-                if (isAnniversary)
+                if (now.Day != account.Limit_Updated_At.Day)
                 {
-                    // Reset Current_Limit ke Reimburse_Limit
-                    account.Current_Limit = title.Reimburse_Limit;
-                }
-                else if (accountAgeInMonths < 12) // Akun dengan umur di bawah 1 tahun
-                {
-                    // Tambahkan prorata untuk bulan-bulan yang belum diproses
-                    if (monthsSinceLastUpdate > 0)
-                    {
-                        float prorateAmount = (float)(monthsSinceLastUpdate * (title.Reimburse_Limit / 12.0f));
-                        float total = (float)(prorateAmount + account.Current_Limit);
-                        
-                        float prorate = (float)(accountAgeInMonths / 12 * title.Reimburse_Limit);
-
-                        if(total <= prorate)
-                        {
-                            account.Current_Limit = (float)Math.Round(total);
-                        }
-                    }
-                }
-                else // Akun dengan umur di atas atau sama dengan 1 tahun
-                {
-                    if (monthsSinceLastUpdate >= 12)
+                    var janFirst = new DateTime(now.Year + 1, 1, 1);
+                    var title = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
+                    if (now == janFirst)
                     {
                         account.Current_Limit = title.Reimburse_Limit;
                     }
-                }
 
-                // Perbarui tanggal terakhir Limit_Updated_At
-                account.Limit_Updated_At = now;
+                    // Perbarui tanggal terakhir Limit_Updated_At
+                    account.Limit_Updated_At = now;
+                }
             }
+                
+                //    // Hitung umur akun dalam bulan sejak Join_Date
+                //    float accountAgeInMonths = ((now.Year - account.Join_Date.Year) * 12) + now.Month - account.Join_Date.Month;
+
+                //    // Hitung bulan sejak Limit_Updated_At terakhir
+                //    var monthsSinceLastUpdate = ((now.Year - account.Limit_Updated_At?.Year) * 12) + now.Month - account.Limit_Updated_At?.Month;
+
+                //    // Cari Title terkait
+                //    var title = _context.Titles.FirstOrDefault(t => t.Id_Title == account.Id_Title);
+
+                //    if (title == null) continue; // Jika Title tidak ditemukan, lewati akun ini
+
+                //    // Reset tahunan (ulang tahun akun)
+                //    bool isAnniversary = account.Join_Date.Day == now.Day && account.Join_Date.Month == now.Month && account.Join_Date.Year < now.Year;
+
+                //    if (isAnniversary)
+                //    {
+                //        // Reset Current_Limit ke Reimburse_Limit
+                //        account.Current_Limit = title.Reimburse_Limit;
+                //    }
+                //    else if (accountAgeInMonths < 12) // Akun dengan umur di bawah 1 tahun
+                //    {
+                //        // Tambahkan prorata untuk bulan-bulan yang belum diproses
+                //        if (monthsSinceLastUpdate > 0)
+                //        {
+                //            float prorate = (float)(accountAgeInMonths / 12 * title.Reimburse_Limit);
+                //            float prorateAmount = (float)(monthsSinceLastUpdate * (title.Reimburse_Limit / 12.0f));
+                //            float total = (float)(prorateAmount + account.Current_Limit);
+
+                //            if(total <= prorate)
+                //            {
+                //                account.Current_Limit = (float)Math.Round(total);
+                //            }
+                //        }
+                //    }
+                //    else // Akun dengan umur di atas atau sama dengan 1 tahun
+                //    {
+                //        if (monthsSinceLastUpdate >= 12)
+                //        {
+                //            account.Current_Limit = title.Reimburse_Limit;
+                //        }
+                //    }
+
 
             // Simpan perubahan ke database
             await _context.SaveChangesAsync();
